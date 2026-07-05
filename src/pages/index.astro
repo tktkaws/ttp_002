@@ -1,17 +1,283 @@
 ---
+import "../styles/global.css";
 
+const navItems = [
+  { href: "#section01", label: "はじめに" },
+  { href: "#section02", label: "略歴" },
+  { href: "#section03", label: "業務経歴" },
+  { href: "#section04", label: "強み" },
+  { href: "#section05", label: "成果物" },
+];
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/300.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/400.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/500.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/700.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body
+    class="font-sans p-6 sm:p-12 md:p-16 2xl:p-32 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+  >
+    <h1
+      class="text-[3rem] font-zen header_logo pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
+    >
+      <a href="/">
+        タカハシ<br />
+        タカユキ<br />
+        のポート<br />
+        フォリオ
+      </a>
+    </h1>
+    <nav
+      id="fixed-nav"
+      aria-label="ページ内ナビゲーション"
+      class="fixed right-6 bottom-6 z-50 w-[10rem] bg-white p-4 text-right text-[1.5rem] font-sans font-light text-gray-900 transition-opacity duration-200 sm:right-12 sm:bottom-12 md:right-16 md:bottom-16 2xl:right-32 2xl:bottom-32"
+    >
+      <ul class="grid gap-2">
+        {
+          navItems.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <main>
+      <section id="section01" class="border-t mt-[4rem]">
+        <p>[01]</p>
+        <div class="mx-[10rem] mt-[4rem]">
+          <h2 class="text-[3rem] mb-[2rem]">はじめに</h2>
+          <div class="text-[1.5rem] font-sans font-light">
+            <p>
+              はじめまして。タカハシタカユキと申します。<br />
+              東京都在住で、フロントエンドエンジニアとして働いています。<br />
+              業務歴は2年で、主にWordPressを使用したサイト制作を行っています。<br
+              />
+              アクセシビリティとモダンフロントエンドに興味があり、日々勉強中です。
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="section02" class="border-t mt-[4rem]">
+        <p>[02]</p>
+        <div class="mx-[10rem] mt-[4rem]">
+          <h2 class="text-[3rem] mb-[2rem]">略歴</h2>
+          <div class="text-[1.5rem] font-sans font-light">
+            <section>
+              <h3 class="text-2xl font-medium mt-8">2011年 - 2017年</h3>
+              <p>
+                大学卒業後、飲食店でフリーターをしており、個人で飲食店を開業することを目指していました。
+              </p>
+            </section>
+            <section>
+              <h3 class="text-2xl font-medium mt-8">2017年 - 2019</h3>
+              <p>
+                事務職として勤務する中でVBAを独学し、プログラミングへの興味を持ち始めました。
+              </p>
+            </section>
+            <section>
+              <h3 class="text-2xl font-medium mt-8">2019年 - 2021年</h3>
+              <p>
+                RubyとRuby on
+                Railsを学習し、受託制作会社へ入社しましたが、不眠症に陥り、早期退職しました。
+              </p>
+            </section>
+            <section>
+              <h3 class="text-2xl font-medium mt-8">2021年 - 2023年</h3>
+              <p>
+                療養し、社会復帰しつつ、Webの勉強を再開しました。<br />
+                バックエンドよりもフロントエンドへの興味が元々強かったため、Web制作の勉強を再開しました。
+              </p>
+            </section>
+            <section>
+              <h3 class="text-2xl font-medium mt-8">2023年 - 現在</h3>
+              <p>
+                東京のWeb制作会社に入社し、フロントエンドエンジニアとして働いています。<br
+                />
+                フロントエンドエンジニアとして、ユーザーに優れた体験を提供することに情熱を持っています。
+              </p>
+            </section>
+          </div>
+        </div>
+      </section>
+      <section id="section03" class="border-t mt-[4rem]">
+        <p>[03]</p>
+        <div class="mx-[10rem] mt-[4rem]">
+          <h2 class="text-[3rem] mb-[2rem]">業務経歴</h2>
+          <div class="text-[1.5rem] font-sans font-light">
+            <h3 class="text-2xl font-medium mt-8">
+              小規模〜中規模サイトの制作
+            </h3>
+            <p>
+              30ページ程度の規模のサイトを数件作成しました。
+              WordPress構築も行いました。
+            </p>
+            <h3 class="text-2xl font-medium mt-8">アクセシビリティ対応</h3>
+            <p>
+              jis規格に基づいて、うwcag2.0に準拠することを目指したアクセシビリティ対応を行いました。
+              外部機関のチェック結果を元に、優先度を設定し、対応を行いました。
+            </p>
+            <h3 class="text-2xl font-medium mt-8">API連携</h3>
+            <p>
+              IR情報のCMS管理サービスのAPIを連携し、サイトに表示させる業務
+              APIが簡略的なものしかなかった
+              各会社の決算期に基づいてデータを割り振り、セレクト要素で表示させるようにする
+              ゼロイチで作成することはほとんどなく、既存のコードを流用することが多かった
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="section04" class="border-t mt-[4rem]">
+        <p>[04]</p>
+        <div class="mx-[10rem] mt-[4rem]">
+          <h2 class="text-[3rem] mb-[2rem]">強み</h2>
+          <div class="text-[1.5rem] font-sans font-light">
+            <section>
+              <h3 class="text-2xl font-medium mt-8">
+                アクセシビリティへの関心
+              </h3>
+              <p>
+                イベントに参加し、アクセシビリティに関する知識を深めています。<br
+                />
+                Trusted Testerに合格しました。<br />
+                なぜ関心を持ったのか：本質的だと思った。どんなにカッコいい演出のサイトを作成しても、それが見えない人にとっては使いものにならない。それでは意味がない。
+              </p>
+            </section>
+            <section>
+              <h3 class="text-2xl font-medium mt-8">
+                モダンフロントエンドへの関心
+              </h3>
+              <p>
+                イベントに参加し、モダンフロントエンドに関する知識を深めています。<br
+                />
+                モダンフロントエンドに関する知識を深めています。<br />
+                なぜ関心を持ったのか：モダンフロントエンドに関する知識を深めています。
+              </p>
+            </section>
+            <section>
+              <h3 class="text-2xl font-medium mt-8">バックエンドの学習経験</h3>
+              <p>
+                バックエンドの学習経験：Ruby,Ruby on
+                Rails,PHP,Laravel,Node.js,Express,MySQL,PostgreSQL,MongoDB
+              </p>
+            </section>
+          </div>
+        </div>
+      </section>
+      <section id="section05" class="border-t mt-[4rem]">
+        <p>[05]</p>
+        <div class="mx-[10rem] mt-[4rem]">
+          <h2 class="text-[3rem] mb-[2rem]">成果物</h2>
+          <div class="text-[1.5rem] font-sans font-light">
+            <h3 class="text-2xl font-medium mt-8">技術ブログ</h3>
+            <a href="https://front-dispatch.vercel.app/" target="_blank"
+              >https://front-dispatch.vercel.app/</a
+            >
+            <p>
+              業務の中でぶつかった問題、解決策をブログに書いています。<br />
+              アクセシビリティに関する記事が多いです。
+            </p>
+            <h3 class="text-2xl font-medium mt-8">会議室予約システム</h3>
+            <a href="">https://front-dispatch.com/</a>
+            <p>
+              next.js,supabaseを使用して会議室予約アプリを作成しました。<br />
+              過去にバックエンドを学習していたことと、AIが進化したことによって、作成に至りました。<br
+              />
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer id="site-footer" class="border-t pt-[10rem] mt-[10rem]">
+      <div class="flex items-start justify-between gap-12">
+        <p class="text-[3rem] font-zen header_logo">
+          タカハシ<br />
+          タカユキ<br />
+          のポート<br />
+          フォリオ
+        </p>
+        <nav
+          aria-label="フッターナビゲーション"
+          class="w-[10rem] bg-white p-4 text-right text-[1.5rem] font-sans font-light text-gray-900"
+        >
+          <ul class="grid gap-2">
+            {
+              navItems.map((item) => (
+                <li>
+                  <a href={item.href}>{item.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </div>
+      <div
+        class="mt-16 flex items-center justify-end gap-3 text-right font-sans font-light"
+      >
+        <p class="text-sm">This contents is created by</p>
+        <a
+          href="https://github.com/tktkaws"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="GitHub"
+        >
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            class="size-6 fill-current"
+          >
+            <path
+              d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 7c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.95.68 1.92 0 1.38-.01 2.5-.01 2.84 0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"
+            ></path>
+          </svg>
+        </a>
+      </div>
+    </footer>
+
+    <script>
+      const fixedNav = document.querySelector("#fixed-nav");
+      const footer = document.querySelector("#site-footer");
+
+      if (fixedNav && footer) {
+        const setFixedNavVisibility = (isFooterVisible: boolean) => {
+          fixedNav.classList.toggle("fixed-nav-hidden", isFooterVisible);
+          fixedNav.setAttribute("aria-hidden", String(isFooterVisible));
+        };
+
+        const observer = new IntersectionObserver(([entry]) => {
+          setFixedNavVisibility(entry.isIntersecting);
+        });
+        observer.observe(footer);
+      }
+    </script>
+  </body>
 </html>

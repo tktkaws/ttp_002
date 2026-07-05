@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+	--font-gen-interface-jp: "Gen Interface JP", "Hiragino Kaku Gothic ProN",
+		"Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif;
+	--font-zen-kaku: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN",
+		"Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif;
+	--font-sans: var(--font-gen-interface-jp);
+	--font-zen: var(--font-zen-kaku);
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+section[id] {
+	scroll-margin-block-start: 4rem;
+}
+
+.fixed-nav-hidden {
+	opacity: 0;
+	pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+.header_logo {
+	/* border: solid 1px; */
+	letter-spacing: 0.5em;
+	transform: translateX(-0.15em);
+	line-height: 1.3;
+}
