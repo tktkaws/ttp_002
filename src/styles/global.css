@@ -30,8 +30,8 @@ section[id] {
 
 /* body padding (6 → 12 → 16 → 32) と同じ変遷を ×2.5 でトレース */
 :root {
-	--layout-trace: 3.75rem;
-	--font-trace: 10rem;
+	--layout-trace: 4rem;
+	--font-trace: 8rem;
 }
 
 @media (min-width: 640px) {
@@ -42,14 +42,20 @@ section[id] {
 
 @media (min-width: 768px) {
 	:root {
-		--layout-trace: 10rem;
+		/* --layout-trace: 10rem; */
+	}
+}
+
+@media (min-width: 1280px) {
+	:root {
+		--font-trace: 10rem;
 	}
 }
 
 @media (min-width: 1536px) {
 	:root {
-		--layout-trace: 20rem;
-		--font-trace: 20rem;
+        --font-trace: 12rem;
+		--layout-trace: 12rem;
 	}
 }
 
@@ -64,6 +70,10 @@ section[id] {
 }
 
 /* md 基準: display 3rem, body 1.5rem, caption 0.875rem（md 未満も同サイズ） */
+.text-logo {
+	font-size: calc(var(--font-trace) * 0.2);
+}
+
 .text-display {
 	font-size: calc(var(--font-trace) * 0.3);
 }
