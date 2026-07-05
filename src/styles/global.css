@@ -28,6 +28,56 @@ section[id] {
 	}
 }
 
+/* body padding (6 → 12 → 16 → 32) と同じ変遷を ×2.5 でトレース */
+:root {
+	--layout-trace: 3.75rem;
+	--font-trace: 10rem;
+}
+
+@media (min-width: 640px) {
+	:root {
+		--layout-trace: 7.5rem;
+	}
+}
+
+@media (min-width: 768px) {
+	:root {
+		--layout-trace: 10rem;
+	}
+}
+
+@media (min-width: 1536px) {
+	:root {
+		--layout-trace: 20rem;
+		--font-trace: 20rem;
+	}
+}
+
+.section-inset-x {
+	margin-inline: 0;
+}
+
+@media (min-width: 1024px) {
+	.section-inset-x {
+		margin-inline: var(--layout-trace);
+	}
+}
+
+/* md 基準: display 3rem, body 1.5rem, caption 0.875rem（md 未満も同サイズ） */
+.text-display {
+	font-size: calc(var(--font-trace) * 0.3);
+}
+
+.text-body {
+	font-size: calc(var(--font-trace) * 0.15);
+	overflow-wrap: break-word;
+	text-wrap: pretty;
+}
+
+.text-caption {
+	font-size: calc(var(--font-trace) * 0.0875);
+}
+
 .header_logo {
 	/* border: solid 1px; */
 	letter-spacing: 0.5em;

@@ -46,7 +46,7 @@ const navItems = [
     class="font-sans p-6 sm:p-12 md:p-16 2xl:p-32 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
   >
     <h1
-      class="text-[3rem] font-zen header_logo pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
+      class="text-display font-zen header_logo pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
     >
       <a href="/">
         タカハシ<br />
@@ -58,24 +58,38 @@ const navItems = [
     <nav
       id="fixed-nav"
       aria-label="ページ内ナビゲーション"
-      class="fixed right-6 bottom-6 z-50 w-[10rem] bg-white p-4 text-right text-[1.5rem] font-sans font-light text-gray-900 transition-opacity duration-200 sm:right-12 sm:bottom-12 md:right-16 md:bottom-16 2xl:right-32 2xl:bottom-32"
+      class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 flex-col-reverse items-center gap-2 font-sans font-light text-gray-900 transition-opacity duration-200 md:right-16 md:bottom-16 md:left-auto md:translate-x-0 md:items-end 2xl:right-32 2xl:bottom-32"
     >
-      <ul class="grid gap-2">
-        {
-          navItems.map((item) => (
-            <li>
-              <a href={item.href}>{item.label}</a>
-            </li>
-          ))
-        }
-      </ul>
+      <div class="flex w-[10rem] flex-col-reverse border border-gray-900 bg-white text-right shadow-md lg:border-0 lg:shadow-none">
+        <button
+          id="menu-button"
+          type="button"
+          aria-controls="fixed-nav-list"
+          aria-expanded="false"
+          class="text-body w-full p-4 lg:hidden"
+        >
+          目次
+        </button>
+        <ul
+          id="fixed-nav-list"
+          class="text-body grid gap-2 p-4 max-lg:hidden"
+        >
+          {
+            navItems.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </nav>
     <main>
       <section id="section01" class="border-t mt-[4rem]">
-        <p>[01]</p>
-        <div class="mx-[10rem] mt-[4rem]">
-          <h2 class="text-[3rem] mb-[2rem]">はじめに</h2>
-          <div class="text-[1.5rem] font-sans font-light">
+        <p class="text-body">[01]</p>
+        <div class="section-inset-x mt-[4rem]">
+          <h2 class="text-display mb-[2rem]">はじめに</h2>
+          <div class="text-body font-sans font-light">
             <p>
               はじめまして。タカハシタカユキと申します。<br />
               東京都在住で、フロントエンドエンジニアとして働いています。<br />
@@ -87,38 +101,38 @@ const navItems = [
         </div>
       </section>
       <section id="section02" class="border-t mt-[4rem]">
-        <p>[02]</p>
-        <div class="mx-[10rem] mt-[4rem]">
-          <h2 class="text-[3rem] mb-[2rem]">略歴</h2>
-          <div class="text-[1.5rem] font-sans font-light">
+        <p class="text-body">[02]</p>
+        <div class="section-inset-x mt-[4rem]">
+          <h2 class="text-display mb-[2rem]">略歴</h2>
+          <div class="text-body font-sans font-light">
             <section>
-              <h3 class="text-2xl font-medium mt-8">2011年 - 2017年</h3>
+              <h3 class="text-body font-medium mt-8">2011年 - 2017年</h3>
               <p>
                 大学卒業後、飲食店でフリーターをしており、個人で飲食店を開業することを目指していました。
               </p>
             </section>
             <section>
-              <h3 class="text-2xl font-medium mt-8">2017年 - 2019</h3>
+              <h3 class="text-body font-medium mt-8">2017年 - 2019</h3>
               <p>
                 事務職として勤務する中でVBAを独学し、プログラミングへの興味を持ち始めました。
               </p>
             </section>
             <section>
-              <h3 class="text-2xl font-medium mt-8">2019年 - 2021年</h3>
+              <h3 class="text-body font-medium mt-8">2019年 - 2021年</h3>
               <p>
                 RubyとRuby on
                 Railsを学習し、受託制作会社へ入社しましたが、不眠症に陥り、早期退職しました。
               </p>
             </section>
             <section>
-              <h3 class="text-2xl font-medium mt-8">2021年 - 2023年</h3>
+              <h3 class="text-body font-medium mt-8">2021年 - 2023年</h3>
               <p>
                 療養し、社会復帰しつつ、Webの勉強を再開しました。<br />
                 バックエンドよりもフロントエンドへの興味が元々強かったため、Web制作の勉強を再開しました。
               </p>
             </section>
             <section>
-              <h3 class="text-2xl font-medium mt-8">2023年 - 現在</h3>
+              <h3 class="text-body font-medium mt-8">2023年 - 現在</h3>
               <p>
                 東京のWeb制作会社に入社し、フロントエンドエンジニアとして働いています。<br
                 />
@@ -129,23 +143,23 @@ const navItems = [
         </div>
       </section>
       <section id="section03" class="border-t mt-[4rem]">
-        <p>[03]</p>
-        <div class="mx-[10rem] mt-[4rem]">
-          <h2 class="text-[3rem] mb-[2rem]">業務経歴</h2>
-          <div class="text-[1.5rem] font-sans font-light">
-            <h3 class="text-2xl font-medium mt-8">
+        <p class="text-body">[03]</p>
+        <div class="section-inset-x mt-[4rem]">
+          <h2 class="text-display mb-[2rem]">業務経歴</h2>
+          <div class="text-body font-sans font-light">
+            <h3 class="text-body font-medium mt-8">
               小規模〜中規模サイトの制作
             </h3>
             <p>
               30ページ程度の規模のサイトを数件作成しました。
               WordPress構築も行いました。
             </p>
-            <h3 class="text-2xl font-medium mt-8">アクセシビリティ対応</h3>
+            <h3 class="text-body font-medium mt-8">アクセシビリティ対応</h3>
             <p>
               jis規格に基づいて、うwcag2.0に準拠することを目指したアクセシビリティ対応を行いました。
               外部機関のチェック結果を元に、優先度を設定し、対応を行いました。
             </p>
-            <h3 class="text-2xl font-medium mt-8">API連携</h3>
+            <h3 class="text-body font-medium mt-8">API連携</h3>
             <p>
               IR情報のCMS管理サービスのAPIを連携し、サイトに表示させる業務
               APIが簡略的なものしかなかった
@@ -157,12 +171,12 @@ const navItems = [
       </section>
 
       <section id="section04" class="border-t mt-[4rem]">
-        <p>[04]</p>
-        <div class="mx-[10rem] mt-[4rem]">
-          <h2 class="text-[3rem] mb-[2rem]">強み</h2>
-          <div class="text-[1.5rem] font-sans font-light">
+        <p class="text-body">[04]</p>
+        <div class="section-inset-x mt-[4rem]">
+          <h2 class="text-display mb-[2rem]">強み</h2>
+          <div class="text-body font-sans font-light">
             <section>
-              <h3 class="text-2xl font-medium mt-8">
+              <h3 class="text-body font-medium mt-8">
                 アクセシビリティへの関心
               </h3>
               <p>
@@ -173,7 +187,7 @@ const navItems = [
               </p>
             </section>
             <section>
-              <h3 class="text-2xl font-medium mt-8">
+              <h3 class="text-body font-medium mt-8">
                 モダンフロントエンドへの関心
               </h3>
               <p>
@@ -184,7 +198,7 @@ const navItems = [
               </p>
             </section>
             <section>
-              <h3 class="text-2xl font-medium mt-8">バックエンドの学習経験</h3>
+              <h3 class="text-body font-medium mt-8">バックエンドの学習経験</h3>
               <p>
                 バックエンドの学習経験：Ruby,Ruby on
                 Rails,PHP,Laravel,Node.js,Express,MySQL,PostgreSQL,MongoDB
@@ -194,11 +208,11 @@ const navItems = [
         </div>
       </section>
       <section id="section05" class="border-t mt-[4rem]">
-        <p>[05]</p>
-        <div class="mx-[10rem] mt-[4rem]">
-          <h2 class="text-[3rem] mb-[2rem]">成果物</h2>
-          <div class="text-[1.5rem] font-sans font-light">
-            <h3 class="text-2xl font-medium mt-8">技術ブログ</h3>
+        <p class="text-body">[05]</p>
+        <div class="section-inset-x mt-[4rem]">
+          <h2 class="text-display mb-[2rem]">成果物</h2>
+          <div class="text-body font-sans font-light">
+            <h3 class="text-body font-medium mt-8">技術ブログ</h3>
             <a href="https://front-dispatch.vercel.app/" target="_blank"
               >https://front-dispatch.vercel.app/</a
             >
@@ -206,7 +220,7 @@ const navItems = [
               業務の中でぶつかった問題、解決策をブログに書いています。<br />
               アクセシビリティに関する記事が多いです。
             </p>
-            <h3 class="text-2xl font-medium mt-8">会議室予約システム</h3>
+            <h3 class="text-body font-medium mt-8">会議室予約システム</h3>
             <a href="">https://front-dispatch.com/</a>
             <p>
               next.js,supabaseを使用して会議室予約アプリを作成しました。<br />
@@ -218,8 +232,8 @@ const navItems = [
       </section>
     </main>
     <footer id="site-footer" class="border-t pt-[10rem] mt-[10rem]">
-      <div class="flex items-start justify-between gap-12">
-        <p class="text-[3rem] font-zen header_logo">
+      <div class="flex flex-col items-start gap-12 sm:flex-row sm:items-start sm:justify-between">
+        <p class="text-display font-zen header_logo">
           タカハシ<br />
           タカユキ<br />
           のポート<br />
@@ -227,7 +241,7 @@ const navItems = [
         </p>
         <nav
           aria-label="フッターナビゲーション"
-          class="w-[10rem] bg-white p-4 text-right text-[1.5rem] font-sans font-light text-gray-900"
+          class="text-body w-[10rem] bg-white p-4 text-left font-sans font-light text-gray-900 sm:text-right"
         >
           <ul class="grid gap-2">
             {
@@ -243,7 +257,7 @@ const navItems = [
       <div
         class="mt-16 flex items-center justify-end gap-3 text-right font-sans font-light"
       >
-        <p class="text-sm">This contents is created by</p>
+        <p class="text-caption">This contents is created by</p>
         <a
           href="https://github.com/tktkaws"
           target="_blank"
@@ -265,7 +279,50 @@ const navItems = [
 
     <script>
       const fixedNav = document.querySelector("#fixed-nav");
+      const menuButton = document.querySelector("#menu-button");
+      const fixedNavList = document.querySelector("#fixed-nav-list");
       const footer = document.querySelector("#site-footer");
+
+      if (fixedNav && menuButton && fixedNavList) {
+        const setMenuOpen = (isOpen: boolean) => {
+          fixedNavList.classList.toggle("max-lg:hidden", !isOpen);
+          menuButton.setAttribute("aria-expanded", String(isOpen));
+          menuButton.textContent = isOpen ? "閉じる" : "目次";
+        };
+
+        menuButton.addEventListener("click", () => {
+          setMenuOpen(menuButton.getAttribute("aria-expanded") !== "true");
+        });
+
+        fixedNavList.addEventListener("click", (event) => {
+          const target = event.target;
+
+          if (target instanceof HTMLAnchorElement) {
+            setMenuOpen(false);
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          const target = event.target;
+
+          if (
+            target instanceof Node &&
+            !fixedNav.contains(target) &&
+            menuButton.getAttribute("aria-expanded") === "true"
+          ) {
+            setMenuOpen(false);
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (
+            event.key === "Escape" &&
+            menuButton.getAttribute("aria-expanded") === "true"
+          ) {
+            setMenuOpen(false);
+          }
+        });
+      }
 
       if (fixedNav && footer) {
         const setFixedNavVisibility = (isFooterVisible: boolean) => {
