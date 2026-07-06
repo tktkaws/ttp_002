@@ -71,11 +71,11 @@ section[id] {
 
 /* md 基準: display 3rem, body 1.5rem, caption 0.875rem（md 未満も同サイズ） */
 .text-logo {
-	font-size: calc(var(--font-trace) * 0.2);
+	font-size: calc(var(--font-trace) * 0.25);
 }
 
 .text-display {
-	font-size: calc(var(--font-trace) * 0.3);
+	font-size: calc(var(--font-trace) * 0.25);
 }
 
 .text-body {
