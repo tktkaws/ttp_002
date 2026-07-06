@@ -32,6 +32,12 @@ section[id] {
 :root {
 	--layout-trace: 4rem;
 	--font-trace: 8rem;
+	--focus-ring-outer: #000000;
+	--focus-ring-inner: #f5e6a3;
+	--focus-ring-width: 4px;
+	--focus-ring-offset: 2px;
+	--focus-ring-inner-width: 2px;
+	--focus-ring-radius: 4px;
 }
 
 @media (min-width: 640px) {
@@ -93,4 +99,18 @@ section[id] {
 	letter-spacing: 0.5em;
 	transform: translateX(-0.15em);
 	line-height: 1.3;
+}
+
+a {
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+}
+
+/* デジタル庁スタイルのダブルリング（黄 × 黒）— outline を主役にする */
+:is(a, button):is(:focus-visible, :hover) {
+	background-color: var(--focus-ring-inner);
+	outline: var(--focus-ring-width) solid var(--focus-ring-outer);
+	outline-offset: var(--focus-ring-offset);
+	border-radius: var(--focus-ring-radius);
+	box-shadow: 0 0 0 var(--focus-ring-inner-width) var(--focus-ring-inner);
 }
