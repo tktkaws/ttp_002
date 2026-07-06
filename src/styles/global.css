@@ -28,8 +28,9 @@ section[id] {
 	}
 }
 
-/* body padding (6 → 12 → 16 → 32) と同じ変遷を ×2.5 でトレース */
+/* body padding: p-6 → sm:p-12 → md:p-16 → 2xl:p-32 */
 :root {
+	--body-padding: 1.5rem;
 	--layout-trace: 4rem;
 	--font-trace: 8rem;
 	--focus-ring-outer: #000000;
@@ -42,12 +43,14 @@ section[id] {
 
 @media (min-width: 640px) {
 	:root {
+		--body-padding: 3rem;
 		--layout-trace: 7.5rem;
 	}
 }
 
 @media (min-width: 768px) {
 	:root {
+		--body-padding: 4rem;
 		/* --layout-trace: 10rem; */
 	}
 }
@@ -60,8 +63,19 @@ section[id] {
 
 @media (min-width: 1536px) {
 	:root {
+		--body-padding: 8rem;
         --font-trace: 12rem;
 		--layout-trace: 12rem;
+	}
+}
+
+#fixed-nav {
+	bottom: var(--body-padding);
+}
+
+@media (min-width: 768px) {
+	#fixed-nav {
+		right: var(--body-padding);
 	}
 }
 

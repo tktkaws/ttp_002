@@ -56,7 +56,7 @@ const navItems = [
     <nav
       id="fixed-nav"
       aria-label="ページ内ナビゲーション"
-      class="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 flex-col-reverse items-center gap-2 font-sans font-light text-gray-900 transition-opacity duration-200 md:right-16 md:bottom-16 md:left-auto md:translate-x-0 md:items-end 2xl:right-32 2xl:bottom-32"
+      class="fixed left-1/2 z-50 flex -translate-x-1/2 flex-col-reverse items-center gap-2 font-sans font-light text-gray-900 transition-opacity duration-200 md:left-auto md:translate-x-0 md:items-end"
     >
       <div class="flex w-[10rem] flex-col-reverse border border-gray-900 bg-white text-right shadow-md lg:border-0 lg:shadow-none">
         <button
@@ -250,7 +250,7 @@ const navItems = [
           aria-label="フッターナビゲーション"
           class="text-body w-[10rem] bg-white text-left font-sans font-light text-gray-900 sm:text-right"
         >
-          <ul class="grid gap-2">
+          <ul class="grid gap-2 lg:p-4 pt-0">
             {
               navItems.map((item) => (
                 <li>
