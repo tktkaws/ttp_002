@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
 	--font-gen-interface-jp: "Gen Interface JP", "Hiragino Kaku Gothic ProN",
 		"Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif;
@@ -7,6 +9,10 @@
 		"Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif;
 	--font-sans: var(--font-gen-interface-jp);
 	--font-zen: var(--font-zen-kaku);
+}
+
+:root {
+	color-scheme: light dark;
 }
 
 html {
@@ -35,10 +41,17 @@ section[id] {
 	--font-trace: 8rem;
 	--focus-ring-outer: #000000;
 	--focus-ring-inner: #f5e6a3;
+	--focus-ring-text: #111827;
 	--focus-ring-width: 4px;
 	--focus-ring-offset: 2px;
 	--focus-ring-inner-width: 2px;
 	--focus-ring-radius: 4px;
+}
+
+html.dark {
+	/* 外側は白のみ。内側背景は透明、文字色は変更しない */
+	--focus-ring-outer: #ffffff;
+	--focus-ring-inner: transparent;
 }
 
 @media (min-width: 640px) {
@@ -77,6 +90,25 @@ section[id] {
 	#fixed-nav {
 		right: var(--body-padding);
 	}
+}
+
+#theme-toggle {
+	top: var(--body-padding);
+	right: var(--body-padding);
+}
+
+#theme-button [data-theme-icon] {
+	display: none;
+}
+
+html[data-theme="light"] #theme-button [data-theme-icon="light"],
+html[data-theme="dark"] #theme-button [data-theme-icon="dark"],
+html[data-theme="system"] #theme-button [data-theme-icon="system"] {
+	display: block;
+}
+
+#theme-menu:not([hidden]) {
+	display: flex;
 }
 
 .section-inset-x {
@@ -120,11 +152,15 @@ a {
 	-webkit-box-decoration-break: clone;
 }
 
-/* デジタル庁スタイルのダブルリング（黄 × 黒）— outline を主役にする */
+/* デジタル庁スタイルのダブルリング（ライト: 黄×黒 / ダーク: 白リングのみ）— outline を主役にする */
 :is(a, button):is(:focus-visible, :hover) {
 	background-color: var(--focus-ring-inner);
 	outline: var(--focus-ring-width) solid var(--focus-ring-outer);
 	outline-offset: var(--focus-ring-offset);
 	border-radius: var(--focus-ring-radius);
 	box-shadow: 0 0 0 var(--focus-ring-inner-width) var(--focus-ring-inner);
+}
+
+html:not(.dark) :is(a, button):is(:focus-visible, :hover) {
+	color: var(--focus-ring-text);
 }
