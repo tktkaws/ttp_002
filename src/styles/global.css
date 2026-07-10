@@ -77,8 +77,13 @@ html.dark {
 	}
 }
 
+html:not(.fixed-nav-ready) #fixed-nav {
+	display: none;
+}
+
 #fixed-nav {
 	bottom: var(--body-padding);
+	right: var(--body-padding);
 	opacity: 1;
 	translate: 0;
 	transition:
@@ -115,12 +120,6 @@ html.dark {
 
 	#fixed-nav.fixed-nav-hidden {
 		translate: none;
-	}
-}
-
-@media (min-width: 768px) {
-	#fixed-nav {
-		right: var(--body-padding);
 	}
 }
 

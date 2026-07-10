@@ -195,7 +195,7 @@ const navItems = [
     <nav
       id="fixed-nav"
       aria-label="ページ内ナビゲーション"
-      class="fixed left-1/2 z-50 flex -translate-x-1/2 flex-col-reverse items-center gap-2 font-sans font-light text-gray-900 dark:text-gray-100 md:left-auto md:translate-x-0 md:items-end"
+      class="fixed z-50 flex flex-col-reverse items-end gap-2 font-sans font-light text-gray-900 dark:text-gray-100"
     >
       <div class="flex w-[10rem] flex-col-reverse border border-gray-900 bg-white text-right shadow-md dark:border-gray-100 dark:bg-gray-900 lg:border-0 lg:shadow-none">
         <button
@@ -222,7 +222,7 @@ const navItems = [
       </div>
     </nav>
     <main>
-      <section id="section01" class="border-t border-gray-900 dark:border-gray-100 mt-[6rem]">
+      <section id="section01" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[01]</p>
 			<h2 class="text-display section-inset-x mt-[4rem]">はじめに</h2>
@@ -239,7 +239,7 @@ const navItems = [
           </div>
         </div>
       </section>
-      <section id="section02" class="border-t border-gray-900 dark:border-gray-100 mt-[6rem]">
+      <section id="section02" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[02]</p>
 			<h2 class="text-display section-inset-x mt-[4rem]">略歴</h2>
@@ -283,7 +283,7 @@ const navItems = [
           </div>
         </div>
       </section>
-      <section id="section03" class="border-t border-gray-900 dark:border-gray-100 mt-[6rem]">
+      <section id="section03" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[03]</p>
 			<h2 class="text-display section-inset-x mt-[4rem]">業務経歴</h2>
@@ -312,7 +312,7 @@ const navItems = [
           </div>
         </div>
       </section>
-      <section id="section04" class="border-t border-gray-900 dark:border-gray-100 mt-[6rem]">
+      <section id="section04" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[04]</p>
 			<h2 class="text-display section-inset-x mt-[4rem]">強み</h2>
@@ -351,7 +351,7 @@ const navItems = [
           </div>
         </div>
       </section>
-      <section id="section05" class="border-t border-gray-900 dark:border-gray-100 mt-[6rem]">
+      <section id="section05" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[05]</p>
 			<h2 class="text-display section-inset-x mt-[4rem]">成果物</h2>
@@ -377,7 +377,7 @@ const navItems = [
         </div>
       </section>
     </main>
-    <footer id="site-footer" class="border-t border-gray-900 pt-[6rem] mt-[6rem] dark:border-gray-100">
+    <footer id="site-footer" class="border-t border-gray-900 pt-[8rem] mt-[8rem] dark:border-gray-100">
       <div class="flex flex-col items-start gap-[6rem] sm:flex-row sm:items-start sm:justify-between">
         <p class="text-logo font-zen header_logo">
           タカハシ<br />
@@ -641,10 +641,34 @@ const navItems = [
           fixedNav.setAttribute("aria-hidden", String(isFooterVisible));
         };
 
+        const isFooterInView = () => {
+          const rect = footer.getBoundingClientRect();
+          return rect.top < window.innerHeight && rect.bottom > 0;
+        };
+
+        const revealFixedNav = () => {
+          setFixedNavVisibility(isFooterInView());
+          document.documentElement.classList.add("fixed-nav-ready");
+        };
+
         const observer = new IntersectionObserver(([entry]) => {
           setFixedNavVisibility(entry.isIntersecting);
         });
         observer.observe(footer);
+
+        if (document.readyState === "complete") {
+          revealFixedNav();
+        } else {
+          window.addEventListener("load", revealFixedNav, { once: true });
+        }
+
+        window.addEventListener("pageshow", () => {
+          if (document.documentElement.classList.contains("fixed-nav-ready")) {
+            setFixedNavVisibility(isFooterInView());
+          }
+        });
+      } else {
+        document.documentElement.classList.add("fixed-nav-ready");
       }
     </script>
   </body>
