@@ -72,13 +72,12 @@ const navItems = [
       <button
         id="theme-button"
         type="button"
-        role="switch"
-        aria-checked="false"
-        aria-label="ダークモードに切り替え"
-        class="theme-switch"
+        aria-describedby="theme-tooltip"
+        aria-label="ダークモードに変更"
+        class="theme-button"
       >
         <svg
-          class="theme-switch__icon theme-switch__icon--sun"
+          class="theme-button__icon theme-button__icon--sun"
           aria-hidden="true"
           viewBox="0 0 24 24"
           fill="none"
@@ -91,11 +90,8 @@ const navItems = [
             d="M12 2.5v2M12 19.5v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2.5 12h2M19.5 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
           ></path>
         </svg>
-        <span class="theme-switch__track" aria-hidden="true">
-          <span class="theme-switch__thumb"></span>
-        </span>
         <svg
-          class="theme-switch__icon theme-switch__icon--moon"
+          class="theme-button__icon theme-button__icon--moon"
           aria-hidden="true"
           viewBox="0 0 24 24"
           fill="none"
@@ -109,6 +105,9 @@ const navItems = [
           ></path>
         </svg>
       </button>
+      <span id="theme-tooltip" role="tooltip" class="theme-tooltip">
+        ダークモードに変更
+      </span>
     </div>
     <h1
       class="text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
@@ -376,12 +375,17 @@ const navItems = [
       const syncThemeUi = (theme: Theme) => {
         if (!(themeButton instanceof HTMLElement)) return;
 
-        const isDark = theme === "dark";
-        themeButton.setAttribute("aria-checked", String(isDark));
-        themeButton.setAttribute(
-          "aria-label",
-          isDark ? "ライトモードに切り替え" : "ダークモードに切り替え"
-        );
+        const label =
+          theme === "dark"
+            ? "ライトモードに変更"
+            : "ダークモードに変更";
+
+        themeButton.setAttribute("aria-label", label);
+
+        const tooltip = document.querySelector("#theme-tooltip");
+        if (tooltip instanceof HTMLElement) {
+          tooltip.textContent = label;
+        }
       };
 
       const applyTheme = (theme: Theme, persist = true) => {

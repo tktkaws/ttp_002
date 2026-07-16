@@ -40,7 +40,7 @@ section[id] {
 	--focus-ring-width: 4px;
 	--focus-ring-offset: 2px;
 	--focus-ring-inner-width: 2px;
-	--focus-ring-radius: 4px;
+	--focus-ring-radius: 0;
 }
 
 html.dark {
@@ -128,10 +128,12 @@ html:not(.fixed-nav-ready) #fixed-nav {
 	right: var(--body-padding);
 }
 
-.theme-switch {
-	display: flex;
-	align-items: center;
-	gap: 0.4em;
+.theme-button {
+	position: relative;
+	display: grid;
+	place-items: center;
+	width: 1.25em;
+	height: 1.25em;
 	padding: 0;
 	border: none;
 	background: transparent;
@@ -140,50 +142,61 @@ html:not(.fixed-nav-ready) #fixed-nav {
 	cursor: pointer;
 }
 
-.theme-switch:focus-visible {
-	outline: 2px solid currentColor;
-	outline-offset: 3px;
-}
-
-.theme-switch__track {
-	position: relative;
-	display: block;
-	width: 2.75em;
-	height: 1.5em;
-	border: 1px solid currentColor;
-	border-radius: 9999px;
-	background: #fff;
-}
-
-html.dark .theme-switch__track {
-	background: transparent;
-}
-
-.theme-switch__icon {
+.theme-button__icon {
+	grid-area: 1 / 1;
 	width: 1em;
 	height: 1em;
-	flex-shrink: 0;
-	color: inherit;
 }
 
-.theme-switch__thumb {
+.theme-button__icon--sun {
+	display: block;
+}
+
+.theme-button__icon--moon {
+	display: none;
+}
+
+html.dark .theme-button__icon--sun {
+	display: none;
+}
+
+html.dark .theme-button__icon--moon {
+	display: block;
+}
+
+.theme-tooltip {
 	position: absolute;
-	top: 50%;
-	left: 0.15em;
-	width: 1.05em;
-	height: 1.05em;
-	border-radius: 9999px;
-	background: currentColor;
-	translate: 0 -50%;
-	transition: translate 200ms ease;
+	top: calc(100% - 0.5rem);
+	right: calc(1rem - var(--focus-ring-width) - var(--focus-ring-offset));
+	z-index: 1;
+	padding: 0.35em 0.6em;
+	border: 1px solid currentColor;
+	background: #fff;
+	font-size: 0.75em;
+	line-height: 1.3;
+	white-space: nowrap;
+	pointer-events: none;
+	opacity: 0;
+	visibility: hidden;
+	translate: 0 -0.25em;
+	transition:
+		opacity 150ms ease,
+		visibility 150ms ease,
+		translate 150ms ease;
 }
 
-html.dark .theme-switch__thumb {
-	translate: 1.25em -50%;
+html.dark .theme-tooltip {
+	background: #111827;
+}
+
+#theme-toggle:has(.theme-button:is(:hover, :focus-visible)) .theme-tooltip {
+	opacity: 1;
+	visibility: visible;
+	translate: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.theme-switch__thumb {
+	.theme-tooltip {
 		transition: none;
 	}
 }
