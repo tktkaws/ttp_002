@@ -72,7 +72,6 @@ const navItems = [
       <button
         id="theme-button"
         type="button"
-        aria-describedby="theme-tooltip"
         aria-label="ダークモードに変更"
         class="theme-button"
       >
@@ -105,9 +104,6 @@ const navItems = [
           ></path>
         </svg>
       </button>
-      <span id="theme-tooltip" role="tooltip" class="theme-tooltip">
-        ダークモードに変更
-      </span>
     </div>
     <h1
       class="text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
@@ -375,17 +371,10 @@ const navItems = [
       const syncThemeUi = (theme: Theme) => {
         if (!(themeButton instanceof HTMLElement)) return;
 
-        const label =
-          theme === "dark"
-            ? "ライトモードに変更"
-            : "ダークモードに変更";
-
-        themeButton.setAttribute("aria-label", label);
-
-        const tooltip = document.querySelector("#theme-tooltip");
-        if (tooltip instanceof HTMLElement) {
-          tooltip.textContent = label;
-        }
+        themeButton.setAttribute(
+          "aria-label",
+          theme === "dark" ? "ライトモードに変更" : "ダークモードに変更"
+        );
       };
 
       const applyTheme = (theme: Theme, persist = true) => {

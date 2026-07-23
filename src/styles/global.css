@@ -164,43 +164,6 @@ html.dark .theme-button__icon--moon {
 	display: block;
 }
 
-.theme-tooltip {
-	position: absolute;
-	top: calc(100% - 0.5rem);
-	right: calc(1rem - var(--focus-ring-width) - var(--focus-ring-offset));
-	z-index: 1;
-	padding: 0.35em 0.6em;
-	border: 1px solid currentColor;
-	background: #fff;
-	font-size: 0.75em;
-	line-height: 1.3;
-	white-space: nowrap;
-	pointer-events: none;
-	opacity: 0;
-	visibility: hidden;
-	translate: 0 -0.25em;
-	transition:
-		opacity 150ms ease,
-		visibility 150ms ease,
-		translate 150ms ease;
-}
-
-html.dark .theme-tooltip {
-	background: #111827;
-}
-
-#theme-toggle:has(.theme-button:is(:hover, :focus-visible)) .theme-tooltip {
-	opacity: 1;
-	visibility: visible;
-	translate: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.theme-tooltip {
-		transition: none;
-	}
-}
-
 .section-inset-x {
 	margin-inline: 0;
 }
