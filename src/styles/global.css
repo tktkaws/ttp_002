@@ -34,6 +34,7 @@ section[id] {
 	--body-padding: 1.5rem;
 	--header-offset: 3rem;
 	--layout-trace: 4rem;
+	--fixed-nav-width: 10rem;
 	--font-trace: 8rem;
 	--focus-ring-outer: #000000;
 	--focus-ring-inner: #f5e6a3;
@@ -176,6 +177,11 @@ html.dark .theme-button__icon--moon {
 @media (min-width: 1024px) {
 	.section-inset-x {
 		margin-inline: var(--layout-trace);
+		/* 右下固定メニュー（10rem）が layout-trace より広いときの差分 */
+		padding-inline-end: max(
+			0rem,
+			calc(var(--fixed-nav-width) - var(--layout-trace))
+		);
 	}
 }
 
