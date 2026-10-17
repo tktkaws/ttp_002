@@ -10,20 +10,20 @@ const { items } = Astro.props;
   <ul class="fixed-nav__items">
     <li class="fixed-nav__item">
       <button type="button" class="fixed-nav__trigger" aria-expanded="false" aria-controls="animation-options">
-        Animation:<span data-animation-label>off</span>
+        Animation:<span data-animation-label>Off</span>
       </button>
       <ul id="animation-options" class="fixed-nav__panel" hidden>
-        <li><button type="button" data-animation="off" aria-pressed="true">off</button></li>
-        <li><button type="button" data-animation="on" aria-pressed="false">on</button></li>
+        <li><button type="button" data-animation="off" aria-pressed="true">Off</button></li>
+        <li><button type="button" data-animation="on" aria-pressed="false">On</button></li>
       </ul>
     </li>
     <li class="fixed-nav__item">
       <button type="button" class="fixed-nav__trigger" aria-expanded="false" aria-controls="theme-options">
-        Theme:<span data-theme-label>light</span>
+        Theme:<span data-theme-label>Light</span>
       </button>
       <ul id="theme-options" class="fixed-nav__panel" hidden>
-        <li><button type="button" data-theme="light" aria-pressed="true">light</button></li>
-        <li><button type="button" data-theme="dark" aria-pressed="false">dark</button></li>
+        <li><button type="button" data-theme="light" aria-pressed="true">Light</button></li>
+        <li><button type="button" data-theme="dark" aria-pressed="false">Dark</button></li>
       </ul>
     </li>
     <li class="fixed-nav__item">
@@ -115,11 +115,13 @@ const { items } = Astro.props;
       }
     };
 
+    const labelText = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+
     const applyTheme = (theme: "light" | "dark", save = true) => {
       root.dataset.theme = theme;
       root.classList.toggle("dark", theme === "dark");
       document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
-      nav.querySelector<HTMLElement>("[data-theme-label]")!.textContent = theme;
+      nav.querySelector<HTMLElement>("[data-theme-label]")!.textContent = labelText(theme);
       nav.querySelectorAll<HTMLButtonElement>("button[data-theme]").forEach((button) => {
         button.setAttribute("aria-pressed", String(button.dataset.theme === theme));
       });
@@ -128,7 +130,7 @@ const { items } = Astro.props;
 
     const applyAnimation = (animation: "on" | "off", save = true) => {
       root.dataset.animation = animation;
-      nav.querySelector<HTMLElement>("[data-animation-label]")!.textContent = animation;
+      nav.querySelector<HTMLElement>("[data-animation-label]")!.textContent = labelText(animation);
       nav.querySelectorAll<HTMLButtonElement>("button[data-animation]").forEach((button) => {
         button.setAttribute("aria-pressed", String(button.dataset.animation === animation));
       });
@@ -242,14 +244,17 @@ const { items } = Astro.props;
     background: var(--color-gray-900);
   }
 
-  .fixed-nav__panel :is(button, a) {
+  .fixed-nav__panel li {
     display: flex;
-    align-items: center;
     justify-content: flex-end;
-    gap: 1rem;
-    width: 100%;
+    align-items: center;
     min-height: 44px;
-    padding-block: 0.25rem;
+  }
+
+  .fixed-nav__panel :is(button, a) {
+    display: inline;
+    width: fit-content;
+    max-width: 100%;
     white-space: nowrap;
     cursor: pointer;
   }
