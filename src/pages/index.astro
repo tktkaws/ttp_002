@@ -1,13 +1,88 @@
 ---
 import "../styles/global.css";
 import FixedNav from "../components/FixedNav.astro";
+import Timeline from "../components/Timeline.astro";
+import TextCards from "../components/TextCards.astro";
 
 const navItems = [
-  { href: "#section01", label: "はじめに" },
-  { href: "#section02", label: "略歴" },
-  { href: "#section03", label: "業務経歴" },
+  { href: "#section01", label: "プロフィール" },
+  { href: "#section02", label: "経歴" },
+  { href: "#section03", label: "スキル" },
   { href: "#section04", label: "強み" },
-  { href: "#section05", label: "成果物" },
+  { href: "#section05", label: "アウトプット" },
+];
+
+const history = [
+  {
+    year: "2011年 - 2017年",
+    description: "大学卒業後、飲食店でフリーターをしており、個人で飲食店を開業することを目指していました。",
+  },
+  {
+    year: "2017年 - 2019年",
+    description: "事務職として勤務する中でVBAを独学し、プログラミングへの興味を持ち始めました。",
+  },
+  {
+    year: "2019年 - 2021年",
+    description: "RubyとRuby on Railsを学習し、受託制作会社へ入社しましたが、不眠症に陥り、早期退職しました。",
+  },
+  {
+    year: "2021年 - 2023年",
+    description: "療養し、社会復帰しつつ、Webの勉強を再開しました。\nバックエンドよりもフロントエンドへの興味が元々強かったため、Web制作の勉強を再開しました。",
+  },
+  {
+    year: "2023年 - 現在",
+    description: "東京のWeb制作会社に入社し、フロントエンドエンジニアとして働いています。\nフロントエンドエンジニアとして、ユーザーに優れた体験を提供することに情熱を持っています。",
+  },
+];
+
+const skills = [
+  {
+    label: "HTML",
+    description: "セマンティックなマークアップとアクセシビリティを意識した構造設計を行います。",
+    color: "#1f4d3a",
+  },
+  {
+    label: "CSS",
+    description: "レイアウト・タイポグラフィ・レスポンシブ対応など、見た目と使いやすさを整えます。",
+    color: "#243048",
+  },
+  {
+    label: "JavaScript",
+    description: "インタラクションやUIの挙動を実装し、ページに動きと操作性を加えます。",
+    color: "#8c3d2f",
+  },
+  {
+    label: "WordPress",
+    description: "テーマ構築やコンテンツ管理を中心に、小〜中規模サイトの制作を行います。",
+    color: "#3d4a55",
+  },
+  {
+    label: "Astro",
+    description: "コンテンツ重視のサイトを、コンポーネントを組み合わせて構築します。",
+    color: "#6b4a2e",
+  },
+  {
+    label: "React",
+    description: "コンポーネント単位で画面を組み立て、データの変化に合わせたUIを実装します。",
+    color: "#1c3f5a",
+  },
+];
+
+const outputs = [
+  {
+    label: "技術ブログ",
+    description:
+      "業務の中でぶつかった問題、解決策をブログに書いています。アクセシビリティに関する記事が多いです。",
+    color: "#1f4d3a",
+    href: "https://front-dispatch-2026.vercel.app/",
+  },
+  {
+    label: "会議室予約",
+    description:
+      "Next.js と Supabase を使用して会議室予約アプリを作成しました。過去のバックエンド学習経験と、AIの進化をきっかけに作成に至りました。",
+    color: "#243048",
+    href: "https://front-dispatch.com/",
+  },
 ];
 ---
 
@@ -45,7 +120,7 @@ const navItems = [
     <title>タカハシタカユキのポートフォリオ</title>
     <meta
       name="description"
-      content="東京都在住のフロントエンドエンジニア、タカハシタカユキのポートフォリオ。WordPressを中心としたサイト制作の経歴・強み・成果物を紹介しています。"
+      content="東京都在住のフロントエンドエンジニア、タカハシタカユキのポートフォリオ。WordPressを中心としたサイト制作の経歴・強み・アウトプットを紹介しています。"
     />
     <script is:inline>
       {
@@ -82,16 +157,16 @@ const navItems = [
       <section id="section01" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[01]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">はじめに</h2>
+			<h2 class="text-display section-inset-x mt-[4rem]">プロフィール</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
           <div class="text-body font-sans font-light">
             <p>
               はじめまして。タカハシタカユキと申します。<br />
-              東京都在住で、フロントエンドエンジニアとして働いています。<br />
-              業務歴は2年で、主にWordPressを使用したサイト制作を行っています。<br
-              />
-              アクセシビリティとモダンフロントエンドに興味があり、日々勉強中です。
+              都内のWeb制作会社で、コーダーとして勤務しています。<br />
+              1986年生まれですが、コーダーとしての業務歴は3年弱です。<br />
+              主に静的サイトの制作保守やWordPressの構築を行っています。<br />
+              Webアクセシビリティとモダンフロントエンドに興味があり、日々学習しています。
             </p>
           </div>
         </div>
@@ -99,74 +174,19 @@ const navItems = [
       <section id="section02" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[02]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">略歴</h2>
+			<h2 class="text-display section-inset-x mt-[4rem]">経歴</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <div class="text-body font-sans font-light">
-            <section>
-              <h3 class="text-body font-medium mt-8">2011年 - 2017年</h3>
-              <p>
-                大学卒業後、飲食店でフリーターをしており、個人で飲食店を開業することを目指していました。
-              </p>
-            </section>
-            <section>
-              <h3 class="text-body font-medium mt-8">2017年 - 2019</h3>
-              <p>
-                事務職として勤務する中でVBAを独学し、プログラミングへの興味を持ち始めました。
-              </p>
-            </section>
-            <section>
-              <h3 class="text-body font-medium mt-8">2019年 - 2021年</h3>
-              <p>
-                RubyとRuby on
-                Railsを学習し、受託制作会社へ入社しましたが、不眠症に陥り、早期退職しました。
-              </p>
-            </section>
-            <section>
-              <h3 class="text-body font-medium mt-8">2021年 - 2023年</h3>
-              <p>
-                療養し、社会復帰しつつ、Webの勉強を再開しました。<br />
-                バックエンドよりもフロントエンドへの興味が元々強かったため、Web制作の勉強を再開しました。
-              </p>
-            </section>
-            <section>
-              <h3 class="text-body font-medium mt-8">2023年 - 現在</h3>
-              <p>
-                東京のWeb制作会社に入社し、フロントエンドエンジニアとして働いています。<br
-                />
-                フロントエンドエンジニアとして、ユーザーに優れた体験を提供することに情熱を持っています。
-              </p>
-            </section>
-          </div>
+          <Timeline items={history} label="2011年から現在までの経歴" />
         </div>
       </section>
       <section id="section03" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[03]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">業務経歴</h2>
+			<h2 class="text-display section-inset-x mt-[4rem]">スキル</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <div class="text-body font-sans font-light">
-            <h3 class="text-body font-medium mt-8">
-              小規模〜中規模サイトの制作
-            </h3>
-            <p>
-              30ページ程度の規模のサイトを数件作成しました。
-              WordPress構築も行いました。
-            </p>
-            <h3 class="text-body font-medium mt-8">アクセシビリティ対応</h3>
-            <p>
-              jis規格に基づいて、うwcag2.0に準拠することを目指したアクセシビリティ対応を行いました。
-              外部機関のチェック結果を元に、優先度を設定し、対応を行いました。
-            </p>
-            <h3 class="text-body font-medium mt-8">API連携</h3>
-            <p>
-              IR情報のCMS管理サービスのAPIを連携し、サイトに表示させる業務
-              APIが簡略的なものしかなかった
-              各会社の決算期に基づいてデータを割り振り、セレクト要素で表示させるようにする
-              ゼロイチで作成することはほとんどなく、既存のコードを流用することが多かった
-            </p>
-          </div>
+          <TextCards items={skills} label="スキル一覧" />
         </div>
       </section>
       <section id="section04" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
@@ -177,32 +197,17 @@ const navItems = [
         <div class="section-inset-x mt-[4rem]">
           <div class="text-body font-sans font-light">
             <section>
-              <h3 class="text-body font-medium mt-8">
-                アクセシビリティへの関心
-              </h3>
+              <h3 class="text-body font-medium mt-8">知的好奇心</h3>
               <p>
-                イベントに参加し、アクセシビリティに関する知識を深めています。<br
-                />
-                Trusted Testerに合格しました。<br />
-                なぜ関心を持ったのか：本質的だと思った。どんなにカッコいい演出のサイトを作成しても、それが見えない人にとっては使いものにならない。それでは意味がない。
+                Webアクセシビリティに関心があり、関連イベントにも積極的に参加しています。見た目だけでなく、誰にとっても使えることを大切にしたいと考えているためです。<br />
+                また、毎日AIが書いた記事を1本読み、学んだ内容をナレッジベースに蓄積しています。情報をその場限りで終わらせず、あとから引き出せる形に残すことで、業務や制作にも活かせるようにしています。
               </p>
             </section>
             <section>
-              <h3 class="text-body font-medium mt-8">
-                モダンフロントエンドへの関心
-              </h3>
+              <h3 class="text-body font-medium mt-8">主体性</h3>
               <p>
-                イベントに参加し、モダンフロントエンドに関する知識を深めています。<br
-                />
-                モダンフロントエンドに関する知識を深めています。<br />
-                なぜ関心を持ったのか：モダンフロントエンドに関する知識を深めています。
-              </p>
-            </section>
-            <section>
-              <h3 class="text-body font-medium mt-8">バックエンドの学習経験</h3>
-              <p>
-                バックエンドの学習経験：Ruby,Ruby on
-                Rails,PHP,Laravel,Node.js,Express,MySQL,PostgreSQL,MongoDB
+                社内のコーダーを集め、勉強会を開催しました。各自の知見を共有し、チーム全体のスキルを底上げすることを目的としています。<br />
+                また、業務効率化のためにVBAを独学し、実務に活かした経験もあります。与えられた作業をこなすだけでなく、課題を見つけて自分から改善に取り組む姿勢を大切にしています。
               </p>
             </section>
           </div>
@@ -211,26 +216,10 @@ const navItems = [
       <section id="section05" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[05]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">成果物</h2>
+			<h2 class="text-display section-inset-x mt-[4rem]">アウトプット</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <div class="text-body font-sans font-light">
-            <h3 class="text-body font-medium mt-8">技術ブログ</h3>
-            <a href="https://front-dispatch.vercel.app/" target="_blank"
-              class="underline" >https://front-dispatch.vercel.app/</a
-            >
-            <p>
-              業務の中でぶつかった問題、解決策をブログに書いています。<br />
-              アクセシビリティに関する記事が多いです。
-            </p>
-            <h3 class="text-body font-medium mt-8">会議室予約システム</h3>
-            <a href="" class="underline">https://front-dispatch.com/</a>
-            <p>
-              next.js,supabaseを使用して会議室予約アプリを作成しました。<br />
-              過去にバックエンドを学習していたことと、AIが進化したことによって、作成に至りました。<br
-              />
-            </p>
-          </div>
+          <TextCards items={outputs} label="アウトプット一覧" maxColumns={2} />
         </div>
       </section>
     </main>
@@ -244,7 +233,7 @@ const navItems = [
         </p>
         <nav
           aria-label="フッターナビゲーション"
-          class="text-body w-[10rem] bg-white text-left font-sans font-light text-gray-900 dark:bg-gray-900 dark:text-gray-100 sm:text-right"
+          class="text-body w-fit bg-white text-left font-sans font-light text-gray-900 dark:bg-gray-900 dark:text-gray-100 sm:text-right"
         >
           <ul class="grid gap-2 lg:p-4 pt-0">
             {
