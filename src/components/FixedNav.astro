@@ -1,0 +1,283 @@
+---
+interface Props {
+  items: { href: string; label: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav id="fixed-nav" aria-label="表示設定とページ内ナビゲーション" class="fixed-nav font-sans font-normal">
+  <ul class="fixed-nav__items">
+    <li class="fixed-nav__item">
+      <button type="button" class="fixed-nav__trigger" aria-expanded="false" aria-controls="animation-options">
+        Animation:<span data-animation-label>off</span>
+      </button>
+      <ul id="animation-options" class="fixed-nav__panel" hidden>
+        <li><button type="button" data-animation="off" aria-pressed="true">off</button></li>
+        <li><button type="button" data-animation="on" aria-pressed="false">on</button></li>
+      </ul>
+    </li>
+    <li class="fixed-nav__item">
+      <button type="button" class="fixed-nav__trigger" aria-expanded="false" aria-controls="theme-options">
+        Theme:<span data-theme-label>light</span>
+      </button>
+      <ul id="theme-options" class="fixed-nav__panel" hidden>
+        <li><button type="button" data-theme="light" aria-pressed="true">light</button></li>
+        <li><button type="button" data-theme="dark" aria-pressed="false">dark</button></li>
+      </ul>
+    </li>
+    <li class="fixed-nav__item">
+      <button type="button" class="fixed-nav__trigger" aria-expanded="false" aria-controls="contents-options">
+        Contents
+      </button>
+      <ul id="contents-options" class="fixed-nav__panel" hidden>
+        {items.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<script>
+  const nav = document.querySelector<HTMLElement>("#fixed-nav");
+
+  if (nav) {
+    const root = document.documentElement;
+    const disclosures = Array.from(nav.querySelectorAll<HTMLElement>(".fixed-nav__item")).map((item) => ({
+      item,
+      trigger: item.querySelector<HTMLButtonElement>(".fixed-nav__trigger")!,
+      panel: item.querySelector<HTMLUListElement>(".fixed-nav__panel")!,
+    }));
+
+    const closeMenus = () => {
+      for (const { trigger, panel } of disclosures) {
+        trigger.setAttribute("aria-expanded", "false");
+        panel.hidden = true;
+      }
+    };
+
+    for (const { item, trigger, panel } of disclosures) {
+      trigger.addEventListener("click", () => {
+        const open = panel.hidden;
+        closeMenus();
+        // Keep focus on the disclosure on browsers that do not focus clicked buttons.
+        trigger.focus({ preventScroll: true });
+        trigger.setAttribute("aria-expanded", String(open));
+        panel.hidden = !open;
+      });
+
+      item.addEventListener("focusout", (event) => {
+        if (!(event.relatedTarget instanceof Node) || !item.contains(event.relatedTarget)) {
+          trigger.setAttribute("aria-expanded", "false");
+          panel.hidden = true;
+        }
+      });
+
+      item.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !panel.hidden) {
+          event.preventDefault();
+          trigger.focus({ preventScroll: true });
+          closeMenus();
+        }
+      });
+
+      panel.addEventListener("click", (event) => {
+        if (!(event.target instanceof Element)) return;
+        const option = event.target.closest<HTMLButtonElement | HTMLAnchorElement>("button, a");
+        if (!option) return;
+
+        if (option instanceof HTMLAnchorElement) {
+          const section = document.querySelector<HTMLElement>(option.hash);
+          if (section) {
+            section.tabIndex = -1;
+            section.focus({ preventScroll: true });
+            section.addEventListener("blur", () => section.removeAttribute("tabindex"), { once: true });
+          }
+        } else {
+          const theme = option.dataset.theme;
+          const animation = option.dataset.animation;
+          if (theme === "light" || theme === "dark") applyTheme(theme);
+          if (animation === "on" || animation === "off") applyAnimation(animation);
+          trigger.focus({ preventScroll: true });
+        }
+        closeMenus();
+      });
+    }
+
+    document.addEventListener("pointerdown", (event) => {
+      if (event.target instanceof Node && !nav.contains(event.target)) closeMenus();
+    });
+
+    const persist = (key: string, value: string) => {
+      try {
+        localStorage.setItem(key, value);
+      } catch {
+        // The controls also work when browser storage is unavailable.
+      }
+    };
+
+    const applyTheme = (theme: "light" | "dark", save = true) => {
+      root.dataset.theme = theme;
+      root.classList.toggle("dark", theme === "dark");
+      document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
+      nav.querySelector<HTMLElement>("[data-theme-label]")!.textContent = theme;
+      nav.querySelectorAll<HTMLButtonElement>("button[data-theme]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.theme === theme));
+      });
+      if (save) persist("theme", theme);
+    };
+
+    const applyAnimation = (animation: "on" | "off", save = true) => {
+      root.dataset.animation = animation;
+      nav.querySelector<HTMLElement>("[data-animation-label]")!.textContent = animation;
+      nav.querySelectorAll<HTMLButtonElement>("button[data-animation]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.animation === animation));
+      });
+      if (save) persist("animation", animation);
+    };
+
+    applyTheme(root.dataset.theme === "dark" ? "dark" : "light", false);
+    applyAnimation(root.dataset.animation === "on" ? "on" : "off", false);
+
+    const getScrollY = () => Math.max(0, Math.min(window.scrollY, root.scrollHeight - window.innerHeight));
+    let previousY = getScrollY();
+    let scrollPending = false;
+
+    const updateVisibility = () => {
+      scrollPending = false;
+      const currentY = getScrollY();
+      const delta = currentY - previousY;
+      if (currentY > 0 && Math.abs(delta) < 6) return;
+      previousY = currentY;
+
+      // Keep keyboard users' focused controls visible even when scrolling.
+      const active = document.activeElement;
+      if (active instanceof HTMLElement && nav.contains(active) && active.matches(":focus-visible")) return;
+
+      const hidden = currentY > 0 && delta > 0;
+      if (hidden) {
+        if (active instanceof HTMLElement && nav.contains(active)) active.blur();
+        closeMenus();
+      }
+      nav.classList.toggle("fixed-nav--hidden", hidden);
+    };
+
+    window.addEventListener("scroll", () => {
+      if (!scrollPending) {
+        scrollPending = true;
+        requestAnimationFrame(updateVisibility);
+      }
+    }, { passive: true });
+
+    // Hidden controls remain reachable with Tab and reveal before receiving input.
+    nav.addEventListener("focusin", () => nav.classList.remove("fixed-nav--hidden"));
+    window.addEventListener("pageshow", () => {
+      previousY = getScrollY();
+      nav.classList.remove("fixed-nav--hidden");
+    });
+  }
+</script>
+
+<style>
+  .fixed-nav {
+    position: fixed;
+    z-index: 50;
+    top: var(--header-offset);
+    right: var(--body-padding);
+    max-width: calc(100% - 2 * var(--body-padding));
+    font-size: clamp(1rem, 1.25vw, 1.25rem);
+    line-height: 1.5;
+    opacity: 1;
+    transition: opacity 200ms ease-out;
+  }
+
+  .fixed-nav--hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .fixed-nav:focus-within {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .fixed-nav__items {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .fixed-nav__item {
+    position: relative;
+    text-align: right;
+  }
+
+  .fixed-nav__trigger {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+    cursor: pointer;
+  }
+
+  .fixed-nav__panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: max-content;
+    min-width: 100%;
+    max-width: calc(100vw - 2 * var(--body-padding));
+    max-height: max(6rem, calc(100dvh - var(--header-offset) - 10rem));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid currentColor;
+    background: var(--color-white);
+  }
+
+  :global(html.dark) .fixed-nav__panel {
+    background: var(--color-gray-900);
+  }
+
+  .fixed-nav__panel :is(button, a) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    width: 100%;
+    min-height: 44px;
+    padding-block: 0.25rem;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .fixed-nav__panel button[aria-pressed="true"] {
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+  }
+
+  @media (max-width: 768px) {
+    .fixed-nav__items {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0;
+    }
+
+    .fixed-nav__panel {
+      position: static;
+      margin-block: 0.25rem 0.5rem;
+      margin-left: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fixed-nav {
+      transition: none;
+    }
+  }
+</style>

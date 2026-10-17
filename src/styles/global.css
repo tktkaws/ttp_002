@@ -16,7 +16,19 @@
 }
 
 html {
+	scroll-behavior: auto;
+}
+
+html[data-animation="on"] {
 	scroll-behavior: smooth;
+}
+
+html[data-animation="off"] *,
+html[data-animation="off"] *::before,
+html[data-animation="off"] *::after {
+	animation: none !important;
+	transition: none !important;
+	scroll-behavior: auto !important;
 }
 
 section[id] {
@@ -24,7 +36,7 @@ section[id] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-	html {
+	html[data-animation] {
 		scroll-behavior: auto;
 	}
 }
@@ -34,7 +46,6 @@ section[id] {
 	--body-padding: 1.5rem;
 	--header-offset: 3rem;
 	--layout-trace: 4rem;
-	--fixed-nav-width: 8rem;
 	--font-trace: 8rem;
 	--focus-ring-outer: #000000;
 	--focus-ring-inner: #f5e6a3;
@@ -82,94 +93,6 @@ html.dark {
 	}
 }
 
-html:not(.fixed-nav-ready) #fixed-nav {
-	display: none;
-}
-
-#fixed-nav {
-	bottom: var(--body-padding);
-	right: var(--body-padding);
-	opacity: 1;
-	translate: 0;
-	transition:
-		display 0.2s,
-		opacity 0.2s ease-out,
-		translate 0.2s ease-out;
-	transition-behavior: allow-discrete;
-}
-
-@starting-style {
-	#fixed-nav {
-		opacity: 0;
-		translate: 0 0.5rem;
-	}
-}
-
-#fixed-nav.fixed-nav-hidden {
-	display: none;
-	opacity: 0;
-	translate: 0 0.5rem;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	#fixed-nav {
-		translate: none;
-		transition-duration: 0.01ms;
-	}
-
-	@starting-style {
-		#fixed-nav {
-			translate: none;
-		}
-	}
-
-	#fixed-nav.fixed-nav-hidden {
-		translate: none;
-	}
-}
-
-#theme-toggle {
-	top: var(--header-offset);
-	right: var(--body-padding);
-}
-
-.theme-button {
-	position: relative;
-	display: grid;
-	place-items: center;
-	width: 40px;
-	height: 40px;
-	padding: 0;
-	border: none;
-	background: transparent;
-	font: inherit;
-	color: inherit;
-	cursor: pointer;
-}
-
-.theme-button__icon {
-	grid-area: 1 / 1;
-	width: 24px;
-	height: 24px;
-}
-
-.theme-button__icon--sun {
-	display: block;
-}
-
-.theme-button__icon--moon {
-	display: none;
-	translate: -10%;
-}
-
-html.dark .theme-button__icon--sun {
-	display: none;
-}
-
-html.dark .theme-button__icon--moon {
-	display: block;
-}
-
 .section-inset-x {
 	margin-inline: 0;
 }
@@ -177,11 +100,6 @@ html.dark .theme-button__icon--moon {
 @media (min-width: 1024px) {
 	.section-inset-x {
 		margin-inline: var(--layout-trace);
-		/* 右下固定メニュー（8rem）が layout-trace より広いときの差分 */
-		padding-inline-end: max(
-			0rem,
-			calc(var(--fixed-nav-width) - var(--layout-trace))
-		);
 	}
 }
 
@@ -214,6 +132,10 @@ html.dark .theme-button__icon--moon {
 a {
 	box-decoration-break: clone;
 	-webkit-box-decoration-break: clone;
+}
+
+:is(a, button) {
+	padding-inline: 0.2em;
 }
 
 /* デジタル庁スタイルのダブルリング（ライト: 黄×黒 / ダーク: 白リングのみ）— outline を主役にする */

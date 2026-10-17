@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import FixedNav from "../components/FixedNav.astro";
 
 const navItems = [
   { href: "#section01", label: "はじめに" },
@@ -10,7 +11,7 @@ const navItems = [
 ];
 ---
 
-<html lang="ja" data-theme="light">
+<html lang="ja" data-theme="light" data-animation="off">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -48,67 +49,27 @@ const navItems = [
     />
     <script is:inline>
       {
-        const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        const theme =
-          stored === "light" || stored === "dark"
-            ? stored
-            : prefersDark
-              ? "dark"
-              : "light";
+        let theme = "light";
+        let animation = "off";
+        try {
+          theme = localStorage.getItem("theme") === "dark" ? "dark" : "light";
+          animation = localStorage.getItem("animation") === "on" ? "on" : "off";
+        } catch {
+          // Use the defaults when browser storage is unavailable.
+        }
         document.documentElement.classList.toggle("dark", theme === "dark");
         document
           .querySelector('meta[name="color-scheme"]')
           ?.setAttribute("content", theme);
         document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.animation = animation;
       }
     </script>
   </head>
   <body
     class="relative font-sans px-6 pt-12 pb-6 sm:p-12 md:p-16 2xl:p-32 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
   >
-    <div
-      id="theme-toggle"
-      class="absolute md:fixed z-50 flex w-[10rem] justify-end p-4 pt-0 font-sans font-light text-body text-gray-900 dark:text-gray-100"
-    >
-      <button
-        id="theme-button"
-        type="button"
-        aria-label="ダークモードに変更"
-        class="theme-button"
-      >
-        <svg
-          class="theme-button__icon theme-button__icon--sun"
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-        >
-          <circle cx="12" cy="12" r="3.5"></circle>
-          <path
-            stroke-linecap="round"
-            d="M12 2.5v2M12 19.5v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2.5 12h2M19.5 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
-          ></path>
-        </svg>
-        <svg
-          class="theme-button__icon theme-button__icon--moon"
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M21 14.5A8.5 8.5 0 0 1 9.5 3 7 7 0 1 0 21 14.5Z"
-          ></path>
-        </svg>
-      </button>
-    </div>
+    <FixedNav items={navItems} />
     <h1
       class="text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
     >
@@ -117,33 +78,6 @@ const navItems = [
         のポート<br />
         フォリオ
     </h1>
-    <nav
-      id="fixed-nav"
-      aria-label="ページ内ナビゲーション"
-      class="fixed z-50 flex w-[8rem] flex-col-reverse items-stretch gap-4 font-sans font-light text-gray-900 dark:text-gray-100"
-    >
-      <button
-        id="menu-button"
-        type="button"
-        aria-controls="fixed-nav-list"
-        aria-expanded="false"
-        class="text-body w-full border border-gray-900 bg-white p-4 text-center shadow-md dark:border-gray-100 dark:bg-gray-900 lg:hidden"
-      >
-        目次
-      </button>
-      <ul
-        id="fixed-nav-list"
-        class="text-body grid w-full gap-2 border border-gray-900 bg-white p-4 text-right shadow-md max-lg:hidden dark:border-gray-100 dark:bg-gray-900 lg:border-0 lg:bg-transparent lg:shadow-none dark:lg:bg-transparent"
-      >
-        {
-          navItems.map((item) => (
-            <li>
-              <a href={item.href}>{item.label}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
     <main>
       <section id="section01" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
@@ -346,150 +280,5 @@ const navItems = [
       </div>
     </footer>
 
-    <script>
-      const fixedNav = document.querySelector("#fixed-nav");
-      const menuButton = document.querySelector("#menu-button");
-      const fixedNavList = document.querySelector("#fixed-nav-list");
-      const footer = document.querySelector("#site-footer");
-      const themeButton = document.querySelector("#theme-button");
-      const colorSchemeMeta = document.querySelector(
-        'meta[name="color-scheme"]'
-      );
-
-      type Theme = "light" | "dark";
-
-      const getStoredTheme = (): Theme => {
-        const stored = localStorage.getItem("theme");
-
-        if (stored === "light" || stored === "dark") {
-          return stored;
-        }
-
-        return window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light";
-      };
-
-      const syncThemeUi = (theme: Theme) => {
-        if (!(themeButton instanceof HTMLElement)) return;
-
-        themeButton.setAttribute(
-          "aria-label",
-          theme === "dark" ? "ライトモードに変更" : "ダークモードに変更"
-        );
-      };
-
-      const applyTheme = (theme: Theme, persist = true) => {
-        document.documentElement.classList.toggle("dark", theme === "dark");
-        document.documentElement.dataset.theme = theme;
-        colorSchemeMeta?.setAttribute("content", theme);
-
-        if (persist) {
-          localStorage.setItem("theme", theme);
-        }
-
-        syncThemeUi(theme);
-      };
-
-      if (themeButton instanceof HTMLElement) {
-        applyTheme(getStoredTheme(), false);
-
-        themeButton.addEventListener("click", () => {
-          const nextTheme: Theme =
-            document.documentElement.dataset.theme === "dark"
-              ? "light"
-              : "dark";
-          applyTheme(nextTheme);
-        });
-      }
-
-      if (fixedNav && menuButton && fixedNavList) {
-        const setMenuOpen = (isOpen: boolean) => {
-          fixedNavList.classList.toggle("max-lg:hidden", !isOpen);
-          menuButton.setAttribute("aria-expanded", String(isOpen));
-          menuButton.textContent = isOpen ? "閉じる" : "目次";
-        };
-
-        menuButton.addEventListener("click", () => {
-          setMenuOpen(menuButton.getAttribute("aria-expanded") !== "true");
-        });
-
-        fixedNavList.addEventListener("click", (event) => {
-          const target = event.target;
-
-          if (target instanceof HTMLAnchorElement) {
-            setMenuOpen(false);
-          }
-        });
-
-        document.addEventListener("click", (event) => {
-          const target = event.target;
-
-          if (
-            target instanceof Node &&
-            !fixedNav.contains(target) &&
-            menuButton.getAttribute("aria-expanded") === "true"
-          ) {
-            setMenuOpen(false);
-          }
-        });
-
-        document.addEventListener("keydown", (event) => {
-          if (
-            event.key === "Escape" &&
-            menuButton.getAttribute("aria-expanded") === "true"
-          ) {
-            setMenuOpen(false);
-          }
-        });
-
-        fixedNav.addEventListener("focusout", (event) => {
-          const next = event.relatedTarget;
-
-          if (
-            menuButton.getAttribute("aria-expanded") === "true" &&
-            (!(next instanceof Node) || !fixedNav.contains(next))
-          ) {
-            setMenuOpen(false);
-          }
-        });
-      }
-
-      if (fixedNav && footer) {
-        const setFixedNavVisibility = (isFooterVisible: boolean) => {
-          fixedNav.classList.toggle("fixed-nav-hidden", isFooterVisible);
-          fixedNav.setAttribute("aria-hidden", String(isFooterVisible));
-        };
-
-        const isFooterInView = () => {
-          const rect = footer.getBoundingClientRect();
-          return rect.top < window.innerHeight && rect.bottom > 0;
-        };
-
-        const revealFixedNav = () => {
-          setFixedNavVisibility(isFooterInView());
-          document.documentElement.classList.add("fixed-nav-ready");
-        };
-
-        const observer = new IntersectionObserver(([entry]) => {
-          setFixedNavVisibility(entry.isIntersecting);
-        });
-        observer.observe(footer);
-
-        if (document.readyState === "complete") {
-          revealFixedNav();
-        } else {
-          window.addEventListener("load", revealFixedNav, { once: true });
-        }
-
-        window.addEventListener("pageshow", () => {
-          if (document.documentElement.classList.contains("fixed-nav-ready")) {
-            setFixedNavVisibility(isFooterInView());
-          }
-        });
-      } else {
-        document.documentElement.classList.add("fixed-nav-ready");
-      }
-    </script>
   </body>
 </html>
