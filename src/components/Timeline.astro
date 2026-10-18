@@ -16,14 +16,27 @@ interface Props {
 	settingsKey?: string;
 }
 
+const LIGHT_CARD_COLORS = new Set([
+	"#d8ddd4",
+	"#f9d34a",
+	"#58cdba",
+	"#b2a5f0",
+	"#63dcb9",
+	"#ee8d8a",
+	"#f0eee9",
+	"#c2c9cb",
+]);
+
 const {
-	items, label = "タイムライン", color = "#243048", soft = false,
+	items, label = "タイムライン", color = "#4F5A6B", soft = false,
 	showControls = false, dropDistance = 0.25, dropInterval = 320, settingsKey,
 } = Astro.props;
+
+const textColor = LIGHT_CARD_COLORS.has(color.toLowerCase()) ? "#000" : "#fff";
 ---
 
 <falling-timeline
-	style={`--timeline-card-color: ${color}`}
+	style={`--timeline-card-color: ${color}; --timeline-card-text: ${textColor}`}
 	data-color={color} data-soft={String(soft)} data-controls={String(showControls)}
 	data-distance={dropDistance} data-interval={dropInterval} data-settings-key={settingsKey}
 >
@@ -47,7 +60,7 @@ const {
 </falling-timeline>
 
 <style>
-	falling-timeline { display: block; max-width: 960px; margin-inline: auto; }
+	falling-timeline { display: block; max-width: 960px; margin-left: 0; }
 	falling-timeline, falling-timeline * { box-sizing: border-box; }
 	.controls { width: min(280px, 100%); margin: 0 24px 16px auto; }
 	.controls[hidden], .timeline[hidden] { display: none; }
@@ -58,7 +71,7 @@ const {
 	.node { grid-column: 2; grid-row: 1; justify-self: center; position: relative; width: 12px; height: 12px; border: 3px solid #c9cecb; border-radius: 50%; background: #fff; }
 	.node::before { content: ""; position: absolute; top: 2px; right: 9px; width: calc(var(--axis-gap) / 2 - 6px); height: 1px; background: #c9cecb; }
 	.item:nth-child(even) .node::before { right: auto; left: 9px; }
-	.card { position: relative; grid-column: 1; grid-row: 1; min-width: 0; padding: 24px 28px; color: #fff; background: var(--timeline-card-color); border-radius: 8px; transform-origin: center; }
+	.card { position: relative; grid-column: 1; grid-row: 1; min-width: 0; padding: 24px 28px; color: var(--timeline-card-text, #fff); background: var(--timeline-card-color); border-radius: 8px; transform-origin: center; }
 	.item:nth-child(even) .card { grid-column: 3; }
 	h3 { margin: 0; font-size: clamp(1.125rem, 2vw, 1.5rem); line-height: 1.5; font-weight: 500; font-variant-numeric: tabular-nums; }
 	p { margin: 16px 0 0; font-size: clamp(1rem, 1.2vw, 1.125rem); line-height: 1.8; overflow-wrap: anywhere; white-space: pre-line; font-weight: 300; }

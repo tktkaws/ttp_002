@@ -1,0 +1,155 @@
+---
+export interface TimelineItem {
+	year: string;
+	description: string;
+}
+
+interface Props {
+	items: TimelineItem[];
+	label?: string;
+	color?: string;
+	/** Duration of each fade-in animation in milliseconds. */
+	fadeDuration?: number;
+}
+
+const LIGHT_CARD_COLORS = new Set([
+	"#d8ddd4",
+	"#f9d34a",
+	"#58cdba",
+	"#b2a5f0",
+	"#63dcb9",
+	"#ee8d8a",
+	"#f0eee9",
+	"#c2c9cb",
+]);
+
+const {
+	items,
+	label = "タイムライン",
+	color = "#4F5A6B",
+	fadeDuration = 500,
+} = Astro.props;
+
+const textColor = LIGHT_CARD_COLORS.has(color.toLowerCase()) ? "#000" : "#fff";
+const safeDuration = Math.max(0, fadeDuration);
+---
+
+<fade-in-timeline
+	style={`--timeline-card-color: ${color}; --timeline-card-text: ${textColor}; --fade-duration: ${safeDuration}ms`}
+>
+	<section class="timeline" data-stage aria-label={label} hidden={items.length === 0}>
+		<div class="line" aria-hidden="true"></div>
+		<ol class="list">
+			{items.map(({ year, description }) => (
+				<li class="item" data-fade-item>
+					<span class="node" aria-hidden="true"></span>
+					<article class="card">
+						<h3>{year}</h3>
+						<p>{description}</p>
+					</article>
+				</li>
+			))}
+		</ol>
+		<span class="end" aria-hidden="true"></span>
+	</section>
+</fade-in-timeline>
+
+<style>
+	fade-in-timeline { display: block; max-width: 960px; margin-left: 0; }
+	fade-in-timeline, fade-in-timeline * { box-sizing: border-box; }
+	.timeline[hidden] { display: none; }
+	.timeline { --axis-gap: 80px; position: relative; padding: 110px 24px 64px; }
+	.line { position: absolute; top: 0; bottom: 0; left: calc(50% - 1px); width: 2px; background: #c9cecb; }
+	.list { margin: 0; padding: 0; list-style: none; display: grid; gap: 28px; }
+	.item { --reveal-x: 16px; display: grid; grid-template-columns: minmax(0, 1fr) var(--axis-gap) minmax(0, 1fr); align-items: center; }
+	.item:nth-child(even) { --reveal-x: -16px; }
+	.node { grid-column: 2; grid-row: 1; justify-self: center; position: relative; width: 12px; height: 12px; border: 3px solid #c9cecb; border-radius: 50%; background: #fff; }
+	.node::before { content: ""; position: absolute; top: 2px; right: 9px; width: calc(var(--axis-gap) / 2 - 6px); height: 1px; background: #c9cecb; }
+	.item:nth-child(even) .node::before { right: auto; left: 9px; }
+	.card { position: relative; grid-column: 1; grid-row: 1; min-width: 0; padding: 24px 28px; color: var(--timeline-card-text, #fff); background: var(--timeline-card-color); border-radius: 8px; }
+	.item:nth-child(even) .card { grid-column: 3; }
+	h3 { margin: 0; font-size: clamp(1.125rem, 2vw, 1.5rem); line-height: 1.5; font-weight: 500; font-variant-numeric: tabular-nums; }
+	p { margin: 16px 0 0; font-size: clamp(1rem, 1.2vw, 1.125rem); line-height: 1.8; overflow-wrap: anywhere; white-space: pre-line; font-weight: 300; }
+	.end { position: absolute; bottom: 2px; left: calc(50% - 5px); width: 10px; height: 10px; border-right: 2px solid #c9cecb; border-bottom: 2px solid #c9cecb; transform: rotate(45deg); }
+
+	fade-in-timeline[data-animated="true"] .item .card {
+		opacity: 0;
+		transform: translateX(var(--reveal-x));
+		transition-property: opacity, transform;
+		transition-duration: var(--fade-duration);
+		transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+	}
+	fade-in-timeline[data-animated="true"] .item[data-visible="true"] .card {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	@media (max-width: 639px) {
+		.timeline { padding: 80px 0 40px; }
+		.line { left: 5px; }
+		.item, .item:nth-child(even) { --reveal-x: -16px; }
+		.item { grid-template-columns: 12px minmax(0, 1fr); column-gap: 20px; }
+		.node { grid-column: 1; }
+		.node::before, .item:nth-child(even) .node::before { right: auto; left: 9px; width: 20px; }
+		.card, .item:nth-child(even) .card { grid-column: 2; }
+		.card { padding: 20px; }
+		.end { left: 1px; }
+	}
+	@media (max-width: 600px) {
+		.card { padding: 20px 16px; }
+		p { margin-top: 12px; line-height: 1.65; }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		fade-in-timeline[data-animated="true"] .item .card {
+			opacity: 1;
+			transform: none;
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	function mount(root: HTMLElement) {
+		const items = [...root.querySelectorAll<HTMLElement>("[data-fade-item]")];
+		if (!items.length) return () => {};
+
+		const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+		let observer: IntersectionObserver | undefined;
+
+		const setup = () => {
+			observer?.disconnect();
+			const animationEnabled = document.documentElement.dataset.animation !== "off" && !reducedMotion.matches;
+			root.dataset.animated = String(animationEnabled);
+			for (const item of items) item.dataset.visible = String(!animationEnabled);
+			if (!animationEnabled) return;
+
+			observer = new IntersectionObserver((entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					(entry.target as HTMLElement).dataset.visible = "true";
+					observer?.unobserve(entry.target);
+				}
+			}, { threshold: 0, rootMargin: "0px 0px -20% 0px" });
+			for (const item of items) observer.observe(item);
+		};
+
+		const animationPreference = new MutationObserver(setup);
+		animationPreference.observe(document.documentElement, { attributes: true, attributeFilter: ["data-animation"] });
+		reducedMotion.addEventListener("change", setup);
+		setup();
+
+		return () => {
+			observer?.disconnect();
+			animationPreference.disconnect();
+			reducedMotion.removeEventListener("change", setup);
+		};
+	}
+
+	class FadeInTimeline extends HTMLElement {
+		private dispose?: () => void;
+		connectedCallback() { if (!this.dispose) this.dispose = mount(this); }
+		disconnectedCallback() { this.dispose?.(); this.dispose = undefined; }
+	}
+
+	if (!customElements.get("fade-in-timeline")) customElements.define("fade-in-timeline", FadeInTimeline);
+</script>
