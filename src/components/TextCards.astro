@@ -3,7 +3,28 @@ export interface TextCardItem {
 	label: string;
 	description: string;
 	color?: string;
+	/** Label text on the card face. Defaults to black on light fills, white otherwise. */
+	textColor?: string;
+	/** Optional image shown on the card face instead of the text label. */
+	image?: string;
 	href?: string;
+}
+
+const LIGHT_CARD_COLORS = new Set([
+	"#d8ddd4",
+	"#f9d34a",
+	"#58cdba",
+	"#b2a5f0",
+	"#63dcb9",
+	"#ee8d8a",
+	"#f0eee9",
+	"#c2c9cb",
+]);
+
+function cardTextColor(item: TextCardItem, fallbackColor: string) {
+	if (item.textColor) return item.textColor;
+	const fill = (item.color ?? fallbackColor).toLowerCase();
+	return LIGHT_CARD_COLORS.has(fill) ? "#000" : "#fff";
 }
 
 interface Props {
@@ -35,16 +56,22 @@ const {
 	<div class="controls" data-controls-container hidden={!showControls}></div>
 	<section class="grid" data-stage aria-label={label} hidden={items.length === 0}>
 		{items.map((item) => (
-			<article class="entry" style={`--item-color: ${item.color ?? color}`}>
-				<div class="object" data-card>
-					<h2>{item.label}</h2>
+			<article
+				class="entry"
+				style={`--item-color: ${item.color ?? color}; --item-text: ${cardTextColor(item, color)}`}
+			>
+				<div class:list={["object", item.image && "object--image"]} data-card>
+					{item.image ? (
+						<img src={item.image} alt="" width="1920" height="992" decoding="async" />
+					) : null}
+					<h2 class:list={[item.image && "visually-hidden"]}>{item.label}</h2>
 				</div>
-				<p class="description">{item.description}</p>
 				{item.href && (
 					<p class="link">
 						<a href={item.href} target="_blank" rel="noreferrer">{item.href}</a>
 					</p>
 				)}
+				<p class="description">{item.description}</p>
 			</article>
 		))}
 		<svg class="skin" data-skin aria-hidden="true" focusable="false"></svg>
@@ -54,8 +81,8 @@ const {
 <style>
 	falling-text-cards {
 		display: block;
-		max-width: 1080px;
-		margin: 0 auto;
+		max-width: 1600px;
+		margin-left: 0;
 		color: inherit;
 		font-family: var(--font-sans);
 		font-weight: 300;
@@ -74,9 +101,33 @@ const {
 		padding: min(1rem, 8cqmin);
 		overflow: hidden;
 		border-radius: 5px;
-		color: #fff;
+		color: var(--item-text, #fff);
 		background: var(--item-color);
 		transform-origin: center;
+	}
+	.object--image {
+		padding: 0;
+	}
+	.object--image img {
+		position: absolute;
+		inset: 4%;
+		width: 92%;
+		height: 92%;
+		max-width: none;
+		object-fit: cover;
+		object-position: top center;
+		pointer-events: none;
+	}
+	.visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
 	}
 	h2 {
 		margin: 0;
@@ -89,6 +140,10 @@ const {
 		text-align: center;
 		overflow-wrap: anywhere;
 	}
+	.object--image h2:not(.visually-hidden) {
+		position: relative;
+		z-index: 1;
+	}
 	.description,
 	.link {
 		margin: 14px 0 0;
@@ -100,8 +155,8 @@ const {
 		overflow-wrap: anywhere;
 		text-wrap: pretty;
 	}
-	.link { margin-top: 0.5em; }
-	.link a { text-decoration: underline; }
+	.link a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; }
+	.link a:hover { text-decoration-thickness: 2px; }
 	.skin { display: none; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 	falling-text-cards[data-active="true"] .object { will-change: transform, opacity; }
 	falling-text-cards[data-active="true"][data-mode="soft"] .object { background: transparent; }
@@ -118,7 +173,7 @@ const {
 		.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 		.object { aspect-ratio: 43 / 20; }
 	}
-	@media (min-width: 1280px) {
+	@media (min-width: 1536px) {
 		.grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 	}
 	falling-text-cards[data-max-columns="2"] .grid {
@@ -130,17 +185,17 @@ const {
 		}
 	}
 	@media (prefers-reduced-motion: no-preference) {
-		.grid { padding-top: calc(var(--drop-distance) * 100% * 14 / 35); }
+		.grid { padding-top: calc(var(--drop-distance) * 100% * 7 / 35); }
 	}
-	@media (min-width: 640px) and (max-width: 1279.98px) and (prefers-reduced-motion: no-preference) {
-		.grid { padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * 20 / 43); }
+	@media (min-width: 640px) and (max-width: 1535.98px) and (prefers-reduced-motion: no-preference) {
+		.grid { padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * 10 / 43); }
 	}
-	@media (min-width: 1280px) and (prefers-reduced-motion: no-preference) {
-		.grid { padding-top: calc(var(--drop-distance) * (100% - 56px) / 3 * 20 / 43); }
+	@media (min-width: 1536px) and (prefers-reduced-motion: no-preference) {
+		.grid { padding-top: calc(var(--drop-distance) * (100% - 56px) / 3 * 10 / 43); }
 	}
 	@media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
 		falling-text-cards[data-max-columns="2"] .grid {
-			padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * 20 / 43);
+			padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * 10 / 43);
 		}
 	}
 </style>
@@ -174,7 +229,7 @@ const {
 		let engine: ReturnType<typeof Engine.create> | undefined;
 		let items: ReturnType<typeof makeItem>[] = [];
 		let frame = 0, resizeFrame = 0, last = 0, elapsed = 0, accumulator = 0;
-		let visible = true, settled = false, active = false, disposed = false;
+		let visible = false, settled = false, active = false, disposed = false;
 		let measuredWidth = 0, measuredHeight = 0;
 
 		function saveSettings() {
@@ -375,7 +430,7 @@ const {
 		document.addEventListener("visibilitychange", () => document.hidden ? pause() : resume(), { signal: abort.signal });
 		window.addEventListener("pagehide", pause, { signal: abort.signal });
 		window.addEventListener("pageshow", resume, { signal: abort.signal });
-		const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) resume(); else pause(); });
+		const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) resume(); else pause(); }, { rootMargin: "0px 0px -20% 0px" });
 		observer.observe(stage);
 		const resize = new ResizeObserver(() => {
 			const bounds = stage.getBoundingClientRect();
