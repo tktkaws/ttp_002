@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
 import FixedNav from "../components/FixedNav.astro";
-import Timeline from "../components/Timeline.astro";
+import FadeInTimeline from "../components/FadeInTimeline.astro";
 import TextCards from "../components/TextCards.astro";
 
 const navItems = [
@@ -15,56 +15,58 @@ const navItems = [
 const history = [
   {
     year: "2011年 - 2017年",
-    description: "大学卒業後、飲食店でフリーターをしており、個人で飲食店を開業することを目指していました。",
+    description: "大学卒業後、飲食店でフリーターをしていました。飲食店の開業を目指していましたが、一生の仕事にする未来が見えず別の道を模索しました。",
   },
   {
     year: "2017年 - 2019年",
-    description: "事務職として勤務する中でVBAを独学し、プログラミングへの興味を持ち始めました。",
+    description: "Amazonの倉庫を運営する会社に入社し、作業者（2000人/1日）の出退勤情報・工程配置情報の管理をExcelで行っていました   。VBAを独学し、1日1時間かかる作業を10分に短縮させました。",
   },
   {
     year: "2019年 - 2021年",
-    description: "RubyとRuby on Railsを学習し、受託制作会社へ入社しましたが、不眠症に陥り、早期退職しました。",
+    description: "Web系の受託制作会社に入社しましたが、不眠症に陥り早期退職しました。転職に際し、Ruby on RailsでWebアプリを制作しました。",
   },
   {
     year: "2021年 - 2023年",
-    description: "療養し、社会復帰しつつ、Webの勉強を再開しました。\nバックエンドよりもフロントエンドへの興味が元々強かったため、Web制作の勉強を再開しました。",
+    description: "社会復帰し、派遣事務職としてカード会社の事務処理を担当していました。元々フロントエンドへの興味が強かったため、Web制作の学習を始めました。",
   },
   {
     year: "2023年 - 現在",
-    description: "東京のWeb制作会社に入社し、フロントエンドエンジニアとして働いています。\nフロントエンドエンジニアとして、ユーザーに優れた体験を提供することに情熱を持っています。",
+    description: "東京のWeb制作会社に入社し、コーダーとして勤務しています。",
   },
 ];
+
+const cardColor = "#4F5A6B";
 
 const skills = [
   {
     label: "HTML",
-    description: "セマンティックなマークアップとアクセシビリティを意識した構造設計を行います。",
-    color: "#1f4d3a",
+    description: "セマンティックなマークアップを意識し、Web標準に準拠したUIを実装します。制作過程では、Nu Html Checkerやmarkuplintによる検証を適宜行い、品質を担保します。",
+    color: "#304C5A",
   },
   {
     label: "CSS",
-    description: "レイアウト・タイポグラフィ・レスポンシブ対応など、見た目と使いやすさを整えます。",
-    color: "#243048",
+    description: "業務ではMindBEMdingを意識し、既存プロジェクトのルールに沿ったCSS設計・実装を行っています。個人開発ではTailwind CSSをよく使用しており、ユーティリティファーストな開発にも対応できます。",
+    color: "#59695C",
   },
   {
     label: "JavaScript",
-    description: "インタラクションやUIの挙動を実装し、ページに動きと操作性を加えます。",
-    color: "#8c3d2f",
+    description: "業務では、アニメーションなどの演出を実装するためのVanilla JavaScriptの記述や、既存ライブラリの導入・調整を主に行っています。個人開発では、TypeScript、React、Next.js、Astroを学びながら実装に取り組んでいます。",
+    color: "#896D62",
   },
   {
     label: "WordPress",
-    description: "テーマ構築やコンテンツ管理を中心に、小〜中規模サイトの制作を行います。",
-    color: "#3d4a55",
+    description: "業務では、クラシックエディタとAdvanced Custom Fieldsを用いたテーマ開発を多く経験しています。また、セキュリティに配慮した実装を心がけています。",
+    color: "#43695B",
   },
   {
-    label: "Astro",
-    description: "コンテンツ重視のサイトを、コンポーネントを組み合わせて構築します。",
-    color: "#6b4a2e",
+    label: "Accessibility",
+    description: "JIS X 8341-3:2016への適合を目指す既存サイトの改修を担当しました。日々の案件でも、可能な限りWCAG 2.2に沿った実装を心がけています。また、DHS Trusted Tester認定を取得し、WCAG 2.0に基づいたWebアクセシビリティ試験を実施できます。",
+    color: "#827049",
   },
   {
-    label: "React",
-    description: "コンポーネント単位で画面を組み立て、データの変化に合わせたUIを実装します。",
-    color: "#1c3f5a",
+    label: "Git",
+    description: "基本的なGit操作に加え、GitHub Flowによるブランチ運用を理解しています。変更内容が追いやすいコミットを意識し、ブランチの作成からプルリクエスト、レビュー、マージまで、チーム開発の流れに沿って作業できます。",
+    color: "#543A3B",
   },
 ];
 
@@ -72,16 +74,18 @@ const outputs = [
   {
     label: "技術ブログ",
     description:
-      "業務の中でぶつかった問題、解決策をブログに書いています。アクセシビリティに関する記事が多いです。",
-    color: "#1f4d3a",
+      "microCMS、Astroを使用しブログを作成しました。Swupによる擬似的な非同期遷移も実装しました。",
+    color: cardColor,
+    image: "/front-dispatch-2026.vercel.app_.png",
     href: "https://front-dispatch-2026.vercel.app/",
   },
   {
-    label: "会議室予約",
+    label: "会議室予約システム",
     description:
-      "Next.js と Supabase を使用して会議室予約アプリを作成しました。過去のバックエンド学習経験と、AIの進化をきっかけに作成に至りました。",
-    color: "#243048",
-    href: "https://front-dispatch.com/",
+      "Next.jsとSupabaseを使用して会議室予約アプリを作成しました。",
+    color: cardColor,
+    image: "/reservation-01.vercel.app_.png",
+    href: "https://reservation-01.vercel.app/",
   },
 ];
 ---
@@ -164,8 +168,8 @@ const outputs = [
             <p>
               はじめまして。タカハシタカユキと申します。<br />
               都内のWeb制作会社で、コーダーとして勤務しています。<br />
-              1986年生まれですが、コーダーとしての業務歴は3年弱です。<br />
-              主に静的サイトの制作保守やWordPressの構築を行っています。<br />
+              1986年生まれですが、業務歴は3年弱です。<br />
+              主に静的サイトの制作保守やWordPressの構築を担当しています。<br />
               Webアクセシビリティとモダンフロントエンドに興味があり、日々学習しています。
             </p>
           </div>
@@ -177,7 +181,7 @@ const outputs = [
 			<h2 class="text-display section-inset-x mt-[4rem]">経歴</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <Timeline items={history} label="2011年から現在までの経歴" />
+          <FadeInTimeline items={history} label="2011年から現在までの経歴" color={cardColor} />
         </div>
       </section>
       <section id="section03" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
@@ -195,17 +199,18 @@ const outputs = [
 			<h2 class="text-display section-inset-x mt-[4rem]">強み</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <div class="text-body font-sans font-light">
+          <div class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-12 xl:gap-y-0">
             <section>
-              <h3 class="text-body font-medium mt-8">知的好奇心</h3>
-              <p>
-                Webアクセシビリティに関心があり、関連イベントにも積極的に参加しています。見た目だけでなく、誰にとっても使えることを大切にしたいと考えているためです。<br />
-                また、毎日AIが書いた記事を1本読み、学んだ内容をナレッジベースに蓄積しています。情報をその場限りで終わらせず、あとから引き出せる形に残すことで、業務や制作にも活かせるようにしています。
+              <h3 class="text-body font-medium">知的好奇心</h3>
+              <p class="mt-4">
+                有料無料問わずWebアクセシビリティ関連イベントに積極的に参加しています。<br />
+                毎日AIが記事を書いてもらい、学んだ内容をナレッジベースに蓄積しています。理解度の確認のため、学んだ内容を自分の言葉でアウトプットすることを心がけています。<br />
+                また、気になったUIをAIで再現しコードを解析することで、実装の理解を深める活動も行っています。
               </p>
             </section>
             <section>
-              <h3 class="text-body font-medium mt-8">主体性</h3>
-              <p>
+              <h3 class="text-body font-medium">主体性</h3>
+              <p class="mt-4">
                 社内のコーダーを集め、勉強会を開催しました。各自の知見を共有し、チーム全体のスキルを底上げすることを目的としています。<br />
                 また、業務効率化のためにVBAを独学し、実務に活かした経験もあります。与えられた作業をこなすだけでなく、課題を見つけて自分から改善に取り組む姿勢を大切にしています。
               </p>
@@ -249,7 +254,7 @@ const outputs = [
       <div
         class="mt-16 flex items-center justify-end gap-3 text-right font-sans font-light"
       >
-        <p class="text-caption">This site was developed by</p>
+        <p class="text-caption">Developed by</p>
         <a
           href="https://github.com/tktkaws"
           target="_blank"
