@@ -1,38 +1,14 @@
 ---
 import "../styles/global.css";
 import FixedNav from "../components/FixedNav.astro";
-import FadeInTimeline from "../components/FadeInTimeline.astro";
 import TextCards from "../components/TextCards.astro";
 
 const navItems = [
   { href: "#section01", label: "プロフィール" },
-  { href: "#section02", label: "経歴" },
+  { href: "#section02", label: "職務経歴" },
   { href: "#section03", label: "スキル" },
   { href: "#section04", label: "強み" },
   { href: "#section05", label: "アウトプット" },
-];
-
-const history = [
-  {
-    year: "2011年 - 2017年",
-    description: "大学卒業後、飲食店でフリーターをしていました。飲食店の開業を目指していましたが、一生の仕事にする未来が見えず別の道を模索しました。",
-  },
-  {
-    year: "2017年 - 2019年",
-    description: "Amazonの倉庫を運営する会社に入社し、作業者（2000人/1日）の出退勤情報・工程配置情報の管理をExcelで行っていました   。VBAを独学し、1日1時間かかる作業を10分に短縮させました。",
-  },
-  {
-    year: "2019年 - 2021年",
-    description: "Web系の受託制作会社に入社しましたが、不眠症に陥り早期退職しました。転職に際し、Ruby on RailsでWebアプリを制作しました。",
-  },
-  {
-    year: "2021年 - 2023年",
-    description: "社会復帰し、派遣事務職としてカード会社の事務処理を担当していました。元々フロントエンドへの興味が強かったため、Web制作の学習を始めました。",
-  },
-  {
-    year: "2023年 - 現在",
-    description: "東京のWeb制作会社に入社し、コーダーとして勤務しています。",
-  },
 ];
 
 const cardColor = "#4F5A6B";
@@ -87,6 +63,16 @@ const outputs = [
     image: "/reservation-01.vercel.app_.png",
     href: "https://reservation-01.vercel.app/",
   },
+  {
+    label: "SCROLL WARS",
+    description:
+      "three.jsとLenisを使用し、スター・ウォーズのオープニングとエンディングをWebサイト上で再現しました。",
+    color: cardColor,
+    image:
+      "https://raw.githubusercontent.com/tktkaws/scroll_wars/main/public/screenshot.png",
+    imageLayout: "inset" as const,
+    href: "https://scroll-wars.vercel.app/",
+  },
 ];
 ---
 
@@ -124,7 +110,7 @@ const outputs = [
     <title>タカハシタカユキのポートフォリオ</title>
     <meta
       name="description"
-      content="東京都在住のフロントエンドエンジニア、タカハシタカユキのポートフォリオ。WordPressを中心としたサイト制作の経歴・強み・アウトプットを紹介しています。"
+      content="東京都在住のフロントエンドエンジニア、タカハシタカユキのポートフォリオ。WordPressを中心としたサイト制作の職務経歴・強み・アウトプットを紹介しています。"
     />
     <script is:inline>
       {
@@ -136,6 +122,7 @@ const outputs = [
         } catch {
           // Use the defaults when browser storage is unavailable.
         }
+        document.documentElement.classList.add("js");
         document.documentElement.classList.toggle("dark", theme === "dark");
         document
           .querySelector('meta[name="color-scheme"]')
@@ -150,18 +137,20 @@ const outputs = [
   >
     <FixedNav items={navItems} />
     <h1
-      class="text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
+      class="logo-random-reveal text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
+      data-logo-random-reveal
+      aria-label="タカハシ タカユキ のポートフォリオ"
     >
-	タカハシ<br />
-        タカユキ<br />
-        のポート<br />
-        フォリオ
+	<span aria-hidden="true"><span data-logo-char>タ</span><span data-logo-char>カ</span><span data-logo-char>ハ</span><span data-logo-char>シ</span><br />
+        <span data-logo-char>タ</span><span data-logo-char>カ</span><span data-logo-char>ユ</span><span data-logo-char>キ</span><br />
+        <span data-logo-char>の</span><span data-logo-char>ポ</span><span data-logo-char>ー</span><span data-logo-char>ト</span><br />
+        <span data-logo-char>フ</span><span data-logo-char>ォ</span><span data-logo-char>リ</span><span data-logo-char>オ</span></span>
     </h1>
     <main>
       <section id="section01" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[01]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">プロフィール</h2>
+			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>プロフィール</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
           <div class="text-body font-sans font-light">
@@ -178,25 +167,44 @@ const outputs = [
       <section id="section02" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[02]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">経歴</h2>
+			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>職務経歴</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <FadeInTimeline items={history} label="2011年から現在までの経歴" color={cardColor} />
+          <div class="text-body font-sans font-light grid max-w-[1600px] gap-12">
+            <section>
+              <h3 class="text-body font-medium">JIS X 8341-3:2016適合を目指したサイト改修</h3>
+              <p class="mt-4">
+                担当：Webアクセシビリティ試験の結果をもとにした改修<br />
+                他社が実施したWebアクセシビリティ試験の結果をもとに、既存サイトの改修を担当しました。<br />
+                対象ページは20ページ、項目数は600項目程度あり、先方の予算に合わせて、優先度の高い項目から順に改修を行いました。<br />
+                試験結果に実装方法も記載されていたため、それを参考にしつつ調べながら作業を進めました。<br />
+                本格的にWebアクセシビリティに興味を持ったきっかけとなった案件です。
+              </p>
+            </section>
+            <section>
+              <h3 class="text-body font-medium">WordPressの構築</h3>
+              <p class="mt-4">
+                担当：WordPressの構築、マークアップ<br />
+                WordPressの構築を担当しました。クラシックエディタとAdvanced Custom Fieldsを使用し、投稿タイプやカスタムフィールドを設定しました。<br />
+                また、セキュリティに配慮した実装を心がけ、WordPressの脆弱性に関する情報を日々収集し、必要に応じて対策を講じました。<br />
+              </p>
+            </section>
+          </div>
         </div>
       </section>
       <section id="section03" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[03]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">スキル</h2>
+			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>スキル</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <TextCards items={skills} label="スキル一覧" />
+          <TextCards items={skills} label="スキル一覧" dropDistance={0.425} />
         </div>
       </section>
       <section id="section04" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[04]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">強み</h2>
+			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>強み</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
           <div class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-12 xl:gap-y-0">
@@ -221,10 +229,10 @@ const outputs = [
       <section id="section05" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[05]</p>
-			<h2 class="text-display section-inset-x mt-[4rem]">アウトプット</h2>
+			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>アウトプット</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <TextCards items={outputs} label="アウトプット一覧" maxColumns={2} />
+          <TextCards items={outputs} label="アウトプット一覧" objectHeightScale={1.1} animate={false} showDetailsLabel />
         </div>
       </section>
     </main>
@@ -273,6 +281,103 @@ const outputs = [
         </a>
       </div>
     </footer>
+
+    <script>
+      const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+      const headings = document.querySelectorAll<HTMLElement>("[data-heading-reveal]");
+
+      if (headings.length > 0) {
+        const reveal = (heading: HTMLElement) => heading.classList.add("heading-reveal--visible");
+
+        if (reducedMotion.matches) {
+          headings.forEach(reveal);
+        } else {
+          const observer = new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              reveal(entry.target as HTMLElement);
+              observer.unobserve(entry.target);
+            }
+          });
+          headings.forEach((heading) => observer.observe(heading));
+        }
+      }
+
+      const logo = document.querySelector<HTMLElement>("[data-logo-random-reveal]");
+
+      if (logo) {
+        const characters = Array.from(logo.querySelectorAll<HTMLElement>("[data-logo-char]"));
+        const reveal = () => {
+          if (!reducedMotion.matches) {
+            const order = characters.map((_, index) => index);
+            for (let index = order.length - 1; index > 0; index -= 1) {
+              const swapIndex = Math.floor(Math.random() * (index + 1));
+              [order[index], order[swapIndex]] = [order[swapIndex], order[index]];
+            }
+            order.forEach((characterIndex, revealIndex) => {
+              characters[characterIndex].style.setProperty("--logo-char-delay", `${revealIndex * 48.6}ms`);
+            });
+          }
+          logo.classList.add("logo-random-reveal--visible");
+        };
+
+        if (reducedMotion.matches) {
+          reveal();
+        } else {
+          const observer = new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting) return;
+            reveal();
+            observer.disconnect();
+          });
+          observer.observe(logo);
+        }
+      }
+    </script>
+
+    <style>
+      [data-logo-char] {
+        display: inline-block;
+        opacity: 1;
+      }
+
+      :global(html.js[data-animation="on"]) .logo-random-reveal:not(.logo-random-reveal--visible) [data-logo-char] {
+        opacity: 0;
+      }
+
+      :global(html[data-animation="on"]) [data-logo-char] {
+        transition: opacity 324ms ease-out;
+        transition-delay: var(--logo-char-delay, 0ms);
+      }
+
+      .heading-reveal {
+        --heading-reveal-duration: 500ms;
+        clip-path: inset(0 0 0 0);
+      }
+
+      h2.heading-reveal {
+        --heading-reveal-duration: 2000ms;
+      }
+
+      :global(html.js[data-animation="on"]) .heading-reveal:not(.heading-reveal--visible) {
+        clip-path: inset(0 100% 0 0);
+      }
+
+      :global(html[data-animation="on"]) .heading-reveal {
+        transition: clip-path var(--heading-reveal-duration) ease-out;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        [data-logo-char] {
+          opacity: 1;
+          transition: none;
+        }
+
+        .heading-reveal {
+          clip-path: none;
+          transition: none;
+        }
+      }
+    </style>
 
   </body>
 </html>
