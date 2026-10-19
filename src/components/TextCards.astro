@@ -7,6 +7,8 @@ export interface TextCardItem {
 	textColor?: string;
 	/** Optional image shown on the card face instead of the text label. */
 	image?: string;
+	/** Image presentation. `inset` keeps an inner margin; `full` fills the card edge to edge. */
+	imageLayout?: "inset" | "full";
 	href?: string;
 }
 
@@ -33,8 +35,14 @@ interface Props {
 	color?: string;
 	soft?: boolean;
 	showControls?: boolean;
+	/** Enables the falling animation. Default true. */
+	animate?: boolean;
 	dropDistance?: number;
 	dropInterval?: number;
+	/** Multiplier for card height while preserving its width. Default 1. */
+	objectHeightScale?: number;
+	/** Shows the item title between the card and its link. Default false. */
+	showDetailsLabel?: boolean;
 	/** Maximum columns at wide viewports. Default 3. */
 	maxColumns?: 2 | 3;
 	/** Use a unique key per instance to remember the physics mode in the URL. */
@@ -43,13 +51,18 @@ interface Props {
 
 const {
 	items, label = "テキストカード", color = "#243048", soft = false,
-	showControls = false, dropDistance = 0.85, dropInterval = 140, maxColumns = 3, settingsKey,
+	showControls = false, animate = true, dropDistance = 0.85, dropInterval = 140,
+	objectHeightScale = 1, showDetailsLabel = false, maxColumns = 3, settingsKey,
 } = Astro.props;
+
+const mobileCardHeight = 14 * objectHeightScale;
+const wideCardHeight = 20 * objectHeightScale;
 ---
 
 <falling-text-cards
-	style={`--drop-distance: ${dropDistance}`}
+	style={`--drop-distance: ${dropDistance}; --mobile-card-ratio: 35 / ${mobileCardHeight}; --wide-card-ratio: 43 / ${wideCardHeight}; --mobile-card-half-height: ${mobileCardHeight / 2}; --wide-card-half-height: ${wideCardHeight / 2}`}
 	data-soft={String(soft)} data-controls={String(showControls)}
+	data-animate={String(animate)}
 	data-distance={dropDistance} data-interval={dropInterval} data-max-columns={maxColumns}
 	data-settings-key={settingsKey}
 >
@@ -60,12 +73,20 @@ const {
 				class="entry"
 				style={`--item-color: ${item.color ?? color}; --item-text: ${cardTextColor(item, color)}`}
 			>
-				<div class:list={["object", item.image && "object--image"]} data-card>
+				<div
+					class:list={[
+						"object",
+						item.image && "object--image",
+						item.image && item.imageLayout === "full" && "object--image-full",
+					]}
+					data-card
+				>
 					{item.image ? (
 						<img src={item.image} alt="" width="1920" height="992" decoding="async" />
 					) : null}
-					<h2 class:list={[item.image && "visually-hidden"]}>{item.label}</h2>
+					{!showDetailsLabel && <h2 class:list={[item.image && "visually-hidden"]}>{item.label}</h2>}
 				</div>
+				{showDetailsLabel && <h2 class="details-title">{item.label}</h2>}
 				{item.href && (
 					<p class="link">
 						<a href={item.href} target="_blank" rel="noreferrer">{item.href}</a>
@@ -97,7 +118,7 @@ const {
 		position: relative;
 		display: grid;
 		place-items: center;
-		aspect-ratio: 35 / 14;
+		aspect-ratio: var(--mobile-card-ratio);
 		padding: min(1rem, 8cqmin);
 		overflow: hidden;
 		border-radius: 5px;
@@ -117,6 +138,11 @@ const {
 		object-fit: cover;
 		object-position: top center;
 		pointer-events: none;
+	}
+	.object--image-full img {
+		inset: 0;
+		width: 100%;
+		height: 100%;
 	}
 	.visually-hidden {
 		position: absolute;
@@ -145,6 +171,7 @@ const {
 		z-index: 1;
 	}
 	.description,
+	.details-title,
 	.link {
 		margin: 14px 0 0;
 		color: inherit;
@@ -155,6 +182,12 @@ const {
 		overflow-wrap: anywhere;
 		text-wrap: pretty;
 	}
+	.details-title {
+		font-weight: 700;
+		letter-spacing: normal;
+		text-align: left;
+	}
+	.details-title + .link { margin-top: 4px; }
 	.link a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; }
 	.link a:hover { text-decoration-thickness: 2px; }
 	.skin { display: none; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
@@ -171,7 +204,7 @@ const {
 
 	@media (min-width: 640px) {
 		.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-		.object { aspect-ratio: 43 / 20; }
+		.object { aspect-ratio: var(--wide-card-ratio); }
 	}
 	@media (min-width: 1536px) {
 		.grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -185,17 +218,17 @@ const {
 		}
 	}
 	@media (prefers-reduced-motion: no-preference) {
-		.grid { padding-top: calc(var(--drop-distance) * 100% * 7 / 35); }
+		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * 100% * var(--mobile-card-half-height) / 35); }
 	}
 	@media (min-width: 640px) and (max-width: 1535.98px) and (prefers-reduced-motion: no-preference) {
-		.grid { padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * 10 / 43); }
+		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * var(--wide-card-half-height) / 43); }
 	}
 	@media (min-width: 1536px) and (prefers-reduced-motion: no-preference) {
-		.grid { padding-top: calc(var(--drop-distance) * (100% - 56px) / 3 * 10 / 43); }
+		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - 56px) / 3 * var(--wide-card-half-height) / 43); }
 	}
 	@media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-max-columns="2"] .grid {
-			padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * 10 / 43);
+		falling-text-cards[data-animate="true"][data-max-columns="2"] .grid {
+			padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * var(--wide-card-half-height) / 43);
 		}
 	}
 </style>
@@ -387,7 +420,7 @@ const {
 			const bounds = stage.getBoundingClientRect();
 			measuredWidth = bounds.width; measuredHeight = bounds.height;
 			// Honor the site's Animation control as well as the OS motion preference.
-			active = document.documentElement.dataset.animation !== "off" && !reduced.matches && cards.length > 0;
+			active = root.dataset.animate !== "false" && document.documentElement.dataset.animation !== "off" && !reduced.matches && cards.length > 0;
 			root.dataset.state = "static";
 			if (!active) return;
 			engine = Engine.create({ enableSleeping: true });
