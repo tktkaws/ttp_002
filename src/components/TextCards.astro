@@ -45,6 +45,8 @@ interface Props {
 	showDetailsLabel?: boolean;
 	/** Maximum columns at wide viewports. Default 3. */
 	maxColumns?: 2 | 3;
+	/** Horizontal gap between columns in pixels. Default 28. */
+	columnGap?: number;
 	/** Use a unique key per instance to remember the physics mode in the URL. */
 	settingsKey?: string;
 }
@@ -52,7 +54,7 @@ interface Props {
 const {
 	items, label = "テキストカード", color = "#243048", soft = false,
 	showControls = false, animate = true, dropDistance = 0.85, dropInterval = 140,
-	objectHeightScale = 1, showDetailsLabel = false, maxColumns = 3, settingsKey,
+	objectHeightScale = 1, showDetailsLabel = false, maxColumns = 3, columnGap = 28, settingsKey,
 } = Astro.props;
 
 const mobileCardHeight = 14 * objectHeightScale;
@@ -60,7 +62,7 @@ const wideCardHeight = 20 * objectHeightScale;
 ---
 
 <falling-text-cards
-	style={`--drop-distance: ${dropDistance}; --mobile-card-ratio: 35 / ${mobileCardHeight}; --wide-card-ratio: 43 / ${wideCardHeight}; --mobile-card-half-height: ${mobileCardHeight / 2}; --wide-card-half-height: ${wideCardHeight / 2}`}
+	style={`--drop-distance: ${dropDistance}; --column-gap: ${columnGap}px; --three-column-gaps: ${columnGap * 2}px; --mobile-card-ratio: 35 / ${mobileCardHeight}; --wide-card-ratio: 43 / ${wideCardHeight}; --mobile-card-half-height: ${mobileCardHeight / 2}; --wide-card-half-height: ${wideCardHeight / 2}`}
 	data-soft={String(soft)} data-controls={String(showControls)}
 	data-animate={String(animate)}
 	data-distance={dropDistance} data-interval={dropInterval} data-max-columns={maxColumns}
@@ -111,7 +113,7 @@ const wideCardHeight = 20 * objectHeightScale;
 	falling-text-cards, falling-text-cards * { box-sizing: border-box; }
 	.controls { width: min(280px, 100%); margin: 0 0 16px auto; }
 	.controls[hidden], .grid[hidden] { display: none; }
-	.grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 100px; column-gap: 28px; }
+	.grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 100px; column-gap: var(--column-gap); }
 	.entry { min-width: 0; }
 	.object {
 		container-type: size;
@@ -221,14 +223,14 @@ const wideCardHeight = 20 * objectHeightScale;
 		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * 100% * var(--mobile-card-half-height) / 35); }
 	}
 	@media (min-width: 640px) and (max-width: 1535.98px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * var(--wide-card-half-height) / 43); }
+		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - var(--column-gap)) / 2 * var(--wide-card-half-height) / 43); }
 	}
 	@media (min-width: 1536px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - 56px) / 3 * var(--wide-card-half-height) / 43); }
+		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - var(--three-column-gaps)) / 3 * var(--wide-card-half-height) / 43); }
 	}
 	@media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
 		falling-text-cards[data-animate="true"][data-max-columns="2"] .grid {
-			padding-top: calc(var(--drop-distance) * (100% - 28px) / 2 * var(--wide-card-half-height) / 43);
+			padding-top: calc(var(--drop-distance) * (100% - var(--column-gap)) / 2 * var(--wide-card-half-height) / 43);
 		}
 	}
 </style>

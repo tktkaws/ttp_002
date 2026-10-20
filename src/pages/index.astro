@@ -127,7 +127,7 @@ const outputs = [
     </script>
   </head>
   <body
-    class="relative font-sans px-6 pt-12 pb-6 sm:p-12 md:p-16 2xl:p-32 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+    class="relative font-sans px-6 pt-12 pb-3 sm:px-12 sm:pt-12 sm:pb-6 md:px-16 md:pt-16 md:pb-8 2xl:px-32 2xl:pt-32 2xl:pb-16 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
   >
     <FixedNav items={navItems} />
     <h1
@@ -192,7 +192,7 @@ const outputs = [
 			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>スキル</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <div class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-12 xl:gap-y-12">
+          <div class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-12">
             {
               skills.map((skill) => (
                 <section>
@@ -210,7 +210,7 @@ const outputs = [
 			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>強み</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <div class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-12 xl:gap-y-0">
+          <div class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-0">
             <section>
               <h3 class="text-body font-medium">知的好奇心</h3>
               <p class="mt-4">
@@ -235,7 +235,7 @@ const outputs = [
 			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>アウトプット</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <TextCards items={outputs} label="アウトプット一覧" objectHeightScale={1.1} showDetailsLabel />
+          <TextCards items={outputs} label="アウトプット一覧" objectHeightScale={1.1} columnGap={56} showDetailsLabel />
         </div>
       </section>
     </main>
@@ -358,7 +358,7 @@ const outputs = [
       }
 
       h2.heading-reveal {
-        --heading-reveal-duration: 250ms;
+        --heading-reveal-duration: 500ms;
         width: fit-content;
       }
 
