@@ -17,32 +17,26 @@ const skills = [
   {
     label: "HTML",
     description: "セマンティックなマークアップを意識し、Web標準に準拠したUIを実装します。制作過程では、Nu Html Checkerやmarkuplintによる検証を適宜行い、品質を担保します。",
-    color: "#304C5A",
   },
   {
     label: "CSS",
     description: "業務ではMindBEMdingを意識し、既存プロジェクトのルールに沿ったCSS設計・実装を行っています。個人開発ではTailwind CSSをよく使用しており、ユーティリティファーストな開発にも対応できます。",
-    color: "#59695C",
   },
   {
     label: "JavaScript",
     description: "業務では、アニメーションなどの演出を実装するためのVanilla JavaScriptの記述や、既存ライブラリの導入・調整を主に行っています。個人開発では、TypeScript、React、Next.js、Astroを学びながら実装に取り組んでいます。",
-    color: "#896D62",
   },
   {
     label: "WordPress",
     description: "業務では、クラシックエディタとAdvanced Custom Fieldsを用いたテーマ開発を多く経験しています。また、セキュリティに配慮した実装を心がけています。",
-    color: "#43695B",
   },
   {
     label: "Accessibility",
     description: "JIS X 8341-3:2016への適合を目指す既存サイトの改修を担当しました。日々の案件でも、可能な限りWCAG 2.2に沿った実装を心がけています。また、DHS Trusted Tester認定を取得し、WCAG 2.0に基づいたWebアクセシビリティ試験を実施できます。",
-    color: "#827049",
   },
   {
     label: "Git",
     description: "基本的なGit操作に加え、GitHub Flowによるブランチ運用を理解しています。変更内容が追いやすいコミットを意識し、ブランチの作成からプルリクエスト、レビュー、マージまで、チーム開発の流れに沿って作業できます。",
-    color: "#543A3B",
   },
 ];
 
@@ -198,7 +192,16 @@ const outputs = [
 			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>スキル</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <TextCards items={skills} label="スキル一覧" dropDistance={0.425} />
+          <div class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-12 xl:gap-y-12">
+            {
+              skills.map((skill) => (
+                <section>
+                  <h3 class="text-body font-medium">{skill.label}</h3>
+                  <p class="mt-4">{skill.description}</p>
+                </section>
+              ))
+            }
+          </div>
         </div>
       </section>
       <section id="section04" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
@@ -232,7 +235,7 @@ const outputs = [
 			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>アウトプット</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <TextCards items={outputs} label="アウトプット一覧" objectHeightScale={1.1} animate={false} showDetailsLabel />
+          <TextCards items={outputs} label="アウトプット一覧" objectHeightScale={1.1} showDetailsLabel />
         </div>
       </section>
     </main>
@@ -355,7 +358,8 @@ const outputs = [
       }
 
       h2.heading-reveal {
-        --heading-reveal-duration: 2000ms;
+        --heading-reveal-duration: 250ms;
+        width: fit-content;
       }
 
       :global(html.js[data-animation="on"]) .heading-reveal:not(.heading-reveal--visible) {
