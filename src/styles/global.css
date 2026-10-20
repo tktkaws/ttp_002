@@ -45,7 +45,7 @@ section[id] {
 	}
 }
 
-/* body padding: 横・下 1.5rem、上は 640px 以上と同じ 3rem → sm:p-12 → md:p-16 → 2xl:p-32 */
+/* body padding: 横 1.5rem（sm 3rem → md 4rem → 2xl 8rem）。下余白は各段階の半分。 */
 :root {
 	--body-padding: 1.5rem;
 	--header-offset: 3rem;
