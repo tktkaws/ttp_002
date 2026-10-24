@@ -4,10 +4,10 @@ import FixedNav from "../components/FixedNav.astro";
 import TextCards from "../components/TextCards.astro";
 
 const navItems = [
-  { href: "#section01", label: "プロフィール" },
-  { href: "#section02", label: "スキル" },
+  { href: "#section01", label: "自己紹介" },
+  { href: "#section02", label: "技術" },
   { href: "#section03", label: "強み" },
-  { href: "#section04", label: "アウトプット" },
+  { href: "#section04", label: "成果物" },
 ];
 
 const cardColor = "#4F5A6B";
@@ -66,6 +66,28 @@ const outputs = [
     imageLayout: "inset" as const,
     href: "https://scroll-wars.vercel.app/",
   },
+  {
+    label: "Spotify UI",
+    description:
+      "Spotifyで印象的な、カバー画像が縮小して背景色が浮き上がってくるUIを再現してみました。",
+    color: cardColor,
+    image: "/spotify_ui.png",
+    href: "https://spotify-ui-six.vercel.app/",
+  },
+  {
+    label: "p5.js Learning",
+    description: "P5.jsを学習するサイトを作成しました。",
+    color: cardColor,
+    image: "/p5-learning.png",
+    href: "https://p5-learning-tau.vercel.app/",
+  },
+  {
+    label: "Scroll Image Distortion",
+    description: "スクロールに応じて画像が歪むUIを作成しました。",
+    color: cardColor,
+    image: "/Scroll_Image_Distortion.png",
+    href: "https://scroll-image-distortion.vercel.app/",
+  },
 ];
 ---
 
@@ -103,7 +125,7 @@ const outputs = [
     <title>タカハシタカユキのポートフォリオ</title>
     <meta
       name="description"
-      content="東京都在住のフロントエンドエンジニア、タカハシタカユキのポートフォリオ。WordPressを中心としたサイト制作のスキル・強み・アウトプットを紹介しています。"
+      content="東京都在住のフロントエンドエンジニア、タカハシタカユキのポートフォリオ。WordPressを中心としたサイト制作の技術・強み・成果物を紹介しています。"
     />
     <script is:inline>
       {
@@ -143,7 +165,7 @@ const outputs = [
       <section id="section01" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[01]</p>
-			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>プロフィール</h2>
+			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>自己紹介</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
           <div class="text-body font-sans font-light">
@@ -160,7 +182,7 @@ const outputs = [
       <section id="section02" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[02]</p>
-			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>スキル</h2>
+			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>技術</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
           <div class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-12">
@@ -203,10 +225,10 @@ const outputs = [
       <section id="section04" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
 		<hgroup>
 			<p class="section-number text-body mt-[0.5em]">[04]</p>
-			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>アウトプット</h2>
+			<h2 class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>成果物</h2>
 		</hgroup>
         <div class="section-inset-x mt-[4rem]">
-          <TextCards items={outputs} label="アウトプット一覧" objectHeightScale={1.1} columnGap={56} showDetailsLabel />
+          <TextCards items={outputs} label="成果物一覧" objectHeightScale={1.1} columnGap={56} detailsTextScale={0.8} showDetailsLabel />
         </div>
       </section>
     </main>
@@ -324,21 +346,29 @@ const outputs = [
       }
 
       .heading-reveal {
-        --heading-reveal-duration: 500ms;
-        clip-path: inset(0 0 0 0);
+        --heading-reveal-duration: 125ms;
+        --heading-reveal-delay: 0ms;
+        --heading-reveal-easing: ease-out;
+        --heading-reveal-start: inset(0 100% 0 0);
+        --heading-reveal-end: inset(0 0 0 0);
+        clip-path: var(--heading-reveal-end);
       }
 
       h2.heading-reveal {
-        --heading-reveal-duration: 500ms;
+        --heading-reveal-duration: 250ms;
+        --heading-reveal-delay: 0ms;
+        --heading-reveal-easing: ease-out;
+        --heading-reveal-start: inset(0 100% 0 0);
+        --heading-reveal-end: inset(0 0 0 0);
         width: fit-content;
       }
 
       :global(html.js[data-animation="on"]) .heading-reveal:not(.heading-reveal--visible) {
-        clip-path: inset(0 100% 0 0);
+        clip-path: var(--heading-reveal-start);
       }
 
       :global(html[data-animation="on"]) .heading-reveal {
-        transition: clip-path var(--heading-reveal-duration) ease-out;
+        transition: clip-path var(--heading-reveal-duration) var(--heading-reveal-easing) var(--heading-reveal-delay);
       }
 
       @media (prefers-reduced-motion: reduce) {
