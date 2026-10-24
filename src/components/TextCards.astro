@@ -47,6 +47,8 @@ interface Props {
 	maxColumns?: 2 | 3;
 	/** Horizontal gap between columns in pixels. Default 28. */
 	columnGap?: number;
+	/** Multiplier for the link and description font size. Default 1. */
+	detailsTextScale?: number;
 	/** Use a unique key per instance to remember the physics mode in the URL. */
 	settingsKey?: string;
 }
@@ -54,7 +56,8 @@ interface Props {
 const {
 	items, label = "テキストカード", color = "#243048", soft = false,
 	showControls = false, animate = true, dropDistance = 0.85, dropInterval = 140,
-	objectHeightScale = 1, showDetailsLabel = false, maxColumns = 3, columnGap = 28, settingsKey,
+	objectHeightScale = 1, showDetailsLabel = false, maxColumns = 3, columnGap = 28,
+	detailsTextScale = 1, settingsKey,
 } = Astro.props;
 
 const mobileCardHeight = 14 * objectHeightScale;
@@ -62,7 +65,7 @@ const wideCardHeight = 20 * objectHeightScale;
 ---
 
 <falling-text-cards
-	style={`--drop-distance: ${dropDistance}; --column-gap: ${columnGap}px; --three-column-gaps: ${columnGap * 2}px; --mobile-card-ratio: 35 / ${mobileCardHeight}; --wide-card-ratio: 43 / ${wideCardHeight}; --mobile-card-half-height: ${mobileCardHeight / 2}; --wide-card-half-height: ${wideCardHeight / 2}`}
+	style={`--drop-distance: ${dropDistance}; --column-gap: ${columnGap}px; --three-column-gaps: ${columnGap * 2}px; --details-font-size: calc(var(--font-trace) * ${0.15 * detailsTextScale}); --mobile-card-ratio: 35 / ${mobileCardHeight}; --wide-card-ratio: 43 / ${wideCardHeight}; --mobile-card-half-height: ${mobileCardHeight / 2}; --wide-card-half-height: ${wideCardHeight / 2}`}
 	data-soft={String(soft)} data-controls={String(showControls)}
 	data-animate={String(animate)}
 	data-distance={dropDistance} data-interval={dropInterval} data-max-columns={maxColumns}
@@ -185,10 +188,12 @@ const wideCardHeight = 20 * objectHeightScale;
 		text-wrap: pretty;
 	}
 	.details-title {
-		font-weight: 700;
+		font-weight: 500;
 		letter-spacing: normal;
 		text-align: left;
 	}
+	.description,
+	.link { font-size: var(--details-font-size); }
 	.details-title + .link { margin-top: 4px; }
 	.link a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; }
 	.link a:hover { text-decoration-thickness: 2px; }
