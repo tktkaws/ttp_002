@@ -72,36 +72,40 @@ const wideCardHeight = 20 * objectHeightScale;
 	data-settings-key={settingsKey}
 >
 	<div class="controls" data-controls-container hidden={!showControls}></div>
-	<section class="grid" data-stage aria-label={label} hidden={items.length === 0}>
-		{items.map((item) => (
-			<article
-				class="entry"
-				style={`--item-color: ${item.color ?? color}; --item-text: ${cardTextColor(item, color)}`}
-			>
-				<div
-					class:list={[
-						"object",
-						item.image && "object--image",
-						item.image && item.imageLayout === "full" && "object--image-full",
-					]}
-					data-card
+	<div class="stage" data-stage hidden={items.length === 0}>
+		<ul class="grid" role="list" aria-label={label}>
+			{items.map((item) => (
+				<li
+					class="entry"
+					style={`--item-color: ${item.color ?? color}; --item-text: ${cardTextColor(item, color)}`}
 				>
-					{item.image ? (
-						<img src={item.image} alt="" width="1920" height="992" decoding="async" />
-					) : null}
-					{!showDetailsLabel && <h2 class:list={[item.image && "visually-hidden"]}>{item.label}</h2>}
-				</div>
-				{showDetailsLabel && <h2 class="details-title">{item.label}</h2>}
-				{item.href && (
-					<p class="link">
-						<a href={item.href} target="_blank" rel="noreferrer">{item.href}</a>
-					</p>
-				)}
-				<p class="description">{item.description}</p>
-			</article>
-		))}
+					<article>
+						<div
+							class:list={[
+								"object",
+								item.image && "object--image",
+								item.image && item.imageLayout === "full" && "object--image-full",
+							]}
+							data-card
+						>
+							{item.image ? (
+								<img src={item.image} alt="" width="1920" height="992" decoding="async" />
+							) : null}
+							{!showDetailsLabel && <h3 class:list={["card-title", item.image && "visually-hidden"]}>{item.label}</h3>}
+						</div>
+						{showDetailsLabel && <h3 class="card-title details-title">{item.label}</h3>}
+						{item.href && (
+							<p class="link">
+								<a href={item.href} target="_blank" rel="noreferrer">{item.href}</a>
+							</p>
+						)}
+						<p class="description">{item.description}</p>
+					</article>
+				</li>
+			))}
+		</ul>
 		<svg class="skin" data-skin aria-hidden="true" focusable="false"></svg>
-	</section>
+	</div>
 </falling-text-cards>
 
 <style>
@@ -115,8 +119,9 @@ const wideCardHeight = 20 * objectHeightScale;
 	}
 	falling-text-cards, falling-text-cards * { box-sizing: border-box; }
 	.controls { width: min(280px, 100%); margin: 0 0 16px auto; }
-	.controls[hidden], .grid[hidden] { display: none; }
-	.grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 100px; column-gap: var(--column-gap); }
+	.controls[hidden], .stage[hidden] { display: none; }
+	.stage { position: relative; }
+	.grid { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 100px; column-gap: var(--column-gap); margin: 0; padding: 0; list-style: none; }
 	.entry { min-width: 0; }
 	.object {
 		container-type: size;
@@ -160,7 +165,7 @@ const wideCardHeight = 20 * objectHeightScale;
 		white-space: nowrap;
 		border: 0;
 	}
-	h2 {
+	.card-title {
 		margin: 0;
 		max-width: 100%;
 		font-family: var(--font-sans);
@@ -171,7 +176,7 @@ const wideCardHeight = 20 * objectHeightScale;
 		text-align: center;
 		overflow-wrap: anywhere;
 	}
-	.object--image h2:not(.visually-hidden) {
+	.object--image .card-title:not(.visually-hidden) {
 		position: relative;
 		z-index: 1;
 	}
