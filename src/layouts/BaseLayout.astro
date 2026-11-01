@@ -1,0 +1,57 @@
+---
+import "../styles/global.css";
+import PreferenceInit from "../components/PreferenceInit.astro";
+import { defaultPreferences } from "../config/preferences";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<html lang="ja" data-theme={defaultPreferences.theme} data-animation={defaultPreferences.animation}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/300.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/400.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/500.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/700.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content={defaultPreferences.theme} />
+    <title>{title}</title>
+    <meta
+      name="description"
+      content={description}
+    />
+    <PreferenceInit />
+  </head>
+  <body
+    class="relative font-sans px-6 pt-12 pb-3 sm:px-12 sm:pt-12 sm:pb-6 md:px-16 md:pt-16 md:pb-8 2xl:px-32 2xl:pt-32 2xl:pb-16 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
+  >
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,25 @@
+---
+import { defaultPreferences, preferenceKeys } from "../config/preferences";
+---
+
+<!-- Run synchronously in head to restore the theme before the first paint. -->
+<script is:inline define:vars={{ defaultPreferences, preferenceKeys }}>
+  {
+    let theme = defaultPreferences.theme;
+    let animation = defaultPreferences.animation;
+    try {
+      const storedTheme = localStorage.getItem(preferenceKeys.theme);
+      const storedAnimation = localStorage.getItem(preferenceKeys.animation);
+      if (storedTheme === "light" || storedTheme === "dark") theme = storedTheme;
+      if (storedAnimation === "off" || storedAnimation === "on") animation = storedAnimation;
+    } catch {
+      // Keep the defaults when browser storage is unavailable.
+    }
+    const root = document.documentElement;
+    root.classList.add("js");
+    root.classList.toggle("dark", theme === "dark");
+    root.dataset.theme = theme;
+    root.dataset.animation = animation;
+    document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
+  }
+</script>

@@ -1,388 +1,54 @@
 ---
-import "../styles/global.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
 import FixedNav from "../components/FixedNav.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import PageSection from "../components/PageSection.astro";
 import TextCards from "../components/TextCards.astro";
-
-const navItems = [
-  { href: "#section01", label: "自己紹介" },
-  { href: "#section02", label: "技術" },
-  { href: "#section03", label: "強み" },
-  { href: "#section04", label: "成果物" },
-];
-
-const cardColor = "#4F5A6B";
-
-const skills = [
-  {
-    label: "HTML",
-    description: "セマンティックなマークアップを意識し、Web標準に準拠したUIを実装します。制作過程では、Nu Html Checkerやmarkuplintによる検証を適宜行い、品質を担保します。",
-  },
-  {
-    label: "CSS",
-    description: "業務ではMindBEMdingを意識し、既存プロジェクトのルールに沿ったCSS設計・実装を行っています。個人開発ではTailwind CSSをよく使用しており、ユーティリティファーストな開発にも対応できます。",
-  },
-  {
-    label: "JavaScript",
-    description: "業務では、アニメーションなどの演出を実装するためのVanilla JavaScriptの記述や、既存ライブラリの導入・調整を主に行っています。個人開発では、TypeScript、React、Next.js、Astroを学びながら実装に取り組んでいます。",
-  },
-  {
-    label: "WordPress",
-    description: "業務では、クラシックエディタとAdvanced Custom Fieldsを用いたテーマ開発を多く経験しています。また、セキュリティに配慮した実装を心がけています。",
-  },
-  {
-    label: "Accessibility",
-    description: "JIS X 8341-3:2016への適合を目指す既存サイトの改修を担当しました。日々の案件でも、可能な限りWCAG 2.2に沿った実装を心がけています。また、DHS Trusted Tester認定を取得し、WCAG 2.0に基づいたWebアクセシビリティ試験を実施できます。",
-  },
-  {
-    label: "Git",
-    description: "基本的なGit操作に加え、GitHub Flowによるブランチ運用を理解しています。変更内容が追いやすいコミットを意識し、ブランチの作成からプルリクエスト、レビュー、マージまで、チーム開発の流れに沿って作業できます。",
-  },
-];
-
-const outputs = [
-  {
-    label: "技術ブログ",
-    description:
-      "microCMS、Astroを使用しブログを作成しました。Swupによる擬似的な非同期遷移も実装しました。",
-    color: cardColor,
-    image: "/front-dispatch-2026.vercel.app_.png",
-    href: "https://front-dispatch-2026.vercel.app/",
-  },
-  {
-    label: "会議室予約システム",
-    description:
-      "Next.jsとSupabaseを使用して会議室予約アプリを作成しました。",
-    color: cardColor,
-    image: "/reservation-01.vercel.app_.png",
-    href: "https://reservation-01.vercel.app/",
-  },
-  {
-    label: "SCROLL WARS",
-    description:
-      "three.jsとLenisを使用し、スター・ウォーズのオープニングとエンディングをWebサイト上で再現しました。",
-    color: cardColor,
-    image:
-      "https://raw.githubusercontent.com/tktkaws/scroll_wars/main/public/screenshot.png",
-    imageLayout: "inset" as const,
-    href: "https://scroll-wars.vercel.app/",
-  },
-  {
-    label: "Spotify UI",
-    description:
-      "Spotifyで印象的な、カバー画像が縮小して背景色が浮き上がってくるUIを再現してみました。",
-    color: cardColor,
-    image: "/spotify_ui.png",
-    href: "https://spotify-ui-six.vercel.app/",
-  },
-  {
-    label: "p5.js Learning",
-    description: "P5.jsを学習するサイトを作成しました。",
-    color: cardColor,
-    image: "/p5-learning.png",
-    href: "https://p5-learning-tau.vercel.app/",
-  },
-  {
-    label: "Scroll Image Distortion",
-    description: "スクロールに応じて画像が歪むUIを作成しました。",
-    color: cardColor,
-    image: "/Scroll_Image_Distortion.png",
-    href: "https://scroll-image-distortion.vercel.app/",
-  },
-];
+import { identity, introduction, navItems, outputs, sections, skills, strengths } from "../data/portfolio";
+import { projectPresentation } from "../config/presentation";
 ---
 
-<html lang="ja" data-theme="light" data-animation="off">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/300.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/400.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/500.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/cdn/700.css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&display=swap"
-      rel="stylesheet"
-    />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <meta name="color-scheme" content="light" />
-    <title>タカハシタカユキのポートフォリオ</title>
-    <meta
-      name="description"
-      content="東京都在住のフロントエンドエンジニア、タカハシタカユキのポートフォリオ。WordPressを中心としたサイト制作の技術・強み・成果物を紹介しています。"
-    />
-    <script is:inline>
-      {
-        let theme = "light";
-        let animation = "off";
-        try {
-          theme = localStorage.getItem("theme") === "dark" ? "dark" : "light";
-          animation = localStorage.getItem("animation") === "on" ? "on" : "off";
-        } catch {
-          // Use the defaults when browser storage is unavailable.
-        }
-        document.documentElement.classList.add("js");
-        document.documentElement.classList.toggle("dark", theme === "dark");
-        document
-          .querySelector('meta[name="color-scheme"]')
-          ?.setAttribute("content", theme);
-        document.documentElement.dataset.theme = theme;
-        document.documentElement.dataset.animation = animation;
-      }
-    </script>
-  </head>
-  <body
-    class="relative font-sans px-6 pt-12 pb-3 sm:px-12 sm:pt-12 sm:pb-6 md:px-16 md:pt-16 md:pb-8 2xl:px-32 2xl:pt-32 2xl:pb-16 bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100"
-  >
-    <FixedNav items={navItems} />
-    <h1
-      class="logo-random-reveal text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
-      data-logo-random-reveal
-      aria-label="タカハシ タカユキ のポートフォリオ"
-    >
-	<span aria-hidden="true"><span data-logo-char>タ</span><span data-logo-char>カ</span><span data-logo-char>ハ</span><span data-logo-char>シ</span><br />
-        <span data-logo-char>タ</span><span data-logo-char>カ</span><span data-logo-char>ユ</span><span data-logo-char>キ</span><br />
-        <span data-logo-char>の</span><span data-logo-char>ポ</span><span data-logo-char>ー</span><span data-logo-char>ト</span><br />
-        <span data-logo-char>フ</span><span data-logo-char>ォ</span><span data-logo-char>リ</span><span data-logo-char>オ</span></span>
-    </h1>
-    <main>
-      <section id="section01" aria-labelledby="section01-heading" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
-        <header>
-          <p class="section-number text-body mt-[0.5em]" aria-hidden="true">[01]</p>
-          <h2 id="section01-heading" class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>自己紹介</h2>
-        </header>
-        <div class="section-inset-x mt-[4rem]">
-          <div class="text-body font-sans font-light">
-            <p>
-              はじめまして。タカハシタカユキと申します。<br />
-              都内のWeb制作会社で、コーダーとして勤務しています。<br />
-              1986年生まれですが、業務歴は3年弱です。<br />
-              主に静的サイトの制作保守やWordPressの構築を担当しています。<br />
-              Webアクセシビリティとモダンフロントエンドに興味があり、日々学習しています。
-            </p>
-          </div>
-        </div>
-      </section>
-      <section id="section02" aria-labelledby="section02-heading" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
-        <header>
-          <p class="section-number text-body mt-[0.5em]" aria-hidden="true">[02]</p>
-          <h2 id="section02-heading" class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>技術</h2>
-        </header>
-        <div class="section-inset-x mt-[4rem]">
-          <ul role="list" class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-12">
-            {
-              skills.map((skill) => (
-                <li>
-                  <h3 class="text-body font-medium">{skill.label}</h3>
-                  <p class="mt-4">{skill.description}</p>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-      </section>
-      <section id="section03" aria-labelledby="section03-heading" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
-        <header>
-          <p class="section-number text-body mt-[0.5em]" aria-hidden="true">[03]</p>
-          <h2 id="section03-heading" class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>強み</h2>
-        </header>
-        <div class="section-inset-x mt-[4rem]">
-          <ul role="list" class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-0">
-            <li>
-              <h3 class="text-body font-medium">知的好奇心</h3>
-              <p class="mt-4">
-                有料無料問わずWebアクセシビリティ関連イベントに積極的に参加しています。<br />
-                毎日AIが記事を書いてもらい、学んだ内容をナレッジベースに蓄積しています。理解度の確認のため、学んだ内容を自分の言葉でアウトプットすることを心がけています。<br />
-                また、気になったUIをAIで再現しコードを解析することで、実装の理解を深める活動も行っています。
-              </p>
-            </li>
-            <li>
-              <h3 class="text-body font-medium">主体性</h3>
-              <p class="mt-4">
-                社内のコーダーを集め、勉強会を開催しました。各自の知見を共有し、チーム全体のスキルを底上げすることを目的としています。<br />
-                また、業務効率化のためにVBAを独学し、実務に活かした経験もあります。与えられた作業をこなすだけでなく、課題を見つけて自分から改善に取り組む姿勢を大切にしています。
-              </p>
-            </li>
-          </ul>
-        </div>
-      </section>
-      <section id="section04" aria-labelledby="section04-heading" class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
-        <header>
-          <p class="section-number text-body mt-[0.5em]" aria-hidden="true">[04]</p>
-          <h2 id="section04-heading" class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>成果物</h2>
-        </header>
-        <div class="section-inset-x mt-[4rem]">
-          <TextCards items={outputs} label="成果物一覧" objectHeightScale={1.1} columnGap={56} detailsTextScale={0.8} showDetailsLabel />
-        </div>
-      </section>
-    </main>
-    <footer id="site-footer" class="border-t border-gray-900 pt-[8rem] mt-[8rem] dark:border-gray-100">
-      <div class="flex flex-col items-start gap-[6rem] sm:flex-row sm:items-start sm:justify-between">
-        <p class="text-logo font-zen header_logo">
-          タカハシ<br />
-          タカユキ<br />
-          のポート<br />
-          フォリオ
+<BaseLayout title={identity.title} description={identity.description}>
+  <FixedNav items={navItems} />
+  <SiteHeader />
+  <main>
+    <PageSection {...sections.about}>
+      <div class="text-body font-sans font-light">
+        <p>
+          {introduction.map((line, index) => (
+            <Fragment>{line}{index < introduction.length - 1 && <br />}</Fragment>
+          ))}
         </p>
-        <nav
-          aria-label="フッターナビゲーション"
-          class="text-body w-fit bg-white text-left font-sans font-light text-gray-900 dark:bg-gray-900 dark:text-gray-100 sm:text-right"
-        >
-          <ul class="grid gap-2 lg:p-4 pt-0">
-            {
-              navItems.map((item) => (
-                <li>
-                  <a href={item.href}>{item.label}</a>
-                </li>
-              ))
-            }
-          </ul>
-        </nav>
       </div>
-      <div
-        class="mt-16 flex items-center justify-end gap-3 text-right font-sans font-light"
-      >
-        <p class="text-caption">Developed by</p>
-        <a
-          href="https://github.com/tktkaws"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="GitHub"
-        >
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            class="size-6 fill-current"
-          >
-            <path
-              d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49 0-.24-.01-.88-.01-1.73-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.93.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 7c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.95.68 1.92 0 1.38-.01 2.5-.01 2.84 0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"
-            ></path>
-          </svg>
-        </a>
-      </div>
-    </footer>
-
-    <script>
-      const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-      const headings = document.querySelectorAll<HTMLElement>("[data-heading-reveal]");
-
-      if (headings.length > 0) {
-        const reveal = (heading: HTMLElement) => heading.classList.add("heading-reveal--visible");
-
-        if (reducedMotion.matches) {
-          headings.forEach(reveal);
-        } else {
-          const observer = new IntersectionObserver((entries) => {
-            for (const entry of entries) {
-              if (!entry.isIntersecting) continue;
-              reveal(entry.target as HTMLElement);
-              observer.unobserve(entry.target);
-            }
-          });
-          headings.forEach((heading) => observer.observe(heading));
-        }
-      }
-
-      const logo = document.querySelector<HTMLElement>("[data-logo-random-reveal]");
-
-      if (logo) {
-        const characters = Array.from(logo.querySelectorAll<HTMLElement>("[data-logo-char]"));
-        const reveal = () => {
-          if (!reducedMotion.matches) {
-            const order = characters.map((_, index) => index);
-            for (let index = order.length - 1; index > 0; index -= 1) {
-              const swapIndex = Math.floor(Math.random() * (index + 1));
-              [order[index], order[swapIndex]] = [order[swapIndex], order[index]];
-            }
-            order.forEach((characterIndex, revealIndex) => {
-              characters[characterIndex].style.setProperty("--logo-char-delay", `${revealIndex * 48.6}ms`);
-            });
-          }
-          logo.classList.add("logo-random-reveal--visible");
-        };
-
-        if (reducedMotion.matches) {
-          reveal();
-        } else {
-          const observer = new IntersectionObserver(([entry]) => {
-            if (!entry.isIntersecting) return;
-            reveal();
-            observer.disconnect();
-          });
-          observer.observe(logo);
-        }
-      }
-    </script>
-
-    <style>
-      [data-logo-char] {
-        display: inline-block;
-        opacity: 1;
-      }
-
-      :global(html.js[data-animation="on"]) .logo-random-reveal:not(.logo-random-reveal--visible) [data-logo-char] {
-        opacity: 0;
-      }
-
-      :global(html[data-animation="on"]) [data-logo-char] {
-        transition: opacity 324ms ease-out;
-        transition-delay: var(--logo-char-delay, 0ms);
-      }
-
-      .heading-reveal {
-        --heading-reveal-duration: 125ms;
-        --heading-reveal-delay: 0ms;
-        --heading-reveal-easing: ease-out;
-        --heading-reveal-start: inset(0 100% 0 0);
-        --heading-reveal-end: inset(0 0 0 0);
-        clip-path: var(--heading-reveal-end);
-      }
-
-      h2.heading-reveal {
-        --heading-reveal-duration: 250ms;
-        --heading-reveal-delay: 0ms;
-        --heading-reveal-easing: ease-out;
-        --heading-reveal-start: inset(0 100% 0 0);
-        --heading-reveal-end: inset(0 0 0 0);
-        width: fit-content;
-      }
-
-      :global(html.js[data-animation="on"]) .heading-reveal:not(.heading-reveal--visible) {
-        clip-path: var(--heading-reveal-start);
-      }
-
-      :global(html[data-animation="on"]) .heading-reveal {
-        transition: clip-path var(--heading-reveal-duration) var(--heading-reveal-easing) var(--heading-reveal-delay);
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        [data-logo-char] {
-          opacity: 1;
-          transition: none;
-        }
-
-        .heading-reveal {
-          clip-path: none;
-          transition: none;
-        }
-      }
-    </style>
-
-  </body>
-</html>
+    </PageSection>
+    <PageSection {...sections.skills}>
+      <ul role="list" class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-12">
+        {skills.map((skill) => (
+          <li>
+            <h3 class="text-body font-medium">{skill.label}</h3>
+            <p class="mt-4">{skill.description}</p>
+          </li>
+        ))}
+      </ul>
+    </PageSection>
+    <PageSection {...sections.strengths}>
+      <ul role="list" class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-0">
+        {strengths.map((strength) => (
+          <li>
+            <h3 class="text-body font-medium">{strength.label}</h3>
+            <p class="mt-4">
+              {strength.lines.map((line, index) => (
+                <Fragment>{line}{index < strength.lines.length - 1 && <br />}</Fragment>
+              ))}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </PageSection>
+    <PageSection {...sections.projects}>
+      <TextCards items={outputs} label="成果物一覧" {...projectPresentation} />
+    </PageSection>
+  </main>
+  <SiteFooter items={navItems} />
+</BaseLayout>

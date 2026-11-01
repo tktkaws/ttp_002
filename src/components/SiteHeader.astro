@@ -1,0 +1,46 @@
+---
+import { identity } from "../data/portfolio";
+---
+
+<h1
+  class="logo-random-reveal text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
+  data-logo-random-reveal
+  aria-label={identity.logoLabel}
+>
+  <span aria-hidden="true">
+    {identity.logoLines.map((line, index) => (
+      <Fragment>
+        {Array.from(line).map((character) => <span data-logo-char>{character}</span>)}
+        {index < identity.logoLines.length - 1 && <br />}
+      </Fragment>
+    ))}
+  </span>
+</h1>
+
+<script>
+  import { initLogoReveal } from "../scripts/logo-reveal";
+  initLogoReveal();
+</script>
+
+<style>
+  [data-logo-char] {
+    display: inline-block;
+    opacity: 1;
+  }
+
+  :global(html.js[data-animation="on"]) .logo-random-reveal:not(.logo-random-reveal--visible) [data-logo-char] {
+    opacity: 0;
+  }
+
+  :global(html[data-animation="on"]) [data-logo-char] {
+    transition: opacity 324ms ease-out;
+    transition-delay: var(--logo-char-delay, 0ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-logo-char] {
+      opacity: 1;
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import type { SectionContent } from "../types/portfolio";
+
+type Props = SectionContent;
+
+const { id, number, title } = Astro.props;
+const headingId = `${id}-heading`;
+---
+
+<section id={id} aria-labelledby={headingId} class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
+  <header>
+    <p class="section-number text-body mt-[0.5em]" aria-hidden="true">[{number}]</p>
+    <h2 id={headingId} class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>{title}</h2>
+  </header>
+  <div class="section-inset-x mt-[4rem]">
+    <slot />
+  </div>
+</section>
+
+<script>
+  import { initHeadingReveal } from "../scripts/heading-reveal";
+  initHeadingReveal();
+</script>
+
+<style>
+  .heading-reveal {
+    --heading-reveal-duration: 250ms;
+    --heading-reveal-delay: 0ms;
+    --heading-reveal-easing: ease-out;
+    --heading-reveal-start: inset(0 100% 0 0);
+    --heading-reveal-end: inset(0 0 0 0);
+    clip-path: var(--heading-reveal-end);
+    width: fit-content;
+  }
+
+  :global(html.js[data-animation="on"]) .heading-reveal:not(.heading-reveal--visible) {
+    clip-path: var(--heading-reveal-start);
+  }
+
+  :global(html[data-animation="on"]) .heading-reveal {
+    transition: clip-path var(--heading-reveal-duration) var(--heading-reveal-easing) var(--heading-reveal-delay);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .heading-reveal {
+      clip-path: none;
+      transition: none;
+    }
+  }
+</style>

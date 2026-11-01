@@ -1,0 +1,59 @@
+@theme {
+	--font-gen-interface-jp: "Gen Interface JP", "Hiragino Kaku Gothic ProN",
+		"Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif;
+	--font-zen-kaku: "Zen Kaku Gothic New", "Hiragino Kaku Gothic ProN",
+		"Hiragino Sans", "Yu Gothic", "YuGothic", sans-serif;
+	--font-sans: var(--font-gen-interface-jp);
+	--font-zen: var(--font-zen-kaku);
+}
+
+/* body padding: 横 1.5rem（sm 3rem → md 4rem → 2xl 8rem）。下余白は各段階の半分。 */
+:root {
+	--body-padding: 1.5rem;
+	--header-offset: 3rem;
+	--layout-trace: 4rem;
+	--font-trace: 8rem;
+	--focus-ring-outer: #000000;
+	--focus-ring-inner: #f5e6a3;
+	--focus-ring-text: #111827;
+	--focus-ring-width: 4px;
+	--focus-ring-offset: 0;
+	--focus-ring-inner-width: 2px;
+	--focus-ring-radius: 0;
+}
+
+html.dark {
+	/* 外側は白のみ。内側背景は透明、文字色は変更しない */
+	--focus-ring-outer: #ffffff;
+	--focus-ring-inner: transparent;
+}
+
+@media (min-width: 640px) {
+	:root {
+		--body-padding: 3rem;
+		--header-offset: var(--body-padding);
+		--layout-trace: 7.5rem;
+	}
+}
+
+@media (min-width: 768px) {
+	:root {
+		--body-padding: 4rem;
+		--header-offset: var(--body-padding);
+	}
+}
+
+@media (min-width: 1280px) {
+	:root {
+		--font-trace: 10rem;
+	}
+}
+
+@media (min-width: 1536px) {
+	:root {
+		--body-padding: 8rem;
+		--header-offset: var(--body-padding);
+		--font-trace: 12rem;
+		--layout-trace: 12rem;
+	}
+}
