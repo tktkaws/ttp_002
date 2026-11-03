@@ -1,39 +1,39 @@
 html {
-	scroll-behavior: auto;
+  scroll-behavior: auto;
 }
 
 body {
-	line-height: 1.8;
+  line-height: 1.8;
 }
 
 html[data-animation="on"] {
-	scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 
 html[data-animation="off"] *,
 html[data-animation="off"] *::before,
 html[data-animation="off"] *::after {
-	animation: none !important;
-	transition: none !important;
-	scroll-behavior: auto !important;
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
 }
 
 section[id] {
-	scroll-margin-block-start: 4rem;
+  scroll-margin-block-start: 4rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
-	html[data-animation] {
-		scroll-behavior: auto;
-	}
+  html[data-animation] {
+    scroll-behavior: auto;
+  }
 }
 
 .section-inset-x {
-	margin-inline: 0;
+  margin-inline: 0;
 }
 
 @media (min-width: 1024px) {
-	.section-inset-x {
-		margin-inline: var(--layout-trace);
-	}
+  .section-inset-x {
+    margin-inline: var(--layout-trace);
+  }
 }

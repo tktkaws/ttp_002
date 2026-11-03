@@ -10,7 +10,10 @@ export default defineConfig({
   retries: 0,
   timeout: 20_000,
   outputDir: "test-results/browser",
-  reporter: [["list"], ["json", { outputFile: "test-results/browser-results.json" }]],
+  reporter: [
+    ["list"],
+    ["json", { outputFile: "test-results/browser-results.json" }],
+  ],
   use: {
     baseURL: `http://127.0.0.1:${port}`,
     browserName: "chromium",

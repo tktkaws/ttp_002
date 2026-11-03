@@ -10,7 +10,9 @@ import { identity } from "../data/portfolio";
   <span aria-hidden="true">
     {identity.logoLines.map((line, index) => (
       <Fragment>
-        {Array.from(line).map((character) => <span data-logo-char>{character}</span>)}
+        {Array.from(line).map((character) => (
+          <span data-logo-char>{character}</span>
+        ))}
         {index < identity.logoLines.length - 1 && <br />}
       </Fragment>
     ))}
@@ -27,5 +29,4 @@ import { identity } from "../data/portfolio";
     display: inline-block;
     opacity: 1;
   }
-
 </style>

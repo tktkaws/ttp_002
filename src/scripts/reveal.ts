@@ -3,7 +3,10 @@ import { preferencesChangeEvent } from "./preferences.ts";
 type TrackAnimation = (animation: Animation) => void;
 
 // Content stays visible until a finite Web Animation actually starts.
-export function initReveal(selector: string, animate: (element: HTMLElement, track: TrackAnimation) => void) {
+export function initReveal(
+  selector: string,
+  animate: (element: HTMLElement, track: TrackAnimation) => void,
+) {
   const elements = [...document.querySelectorAll<HTMLElement>(selector)];
   const animations = new Set<Animation>();
   const revealed = new Set<HTMLElement>();
@@ -19,10 +22,14 @@ export function initReveal(selector: string, animate: (element: HTMLElement, tra
   };
   const track: TrackAnimation = (animation) => {
     animations.add(animation);
-    animation.finished.then(() => animations.delete(animation), () => animations.delete(animation));
+    animation.finished.then(
+      () => animations.delete(animation),
+      () => animations.delete(animation),
+    );
   };
   const setup = () => {
-    const next = document.documentElement.dataset.animation === "on" && !reduced?.matches;
+    const next =
+      document.documentElement.dataset.animation === "on" && !reduced?.matches;
     if (next === enabled) return;
     enabled = next;
     stop();
@@ -47,7 +54,10 @@ export function initReveal(selector: string, animate: (element: HTMLElement, tra
       stop();
     }
   };
-  const pause = () => { stop(); enabled = false; };
+  const pause = () => {
+    stop();
+    enabled = false;
+  };
   const dispose = () => {
     pause();
     document.removeEventListener(preferencesChangeEvent, setup);
@@ -57,7 +67,11 @@ export function initReveal(selector: string, animate: (element: HTMLElement, tra
   };
 
   try {
-    if (!elements.length || elements.some((element) => typeof element.animate !== "function")) return dispose;
+    if (
+      !elements.length ||
+      elements.some((element) => typeof element.animate !== "function")
+    )
+      return dispose;
     reduced = matchMedia("(prefers-reduced-motion: reduce)");
     document.addEventListener(preferencesChangeEvent, setup);
     reduced.addEventListener("change", setup);

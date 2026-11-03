@@ -29,11 +29,14 @@ import { defaultPreferences, preferenceKeys } from "../config/preferences";
     const storedTheme = read(preferenceKeys.theme);
     const storedAnimation = read(preferenceKeys.animation);
     if (storedTheme === "light" || storedTheme === "dark") theme = storedTheme;
-    if (storedAnimation === "off" || storedAnimation === "on") animation = storedAnimation;
+    if (storedAnimation === "off" || storedAnimation === "on")
+      animation = storedAnimation;
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
     root.dataset.theme = theme;
     root.dataset.animation = animation;
-    document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
+    document
+      .querySelector('meta[name="color-scheme"]')
+      ?.setAttribute("content", theme);
   }
 </script>

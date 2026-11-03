@@ -12,21 +12,44 @@ export function focusPageAnchor(hash: string) {
   // Preserve tabindex supplied by the document or another interaction.
   if (!target.hasAttribute("tabindex") && target.tabIndex < 0) {
     target.setAttribute("tabindex", "-1");
-    target.addEventListener("blur", () => {
-      if (target.getAttribute("tabindex") === "-1") target.removeAttribute("tabindex");
-    }, { once: true });
+    target.addEventListener(
+      "blur",
+      () => {
+        if (target.getAttribute("tabindex") === "-1")
+          target.removeAttribute("tabindex");
+      },
+      { once: true },
+    );
   }
   target.focus({ preventScroll: true });
 }
 
 export function initPageAnchors() {
   const onClick = (event: MouseEvent) => {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    )
+      return;
     if (!(event.target instanceof Element)) return;
     const link = event.target.closest<HTMLAnchorElement>("a[href]");
-    if (!link || link.hasAttribute("download") || (link.target && link.target !== "_self")) return;
+    if (
+      !link ||
+      link.hasAttribute("download") ||
+      (link.target && link.target !== "_self")
+    )
+      return;
     const url = new URL(link.href, location.href);
-    if (url.origin !== location.origin || url.pathname !== location.pathname || url.search !== location.search) return;
+    if (
+      url.origin !== location.origin ||
+      url.pathname !== location.pathname ||
+      url.search !== location.search
+    )
+      return;
     // Native navigation owns the hash, scrolling and back/forward history.
     focusPageAnchor(url.hash);
   };

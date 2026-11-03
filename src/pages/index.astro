@@ -5,7 +5,15 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import PageSection from "../components/PageSection.astro";
 import TextCards from "../components/TextCards.astro";
-import { identity, introduction, navItems, outputs, sections, skills, strengths } from "../data/portfolio";
+import {
+  identity,
+  introduction,
+  navItems,
+  outputs,
+  sections,
+  skills,
+  strengths,
+} from "../data/portfolio";
 import { projectPresentation } from "../config/presentation";
 ---
 
@@ -17,13 +25,19 @@ import { projectPresentation } from "../config/presentation";
       <div class="text-body font-sans font-light">
         <p>
           {introduction.map((line, index) => (
-            <Fragment>{line}{index < introduction.length - 1 && <br />}</Fragment>
+            <Fragment>
+              {line}
+              {index < introduction.length - 1 && <br />}
+            </Fragment>
           ))}
         </p>
       </div>
     </PageSection>
     <PageSection {...sections.skills}>
-      <ul role="list" class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-12">
+      <ul
+        role="list"
+        class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-12"
+      >
         {skills.map((skill) => (
           <li>
             <h3 class="text-body font-medium">{skill.label}</h3>
@@ -33,13 +47,19 @@ import { projectPresentation } from "../config/presentation";
       </ul>
     </PageSection>
     <PageSection {...sections.strengths}>
-      <ul role="list" class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-0">
+      <ul
+        role="list"
+        class="text-body font-sans font-light grid max-w-[1600px] gap-12 xl:grid-cols-2 xl:gap-x-24 xl:gap-y-0"
+      >
         {strengths.map((strength) => (
           <li>
             <h3 class="text-body font-medium">{strength.label}</h3>
             <p class="mt-4">
               {strength.lines.map((line, index) => (
-                <Fragment>{line}{index < strength.lines.length - 1 && <br />}</Fragment>
+                <Fragment>
+                  {line}
+                  {index < strength.lines.length - 1 && <br />}
+                </Fragment>
               ))}
             </p>
           </li>

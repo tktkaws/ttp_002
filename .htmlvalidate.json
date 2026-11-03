@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "extends": ["html-validate:recommended"],
+  "elements": [
+    "html5",
+    {
+      "falling-text-cards": {
+        "flow": true,
+        "permittedContent": ["@flow"]
+      }
+    }
+  ],
+  "rules": {
+    "aria-label-misuse": ["error", { "allowAnyNamable": true }],
+    "no-redundant-role": ["error", { "exclude": ["list"] }]
+  }
+}

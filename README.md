@@ -4,35 +4,35 @@ AstroとTailwind CSSで構築したポートフォリオです。本文は静的
 
 ## 変更する内容とファイル
 
-| 変更したい内容 | 主な変更箇所 |
-| --- | --- |
-| タイトル・description、ロゴの文字、自己紹介、技術、強み、成果物、リンク先 | `src/data/portfolio.ts` |
-| コンテンツデータの型 | `src/types/portfolio.ts` |
-| ページ全体のセクション構成・並び・一覧のHTML | `src/pages/index.astro` |
-| html・head・body、外部フォント、ページ全体の余白 | `src/layouts/BaseLayout.astro` |
-| セクションの枠・番号・h2と本文の配置 | `src/components/PageSection.astro` |
-| ロゴのHTMLと見た目 | `src/components/SiteHeader.astro` |
-| フッターのHTMLと見た目 | `src/components/SiteFooter.astro` |
-| ナビゲーション・設定ボタンのHTMLと見た目 | `src/components/FixedNav.astro` |
-| 成果物一覧・カードのHTMLと見た目 | `src/components/TextCards.astro` |
-| フォント・余白・文字サイズの基準値・フォーカスの色 | `src/styles/tokens.css` |
-| 基礎スタイル・ページ内移動・アニメーション停止のCSS | `src/styles/base.css` |
-| 共通の文字サイズ・ロゴの組版 | `src/styles/typography.css` |
-| 共通フォーカス・リンクやボタンの操作時の表示 | `src/styles/accessibility.css` |
-| CSSの読み込み順・Tailwindの導入とdark variant | `src/styles/global.css` |
-| テーマ・アニメーションの既定値と保存キー | `src/config/preferences.ts` |
-| 成果物カードの色・高さ・間隔・文字倍率 | `src/config/presentation.ts` |
-| カードの物理演算の既定値 | `src/config/card-physics.ts` |
-| 初回描画前の設定復元 | `src/components/PreferenceInit.astro` |
-| 設定の取得・DOMへの反映・保存 | `src/scripts/preferences.ts` |
-| ナビの開閉・フォーカス・スクロール時の表示 | `src/scripts/fixed-nav.ts` |
-| ページ内リンク・直接アクセス・hashchange時のフォーカス | `src/scripts/page-anchors.ts` |
-| ロゴ／セクション見出しの表示演出 | `src/scripts/logo-reveal.ts` / `src/scripts/heading-reveal.ts` |
-| 表示演出の開始条件・有限アニメーションの管理 | `src/scripts/reveal.ts` |
-| カード用カスタム要素の登録・接続と切断 | `src/scripts/cards/text-cards.ts` |
-| カードの演出モジュール読み込み・失敗時の静的表示 | `src/scripts/cards/enhancement.ts` / `src/scripts/cards/fallback.ts` |
-| カードの物理演算・描画・Observerとフレームの停止／再開／破棄 | `src/scripts/cards/physics.ts` |
-| カードの調整用Tweakpane UI | `src/scripts/cards/controls.ts` |
+| 変更したい内容                                                            | 主な変更箇所                                                         |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| タイトル・description、ロゴの文字、自己紹介、技術、強み、成果物、リンク先 | `src/data/portfolio.ts`                                              |
+| コンテンツデータの型                                                      | `src/types/portfolio.ts`                                             |
+| ページ全体のセクション構成・並び・一覧のHTML                              | `src/pages/index.astro`                                              |
+| html・head・body、外部フォント、ページ全体の余白                          | `src/layouts/BaseLayout.astro`                                       |
+| セクションの枠・番号・h2と本文の配置                                      | `src/components/PageSection.astro`                                   |
+| ロゴのHTMLと見た目                                                        | `src/components/SiteHeader.astro`                                    |
+| フッターのHTMLと見た目                                                    | `src/components/SiteFooter.astro`                                    |
+| ナビゲーション・設定ボタンのHTMLと見た目                                  | `src/components/FixedNav.astro`                                      |
+| 成果物一覧・カードのHTMLと見た目                                          | `src/components/TextCards.astro`                                     |
+| フォント・余白・文字サイズの基準値・フォーカスの色                        | `src/styles/tokens.css`                                              |
+| 基礎スタイル・ページ内移動・アニメーション停止のCSS                       | `src/styles/base.css`                                                |
+| 共通の文字サイズ・ロゴの組版                                              | `src/styles/typography.css`                                          |
+| 共通フォーカス・リンクやボタンの操作時の表示                              | `src/styles/accessibility.css`                                       |
+| CSSの読み込み順・Tailwindの導入とdark variant                             | `src/styles/global.css`                                              |
+| テーマ・アニメーションの既定値と保存キー                                  | `src/config/preferences.ts`                                          |
+| 成果物カードの色・高さ・間隔・文字倍率                                    | `src/config/presentation.ts`                                         |
+| カードの物理演算の既定値                                                  | `src/config/card-physics.ts`                                         |
+| 初回描画前の設定復元                                                      | `src/components/PreferenceInit.astro`                                |
+| 設定の取得・DOMへの反映・保存                                             | `src/scripts/preferences.ts`                                         |
+| ナビの開閉・フォーカス・スクロール時の表示                                | `src/scripts/fixed-nav.ts`                                           |
+| ページ内リンク・直接アクセス・hashchange時のフォーカス                    | `src/scripts/page-anchors.ts`                                        |
+| ロゴ／セクション見出しの表示演出                                          | `src/scripts/logo-reveal.ts` / `src/scripts/heading-reveal.ts`       |
+| 表示演出の開始条件・有限アニメーションの管理                              | `src/scripts/reveal.ts`                                              |
+| カード用カスタム要素の登録・接続と切断                                    | `src/scripts/cards/text-cards.ts`                                    |
+| カードの演出モジュール読み込み・失敗時の静的表示                          | `src/scripts/cards/enhancement.ts` / `src/scripts/cards/fallback.ts` |
+| カードの物理演算・描画・Observerとフレームの停止／再開／破棄              | `src/scripts/cards/physics.ts`                                       |
+| カードの調整用Tweakpane UI                                                | `src/scripts/cards/controls.ts`                                      |
 
 単純な配置にはTailwindのutilityを使い、コンポーネント固有のスタイルは各 `.astro` のscopedな `<style>` に置きます。共通の基準や操作時の表示は `src/styles/` が担当します。コンポーネントを分割するときは、scoped CSSが子コンポーネント内部に自動で届かない点を確認してください。
 
@@ -54,24 +54,29 @@ AstroとTailwind CSSで構築したポートフォリオです。本文は静的
 
 ## 開発
 
-Node.js 22.12.0以上が必要です。依存は `npm ci` でインストールします。
+品質確認ツールを含め、Node.js 22.22.0以上の22系、または24.8.0以上が必要です（`package.json` の `engines` 参照）。依存は `npm ci` でインストールします。
 
-| 操作 | コマンド |
-| --- | --- |
-| 開発サーバーのバックグラウンド起動 | `npm run dev -- --background` |
-| 状態確認 | `npm run astro -- dev status` |
-| ログ確認 | `npm run astro -- dev logs` |
-| 停止 | `npm run astro -- dev stop` |
-| 本番ビルド | `npm run build` |
-| テーマ・保存設定・ページ内URLの回帰テスト | `npm run test:regression` |
-| 隔離した実ブラウザーでの回帰テスト | `npm run test:browser` |
-| 差分の空白チェック | `git diff --check` |
+| 操作                                      | コマンド                      |
+| ----------------------------------------- | ----------------------------- |
+| 開発サーバーのバックグラウンド起動        | `npm run dev -- --background` |
+| 状態確認                                  | `npm run astro -- dev status` |
+| ログ確認                                  | `npm run astro -- dev logs`   |
+| 停止                                      | `npm run astro -- dev stop`   |
+| 本番ビルド                                | `npm run build`               |
+| Astro・TypeScriptの型確認                 | `npm run check`               |
+| ソース・設定・文書の整形                  | `npm run format`              |
+| 整形状態の確認                            | `npm run format:check`        |
+| ビルドと生成HTMLの検証                    | `npm run validate:html`       |
+| 品質確認をすべて実行                      | `npm run verify`              |
+| テーマ・保存設定・ページ内URLの回帰テスト | `npm run test:regression`     |
+| 隔離した実ブラウザーでの回帰テスト        | `npm run test:browser`        |
+| 差分の空白チェック                        | `git diff --check`            |
 
 開発サーバーは `AGENTS.md` の指示どおりバックグラウンドで管理します。通常のURLは `http://localhost:4321`、ビルド出力は `dist/` です。
 
 ## 変更後の確認
 
-1. `npm run test:regression`、`npm run test:browser`、`git diff --check` を実行します。各テストにはビルドも含みます。ビルドはTypeScriptの完全な型チェックではありません。
+1. `npm run verify` を実行します。型確認・整形確認・ビルド・生成HTMLの検証・Node回帰テスト・ブラウザー操作テスト・差分の空白チェックを順に実行し、失敗時は停止します。ビルドは1回だけ行い、同じ成果物をHTML検証と各テストで使用します。
 2. 生成HTMLの見出し（h1: 1、h2: 4、h3: 14）、技術6件・強み2件・成果物6件の一覧、重複ID、ページ内リンク先を確認します。件数を変更した場合は変更後のデータに合わせます。
 3. 表示設定はライト／ダーク、Animation On／Off、保存後の再読み込み、localStorageが利用できない場合を確認します。
 4. キーボードのTab・Shift+Tab・Enter・Space・Escape、目次選択後のフォーカス移動を確認します。
@@ -85,7 +90,11 @@ Node.js 22.12.0以上が必要です。依存は `npm ci` でインストール�
 
 キーボード・支援技術向け情報・文字拡大・リフロー・モーション設定の試験も `test:browser` に含みます。実施条件と結果、拡大時に見つかった目次の修正は [アクセシビリティ試験記録](docs/accessibility-test-results.md) を参照してください。読み上げはアクセシビリティ情報の自動検証まで実施し、VoiceOver等での実機確認は未実施です。
 
-完全な型チェック・整形・HTMLバリデーターの専用スクリプトは未導入です。`astro check` を利用するには `@astrojs/check` と `typescript` の追加が必要です。ブラウザーや支援技術での確認結果は、実施した項目と環境を記録してください。
+`check` はAstro Checkで `.astro` とTypeScriptをstrict設定で検査し、warning以上で失敗します。保持中の `src/components/Timeline.astro` と `src/scripts/timeline.ts` も対象です。`_timeline/` 等の別プロジェクトや出力先は除外しています。Matter.jsとTweakpaneの型には `@types/matter-js` と `@tweakpane/core` を使用します。
+
+`format` / `format:check` はAstro対応Prettierを使います。ソース・テスト・設定・README・`docs/` を対象とし、生成物・画像等のアセット・ローカル資料・エージェント向け指示ファイルは `.prettierignore` で除外します。
+
+`validate:html` はHTML Validateで `dist/**/*.html` をオフライン検証します。カスタム要素の内容モデルと、既存の読み上げ対応に関する設定は `.htmlvalidate.json` にまとめています。検証条件・設定理由・実行結果は [品質確認の記録](docs/quality-checks.md) を参照してください。
 
 ### 回帰検証の記録（2026-11-03）
 

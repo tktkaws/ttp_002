@@ -8,7 +8,9 @@ import {
 
 export const preferencesChangeEvent = "portfolio:preferenceschange";
 
-export function readStoredPreferences(fallback: DisplayPreferences = defaultPreferences): DisplayPreferences {
+export function readStoredPreferences(
+  fallback: DisplayPreferences = defaultPreferences,
+): DisplayPreferences {
   const read = (key: string, otherwise: string) => {
     try {
       return localStorage.getItem(key);
@@ -19,8 +21,12 @@ export function readStoredPreferences(fallback: DisplayPreferences = defaultPref
   const theme = read(preferenceKeys.theme, fallback.theme);
   const animation = read(preferenceKeys.animation, fallback.animation);
   return {
-    theme: theme === "light" || theme === "dark" ? theme : defaultPreferences.theme,
-    animation: animation === "off" || animation === "on" ? animation : defaultPreferences.animation,
+    theme:
+      theme === "light" || theme === "dark" ? theme : defaultPreferences.theme,
+    animation:
+      animation === "off" || animation === "on"
+        ? animation
+        : defaultPreferences.animation,
   };
 }
 
@@ -35,8 +41,12 @@ function persist(key: string, value: string) {
 export function getPreferences(): DisplayPreferences {
   const { theme, animation } = document.documentElement.dataset;
   return {
-    theme: theme === "light" || theme === "dark" ? theme : defaultPreferences.theme,
-    animation: animation === "off" || animation === "on" ? animation : defaultPreferences.animation,
+    theme:
+      theme === "light" || theme === "dark" ? theme : defaultPreferences.theme,
+    animation:
+      animation === "off" || animation === "on"
+        ? animation
+        : defaultPreferences.animation,
   };
 }
 
@@ -45,8 +55,12 @@ function applyPreferences({ theme, animation }: DisplayPreferences) {
   if (root.dataset.theme !== theme) root.dataset.theme = theme;
   if (root.dataset.animation !== animation) root.dataset.animation = animation;
   root.classList.toggle("dark", theme === "dark");
-  document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", theme);
-  document.dispatchEvent(new CustomEvent(preferencesChangeEvent, { detail: { theme, animation } }));
+  document
+    .querySelector('meta[name="color-scheme"]')
+    ?.setAttribute("content", theme);
+  document.dispatchEvent(
+    new CustomEvent(preferencesChangeEvent, { detail: { theme, animation } }),
+  );
 }
 
 export function setTheme(theme: Theme, save = true) {
@@ -60,14 +74,19 @@ export function setAnimation(animation: Animation, save = true) {
 }
 
 export function initPreferenceSync() {
-  const restore = () => applyPreferences(readStoredPreferences(getPreferences()));
+  const restore = () =>
+    applyPreferences(readStoredPreferences(getPreferences()));
   const onStorage = (event: StorageEvent) => {
     try {
       if (event.storageArea !== localStorage) return;
     } catch {
       return;
     }
-    if (event.key === null || event.key === preferenceKeys.theme || event.key === preferenceKeys.animation) {
+    if (
+      event.key === null ||
+      event.key === preferenceKeys.theme ||
+      event.key === preferenceKeys.animation
+    ) {
       restore();
     }
   };

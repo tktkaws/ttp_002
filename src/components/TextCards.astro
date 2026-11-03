@@ -3,51 +3,61 @@ import type { TextCardItem } from "../types/portfolio";
 export type { TextCardItem } from "../types/portfolio";
 
 const LIGHT_CARD_COLORS = new Set([
-	"#d8ddd4",
-	"#f9d34a",
-	"#58cdba",
-	"#b2a5f0",
-	"#63dcb9",
-	"#ee8d8a",
-	"#f0eee9",
-	"#c2c9cb",
+  "#d8ddd4",
+  "#f9d34a",
+  "#58cdba",
+  "#b2a5f0",
+  "#63dcb9",
+  "#ee8d8a",
+  "#f0eee9",
+  "#c2c9cb",
 ]);
 
 function cardTextColor(item: TextCardItem, fallbackColor: string) {
-	if (item.textColor) return item.textColor;
-	const fill = (item.color ?? fallbackColor).toLowerCase();
-	return LIGHT_CARD_COLORS.has(fill) ? "#000" : "#fff";
+  if (item.textColor) return item.textColor;
+  const fill = (item.color ?? fallbackColor).toLowerCase();
+  return LIGHT_CARD_COLORS.has(fill) ? "#000" : "#fff";
 }
 
 interface Props {
-	items: TextCardItem[];
-	label?: string;
-	color?: string;
-	soft?: boolean;
-	showControls?: boolean;
-	/** Enables the falling animation. Default true. */
-	animate?: boolean;
-	dropDistance?: number;
-	dropInterval?: number;
-	/** Multiplier for card height while preserving its width. Default 1. */
-	objectHeightScale?: number;
-	/** Shows the item title between the card and its link. Default false. */
-	showDetailsLabel?: boolean;
-	/** Maximum columns at wide viewports. Default 3. */
-	maxColumns?: 2 | 3;
-	/** Horizontal gap between columns in pixels. Default 28. */
-	columnGap?: number;
-	/** Multiplier for the link and description font size. Default 1. */
-	detailsTextScale?: number;
-	/** Use a unique key per instance to remember the physics mode in the URL. */
-	settingsKey?: string;
+  items: TextCardItem[];
+  label?: string;
+  color?: string;
+  soft?: boolean;
+  showControls?: boolean;
+  /** Enables the falling animation. Default true. */
+  animate?: boolean;
+  dropDistance?: number;
+  dropInterval?: number;
+  /** Multiplier for card height while preserving its width. Default 1. */
+  objectHeightScale?: number;
+  /** Shows the item title between the card and its link. Default false. */
+  showDetailsLabel?: boolean;
+  /** Maximum columns at wide viewports. Default 3. */
+  maxColumns?: 2 | 3;
+  /** Horizontal gap between columns in pixels. Default 28. */
+  columnGap?: number;
+  /** Multiplier for the link and description font size. Default 1. */
+  detailsTextScale?: number;
+  /** Use a unique key per instance to remember the physics mode in the URL. */
+  settingsKey?: string;
 }
 
 const {
-	items, label = "テキストカード", color = "#243048", soft = false,
-	showControls = false, animate = true, dropDistance = 0.85, dropInterval = 140,
-	objectHeightScale = 1, showDetailsLabel = false, maxColumns = 3, columnGap = 28,
-	detailsTextScale = 1, settingsKey,
+  items,
+  label = "テキストカード",
+  color = "#243048",
+  soft = false,
+  showControls = false,
+  animate = true,
+  dropDistance = 0.85,
+  dropInterval = 140,
+  objectHeightScale = 1,
+  showDetailsLabel = false,
+  maxColumns = 3,
+  columnGap = 28,
+  detailsTextScale = 1,
+  settingsKey,
 } = Astro.props;
 
 const mobileCardHeight = 14 * objectHeightScale;
@@ -55,184 +65,275 @@ const wideCardHeight = 20 * objectHeightScale;
 ---
 
 <falling-text-cards
-	style={`--drop-distance: ${dropDistance}; --column-gap: ${columnGap}px; --three-column-gaps: ${columnGap * 2}px; --details-font-size: calc(var(--font-trace) * ${0.15 * detailsTextScale}); --mobile-card-ratio: 35 / ${mobileCardHeight}; --wide-card-ratio: 43 / ${wideCardHeight}; --mobile-card-half-height: ${mobileCardHeight / 2}; --wide-card-half-height: ${wideCardHeight / 2}`}
-	data-soft={String(soft)} data-controls={String(showControls)}
-	data-animate={String(animate)}
-	data-distance={dropDistance} data-interval={dropInterval} data-max-columns={maxColumns}
-	data-settings-key={settingsKey}
+  style={`--drop-distance: ${dropDistance}; --column-gap: ${columnGap}px; --three-column-gaps: ${columnGap * 2}px; --details-font-size: calc(var(--font-trace) * ${0.15 * detailsTextScale}); --mobile-card-ratio: 35 / ${mobileCardHeight}; --wide-card-ratio: 43 / ${wideCardHeight}; --mobile-card-half-height: ${mobileCardHeight / 2}; --wide-card-half-height: ${wideCardHeight / 2}`}
+  data-soft={String(soft)}
+  data-controls={String(showControls)}
+  data-animate={String(animate)}
+  data-distance={dropDistance}
+  data-interval={dropInterval}
+  data-max-columns={maxColumns}
+  data-settings-key={settingsKey}
 >
-	<div class="controls" data-controls-container hidden></div>
-	<div class="stage" data-stage hidden={items.length === 0}>
-		<ul class="grid" role="list" aria-label={label}>
-			{items.map((item) => (
-				<li
-					class="entry"
-					style={`--item-color: ${item.color ?? color}; --item-text: ${cardTextColor(item, color)}`}
-				>
-					<article>
-						<div
-							class:list={[
-								"object",
-								item.image && "object--image",
-								item.image && item.imageLayout === "full" && "object--image-full",
-							]}
-							data-card
-						>
-							{item.image ? (
-								<img src={item.image} alt="" width="1920" height="992" decoding="async" />
-							) : null}
-							{!showDetailsLabel && <h3 class:list={["card-title", item.image && "visually-hidden"]}>{item.label}</h3>}
-						</div>
-						{showDetailsLabel && <h3 class="card-title details-title">{item.label}</h3>}
-						{item.href && (
-							<p class="link">
-								<a href={item.href} target="_blank" rel="noreferrer">{item.href}</a>
-							</p>
-						)}
-						<p class="description">{item.description}</p>
-					</article>
-				</li>
-			))}
-		</ul>
-		<svg class="skin" data-skin aria-hidden="true" focusable="false"></svg>
-	</div>
+  <div class="controls" data-controls-container hidden></div>
+  <div class="stage" data-stage hidden={items.length === 0}>
+    <ul class="grid" role="list" aria-label={label}>
+      {items.map((item) => (
+        <li
+          class="entry"
+          style={`--item-color: ${item.color ?? color}; --item-text: ${cardTextColor(item, color)}`}
+        >
+          <article>
+            <div
+              class:list={[
+                "object",
+                item.image && "object--image",
+                item.image &&
+                  item.imageLayout === "full" &&
+                  "object--image-full",
+              ]}
+              data-card
+            >
+              {item.image ? (
+                <img
+                  src={item.image}
+                  alt=""
+                  width="1920"
+                  height="992"
+                  decoding="async"
+                />
+              ) : null}
+              {!showDetailsLabel && (
+                <h3
+                  class:list={["card-title", item.image && "visually-hidden"]}
+                >
+                  {item.label}
+                </h3>
+              )}
+            </div>
+            {showDetailsLabel && (
+              <h3 class="card-title details-title">{item.label}</h3>
+            )}
+            {item.href && (
+              <p class="link">
+                <a href={item.href} target="_blank" rel="noreferrer">
+                  {item.href}
+                </a>
+              </p>
+            )}
+            <p class="description">{item.description}</p>
+          </article>
+        </li>
+      ))}
+    </ul>
+    <svg class="skin" data-skin aria-hidden="true" focusable="false"></svg>
+  </div>
 </falling-text-cards>
 
 <style>
-	falling-text-cards {
-		display: block;
-		max-width: 1600px;
-		margin-left: 0;
-		color: inherit;
-		font-family: var(--font-sans);
-		font-weight: 300;
-	}
-	falling-text-cards, falling-text-cards * { box-sizing: border-box; }
-	.controls { width: min(280px, 100%); margin: 0 0 16px auto; }
-	.controls[hidden], .stage[hidden] { display: none; }
-	.stage { position: relative; }
-	.grid { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 100px; column-gap: var(--column-gap); margin: 0; padding: 0; list-style: none; }
-	.entry { min-width: 0; }
-	.object {
-		container-type: size;
-		position: relative;
-		display: grid;
-		place-items: center;
-		aspect-ratio: var(--mobile-card-ratio);
-		padding: min(1rem, 8cqmin);
-		overflow: hidden;
-		border-radius: 5px;
-		color: var(--item-text, #fff);
-		background: var(--item-color);
-		transform-origin: center;
-	}
-	.object--image {
-		padding: 0;
-	}
-	.object--image img {
-		position: absolute;
-		inset: 4%;
-		width: 92%;
-		height: 92%;
-		max-width: none;
-		object-fit: cover;
-		object-position: top center;
-		pointer-events: none;
-	}
-	.object--image-full img {
-		inset: 0;
-		width: 100%;
-		height: 100%;
-	}
-	.visually-hidden {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		padding: 0;
-		margin: -1px;
-		overflow: hidden;
-		clip: rect(0, 0, 0, 0);
-		white-space: nowrap;
-		border: 0;
-	}
-	.card-title {
-		margin: 0;
-		max-width: 100%;
-		font-family: var(--font-sans);
-		font-size: clamp(0.875rem, min(22cqw, 42cqh), 2.5rem);
-		font-weight: 500;
-		line-height: 1.1;
-		letter-spacing: 0.02em;
-		text-align: center;
-		overflow-wrap: anywhere;
-	}
-	.object--image .card-title:not(.visually-hidden) {
-		position: relative;
-		z-index: 1;
-	}
-	.description,
-	.details-title,
-	.link {
-		margin: 14px 0 0;
-		color: inherit;
-		font-family: var(--font-sans);
-		font-size: calc(var(--font-trace) * 0.15);
-		font-weight: 300;
-		line-height: 1.8;
-		overflow-wrap: anywhere;
-		text-wrap: pretty;
-	}
-	.details-title {
-		font-weight: 500;
-		letter-spacing: normal;
-		text-align: left;
-	}
-	.description,
-	.link { font-size: var(--details-font-size); }
-	.details-title + .link { margin-top: 4px; }
-	.link a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; }
-	.link a:hover { text-decoration-thickness: 2px; }
-	.skin { display: none; position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-	falling-text-cards[data-active="true"] .object { will-change: transform, opacity; }
-	falling-text-cards[data-active="true"][data-mode="soft"] .object { background: transparent; }
-	falling-text-cards[data-active="true"][data-mode="soft"] .skin { display: block; }
+  falling-text-cards {
+    display: block;
+    max-width: 1600px;
+    margin-left: 0;
+    color: inherit;
+    font-family: var(--font-sans);
+    font-weight: 300;
+  }
+  falling-text-cards,
+  falling-text-cards * {
+    box-sizing: border-box;
+  }
+  .controls {
+    width: min(280px, 100%);
+    margin: 0 0 16px auto;
+  }
+  .controls[hidden],
+  .stage[hidden] {
+    display: none;
+  }
+  .stage {
+    position: relative;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 100px;
+    column-gap: var(--column-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .entry {
+    min-width: 0;
+  }
+  .object {
+    container-type: size;
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: var(--mobile-card-ratio);
+    padding: min(1rem, 8cqmin);
+    overflow: hidden;
+    border-radius: 5px;
+    color: var(--item-text, #fff);
+    background: var(--item-color);
+    transform-origin: center;
+  }
+  .object--image {
+    padding: 0;
+  }
+  .object--image img {
+    position: absolute;
+    inset: 4%;
+    width: 92%;
+    height: 92%;
+    max-width: none;
+    object-fit: cover;
+    object-position: top center;
+    pointer-events: none;
+  }
+  .object--image-full img {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .card-title {
+    margin: 0;
+    max-width: 100%;
+    font-family: var(--font-sans);
+    font-size: clamp(0.875rem, min(22cqw, 42cqh), 2.5rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+  .object--image .card-title:not(.visually-hidden) {
+    position: relative;
+    z-index: 1;
+  }
+  .description,
+  .details-title,
+  .link {
+    margin: 14px 0 0;
+    color: inherit;
+    font-family: var(--font-sans);
+    font-size: calc(var(--font-trace) * 0.15);
+    font-weight: 300;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+    text-wrap: pretty;
+  }
+  .details-title {
+    font-weight: 500;
+    letter-spacing: normal;
+    text-align: left;
+  }
+  .description,
+  .link {
+    font-size: var(--details-font-size);
+  }
+  .details-title + .link {
+    margin-top: 4px;
+  }
+  .link a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+  .link a:hover {
+    text-decoration-thickness: 2px;
+  }
+  .skin {
+    display: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  falling-text-cards[data-active="true"] .object {
+    will-change: transform, opacity;
+  }
+  falling-text-cards[data-active="true"][data-mode="soft"] .object {
+    background: transparent;
+  }
+  falling-text-cards[data-active="true"][data-mode="soft"] .skin {
+    display: block;
+  }
 
-	:global(html.dark) falling-text-cards .object {
-		box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
-	}
-	:global(html.dark) falling-text-cards[data-active="true"][data-mode="soft"] .object {
-		box-shadow: none;
-	}
+  :global(html.dark) falling-text-cards .object {
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+  }
+  :global(html.dark)
+    falling-text-cards[data-active="true"][data-mode="soft"]
+    .object {
+    box-shadow: none;
+  }
 
-	@media (min-width: 640px) {
-		.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-		.object { aspect-ratio: var(--wide-card-ratio); }
-	}
-	@media (min-width: 1536px) {
-		.grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-	}
-	falling-text-cards[data-max-columns="2"] .grid {
-		grid-template-columns: minmax(0, 1fr);
-	}
-	@media (min-width: 640px) {
-		falling-text-cards[data-max-columns="2"] .grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
-	@media (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-active="true"] .grid { padding-top: calc(var(--drop-distance) * 100% * var(--mobile-card-half-height) / 35); }
-	}
-	@media (min-width: 640px) and (max-width: 1535.98px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-active="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - var(--column-gap)) / 2 * var(--wide-card-half-height) / 43); }
-	}
-	@media (min-width: 1536px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-active="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - var(--three-column-gaps)) / 3 * var(--wide-card-half-height) / 43); }
-	}
-	@media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-active="true"][data-max-columns="2"] .grid {
-			padding-top: calc(var(--drop-distance) * (100% - var(--column-gap)) / 2 * var(--wide-card-half-height) / 43);
-		}
-	}
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .object {
+      aspect-ratio: var(--wide-card-ratio);
+    }
+  }
+  @media (min-width: 1536px) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  falling-text-cards[data-max-columns="2"] .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 640px) {
+    falling-text-cards[data-max-columns="2"] .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    falling-text-cards[data-active="true"] .grid {
+      padding-top: calc(
+        var(--drop-distance) * 100% * var(--mobile-card-half-height) / 35
+      );
+    }
+  }
+  @media (min-width: 640px) and (max-width: 1535.98px) and (prefers-reduced-motion: no-preference) {
+    falling-text-cards[data-active="true"] .grid {
+      padding-top: calc(
+        var(--drop-distance) * (100% - var(--column-gap)) / 2 *
+          var(--wide-card-half-height) / 43
+      );
+    }
+  }
+  @media (min-width: 1536px) and (prefers-reduced-motion: no-preference) {
+    falling-text-cards[data-active="true"] .grid {
+      padding-top: calc(
+        var(--drop-distance) * (100% - var(--three-column-gaps)) / 3 *
+          var(--wide-card-half-height) / 43
+      );
+    }
+  }
+  @media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
+    falling-text-cards[data-active="true"][data-max-columns="2"] .grid {
+      padding-top: calc(
+        var(--drop-distance) * (100% - var(--column-gap)) / 2 *
+          var(--wide-card-half-height) / 43
+      );
+    }
+  }
 </style>
 
 <script>

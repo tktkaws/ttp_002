@@ -7,10 +7,22 @@ const { id, number, title } = Astro.props;
 const headingId = `${id}-heading`;
 ---
 
-<section id={id} aria-labelledby={headingId} class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]">
+<section
+  id={id}
+  aria-labelledby={headingId}
+  class="border-t border-gray-900 dark:border-gray-100 mt-[8rem]"
+>
   <header>
-    <p class="section-number text-body mt-[0.5em]" aria-hidden="true">[{number}]</p>
-    <h2 id={headingId} class="heading-reveal text-display section-inset-x mt-[4rem]" data-heading-reveal>{title}</h2>
+    <p class="section-number text-body mt-[0.5em]" aria-hidden="true">
+      [{number}]
+    </p>
+    <h2
+      id={headingId}
+      class="heading-reveal text-display section-inset-x mt-[4rem]"
+      data-heading-reveal
+    >
+      {title}
+    </h2>
   </header>
   <div class="section-inset-x mt-[4rem]">
     <slot />

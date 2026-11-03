@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.astro/
+test-results/
+playwright-report/
+public/
+output/
+package-lock.json
+_docs/
+_timeline/
+REFACTORING_PLAN.md
+AGENTS.md
+CLAUDE.md
+.vscode/
+.agents/
+.codex/
+.aws/

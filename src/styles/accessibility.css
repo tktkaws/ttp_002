@@ -1,21 +1,21 @@
 a {
-	box-decoration-break: clone;
-	-webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 :is(a, button) {
-	padding-inline: 0.2em;
+  padding-inline: 0.2em;
 }
 
 /* デジタル庁スタイルのダブルリング（ライト: 黄×黒 / ダーク: 白リングのみ）— outline を主役にする */
 :is(a, button):is(:focus-visible, :hover) {
-	background-color: var(--focus-ring-inner);
-	outline: var(--focus-ring-width) solid var(--focus-ring-outer);
-	outline-offset: var(--focus-ring-offset);
-	border-radius: var(--focus-ring-radius);
-	box-shadow: 0 0 0 var(--focus-ring-inner-width) var(--focus-ring-inner);
+  background-color: var(--focus-ring-inner);
+  outline: var(--focus-ring-width) solid var(--focus-ring-outer);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--focus-ring-radius);
+  box-shadow: 0 0 0 var(--focus-ring-inner-width) var(--focus-ring-inner);
 }
 
 html:not(.dark) :is(a, button):is(:focus-visible, :hover) {
-	color: var(--focus-ring-text);
+  color: var(--focus-ring-text);
 }
