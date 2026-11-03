@@ -98,6 +98,11 @@ export function initFixedNav(nav = document.querySelector<HTMLElement>("#fixed-n
       frame = requestAnimationFrame(() => safely(() => {
         frame = 0;
         const currentY = getScrollY(), delta = currentY - previousY;
+        if (getComputedStyle(nav).position !== "fixed") {
+          previousY = currentY;
+          nav.classList.remove("fixed-nav--hidden");
+          return;
+        }
         if (currentY > 0 && Math.abs(delta) < 6) return;
         previousY = currentY;
         const active = document.activeElement;

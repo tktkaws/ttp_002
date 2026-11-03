@@ -187,4 +187,20 @@ const { items } = Astro.props;
       transition: none;
     }
   }
+
+  /* Keep every option reachable when zoom leaves little screen space. */
+  @media (max-width: 639px), (max-height: 480px) {
+    .fixed-nav {
+      position: static;
+      max-width: 100%;
+      margin-bottom: 2rem;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .fixed-nav__panel {
+      position: static;
+      max-height: none;
+    }
+  }
 </style>
