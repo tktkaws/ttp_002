@@ -27,3 +27,7 @@ pnpm-debug.log*
 _docs
 _timeline
 REFACTORING_PLAN.md
+
+# browser test artifacts
+test-results/
+playwright-report/

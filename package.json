@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test:regression": "npm run build && node --experimental-strip-types --test tests/*.test.mjs"
+    "test:regression": "npm run build && node --experimental-strip-types --test tests/*.test.mjs",
+    "test:browser": "npm run build && playwright test"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",
@@ -18,5 +19,8 @@
     "matter-js": "^0.20.0",
     "tailwindcss": "^4.3.2",
     "tweakpane": "^4.0.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1"
   }
 }
