@@ -1,5 +1,4 @@
-import { getPreferences, setAnimation, setTheme } from "./preferences";
-import type { Animation, Theme } from "../config/preferences";
+import { getPreferences, preferencesChangeEvent, setAnimation, setTheme } from "./preferences.ts";
 
 const nav = document.querySelector<HTMLElement>("#fixed-nav");
 
@@ -49,17 +48,13 @@ if (nav) {
       if (!option) return;
 
       if (option instanceof HTMLAnchorElement) {
-        const section = document.querySelector<HTMLElement>(option.hash);
-        if (section) {
-          section.tabIndex = -1;
-          section.focus({ preventScroll: true });
-          section.addEventListener("blur", () => section.removeAttribute("tabindex"), { once: true });
-        }
+        // Leave modified clicks and browser history to native link navigation.
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       } else {
         const theme = option.dataset.theme;
         const animation = option.dataset.animation;
-        if (theme === "light" || theme === "dark") applyTheme(theme);
-        if (animation === "on" || animation === "off") applyAnimation(animation);
+        if (theme === "light" || theme === "dark") setTheme(theme);
+        if (animation === "on" || animation === "off") setAnimation(animation);
         trigger.focus({ preventScroll: true });
       }
       closeMenus();
@@ -72,25 +67,20 @@ if (nav) {
 
   const labelText = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 
-  const applyTheme = (theme: Theme, save = true) => {
-    setTheme(theme, save);
+  const syncPreferenceControls = () => {
+    const { theme, animation } = getPreferences();
     nav.querySelector<HTMLElement>("[data-theme-label]")!.textContent = labelText(theme);
     nav.querySelectorAll<HTMLButtonElement>("button[data-theme]").forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.theme === theme));
     });
-  };
-
-  const applyAnimation = (animation: Animation, save = true) => {
-    setAnimation(animation, save);
     nav.querySelector<HTMLElement>("[data-animation-label]")!.textContent = labelText(animation);
     nav.querySelectorAll<HTMLButtonElement>("button[data-animation]").forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.animation === animation));
     });
   };
 
-  const preferences = getPreferences();
-  applyTheme(preferences.theme, false);
-  applyAnimation(preferences.animation, false);
+  document.addEventListener(preferencesChangeEvent, syncPreferenceControls);
+  syncPreferenceControls();
 
   const getScrollY = () => Math.max(0, Math.min(window.scrollY, root.scrollHeight - window.innerHeight));
   let previousY = getScrollY();

@@ -2,19 +2,34 @@
 import { defaultPreferences, preferenceKeys } from "../config/preferences";
 ---
 
-<!-- Run synchronously in head to restore the theme before the first paint. -->
+<!-- Paint the canvas and native controls correctly while external CSS loads. -->
+<style is:inline>
+  html[data-theme="light"] {
+    color-scheme: light;
+    background-color: var(--color-white, #fff);
+  }
+  html[data-theme="dark"] {
+    color-scheme: dark;
+    background-color: var(--color-gray-900, #111827);
+  }
+</style>
+
+<!-- Run before external stylesheets, without waiting for a module download. -->
 <script is:inline define:vars={{ defaultPreferences, preferenceKeys }}>
   {
     let theme = defaultPreferences.theme;
     let animation = defaultPreferences.animation;
-    try {
-      const storedTheme = localStorage.getItem(preferenceKeys.theme);
-      const storedAnimation = localStorage.getItem(preferenceKeys.animation);
-      if (storedTheme === "light" || storedTheme === "dark") theme = storedTheme;
-      if (storedAnimation === "off" || storedAnimation === "on") animation = storedAnimation;
-    } catch {
-      // Keep the defaults when browser storage is unavailable.
-    }
+    const read = (key) => {
+      try {
+        return localStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    };
+    const storedTheme = read(preferenceKeys.theme);
+    const storedAnimation = read(preferenceKeys.animation);
+    if (storedTheme === "light" || storedTheme === "dark") theme = storedTheme;
+    if (storedAnimation === "off" || storedAnimation === "on") animation = storedAnimation;
     const root = document.documentElement;
     root.classList.add("js");
     root.classList.toggle("dark", theme === "dark");
