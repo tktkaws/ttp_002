@@ -24,27 +24,6 @@ const headingId = `${id}-heading`;
 
 <style>
   .heading-reveal {
-    --heading-reveal-duration: 250ms;
-    --heading-reveal-delay: 0ms;
-    --heading-reveal-easing: ease-out;
-    --heading-reveal-start: inset(0 100% 0 0);
-    --heading-reveal-end: inset(0 0 0 0);
-    clip-path: var(--heading-reveal-end);
     width: fit-content;
-  }
-
-  :global(html.js[data-animation="on"]) .heading-reveal:not(.heading-reveal--visible) {
-    clip-path: var(--heading-reveal-start);
-  }
-
-  :global(html[data-animation="on"]) .heading-reveal {
-    transition: clip-path var(--heading-reveal-duration) var(--heading-reveal-easing) var(--heading-reveal-delay);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .heading-reveal {
-      clip-path: none;
-      transition: none;
-    }
   }
 </style>

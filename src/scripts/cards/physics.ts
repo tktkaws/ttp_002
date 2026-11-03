@@ -1,6 +1,7 @@
 import Matter from "matter-js";
-import { mountCardControls } from "./controls";
-import { cardPhysicsDefaults } from "../../config/card-physics";
+import { mountCardControls } from "./controls.ts";
+import { cardPhysicsDefaults } from "../../config/card-physics.ts";
+import { restoreTextCards } from "./fallback.ts";
 
 const { Engine, Bodies, Body, Composite, Constraint, Sleeping } = Matter;
 const NS = "http://www.w3.org/2000/svg";
@@ -9,6 +10,10 @@ export function mountTextCards(root: HTMLElement) {
   const stage = root.querySelector<HTMLElement>("[data-stage]")!;
   const cards = [...root.querySelectorAll<HTMLElement>("[data-card]")];
   const skin = root.querySelector<SVGSVGElement>("[data-skin]")!;
+  if (!stage || !skin || !cards.length) {
+    restoreTextCards(root);
+    return () => restoreTextCards(root);
+  }
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
   const abort = new AbortController();
   const defaults = {
@@ -28,6 +33,33 @@ export function mountTextCards(root: HTMLElement) {
   let frame = 0, resizeFrame = 0, last = 0, elapsed = 0, accumulator = 0;
   let visible = false, settled = false, active = false, disposed = false;
   let measuredWidth = 0, measuredHeight = 0;
+  let pane: ReturnType<typeof mountCardControls> | undefined;
+  let observer: IntersectionObserver | undefined;
+  let resize: ResizeObserver | undefined;
+  let animationPreference: MutationObserver | undefined;
+
+  function dispose() {
+    disposed = true;
+    restoreTextCards(root);
+    const cleanup = [
+      pause,
+      () => cancelAnimationFrame(resizeFrame),
+      () => abort.abort(),
+      () => observer?.disconnect(),
+      () => resize?.disconnect(),
+      () => animationPreference?.disconnect(),
+      () => pane?.dispose(),
+      () => { if (engine) { Composite.clear(engine.world, false); Engine.clear(engine); } },
+    ];
+    for (const action of cleanup) {
+      try { action(); } catch { /* Continue restoring the remaining resources. */ }
+    }
+  }
+
+  function safely(action: () => void) {
+    if (disposed) return;
+    try { action(); } catch { dispose(); }
+  }
 
   function saveSettings() {
     if (!key) return;
@@ -160,6 +192,10 @@ export function mountTextCards(root: HTMLElement) {
     if (!disposed && active && !settled && !document.hidden && visible && !frame) frame = requestAnimationFrame(tick);
   }
   function tick(now: number) {
+    safely(() => updateFrame(now));
+  }
+
+  function updateFrame(now: number) {
     frame = 0;
     const delta = last ? Math.min(now - last, 64) : 0;
     last = now; elapsed += delta; accumulator += delta;
@@ -173,6 +209,10 @@ export function mountTextCards(root: HTMLElement) {
   }
 
   function rebuild() {
+    safely(rebuildScene);
+  }
+
+  function rebuildScene() {
     pause();
     if (engine) { Composite.clear(engine.world, false); Engine.clear(engine); engine = undefined; }
     skin.replaceChildren();
@@ -180,11 +220,15 @@ export function mountTextCards(root: HTMLElement) {
     root.dataset.active = "false";
     root.dataset.mode = params.soft ? "soft" : "rigid";
     root.style.setProperty("--drop-distance", String(params.dropDistance));
-    for (const card of cards) card.removeAttribute("style");
+    for (const card of cards) {
+      for (const property of ["opacity", "transform", "z-index", "will-change"]) card.style.removeProperty(property);
+    }
+    // Measure after activating the animation's reserved space.
+    active = root.dataset.animate !== "false" && document.documentElement.dataset.animation === "on" && !reduced.matches;
+    root.dataset.active = String(active);
     const bounds = stage.getBoundingClientRect();
     measuredWidth = bounds.width; measuredHeight = bounds.height;
     // Honor the site's Animation control as well as the OS motion preference.
-    active = root.dataset.animate !== "false" && document.documentElement.dataset.animation !== "off" && !reduced.matches && cards.length > 0;
     root.dataset.state = "static";
     if (!active) return;
     engine = Engine.create({ enableSleeping: true });
@@ -192,40 +236,36 @@ export function mountTextCards(root: HTMLElement) {
     engine.positionIterations = 10; engine.velocityIterations = 8;
     skin.setAttribute("viewBox", `0 0 ${bounds.width} ${bounds.height}`);
     items = cards.map((card, index) => makeItem(card, index, bounds));
-    root.dataset.active = "true";
-    for (const card of cards) card.style.opacity = "0";
     elapsed = 0; accumulator = 0; settled = false;
     resume();
   }
 
-  const pane = root.dataset.controls === "true"
-    ? mountCardControls(root.querySelector<HTMLElement>("[data-controls-container]")!, params, defaults, {
-        saveSettings,
-        rebuild,
-        paintSkeleton: () => items.forEach(paintSkeleton),
-      })
-    : undefined;
+  safely(() => {
+    pane = root.dataset.controls === "true"
+      ? mountCardControls(root.querySelector<HTMLElement>("[data-controls-container]")!, params, defaults, {
+          saveSettings: () => safely(saveSettings),
+          rebuild,
+          paintSkeleton: () => safely(() => items.forEach(paintSkeleton)),
+        })
+      : undefined;
 
-  const scheduleRebuild = () => { cancelAnimationFrame(resizeFrame); resizeFrame = requestAnimationFrame(() => { if (!disposed) rebuild(); }); };
-  const animationPreference = new MutationObserver(scheduleRebuild);
-  animationPreference.observe(document.documentElement, { attributes: true, attributeFilter: ["data-animation"] });
-  reduced.addEventListener("change", scheduleRebuild, { signal: abort.signal });
-  document.addEventListener("visibilitychange", () => document.hidden ? pause() : resume(), { signal: abort.signal });
-  window.addEventListener("pagehide", pause, { signal: abort.signal });
-  window.addEventListener("pageshow", resume, { signal: abort.signal });
-  const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; if (visible) resume(); else pause(); }, { rootMargin: "0px 0px -20% 0px" });
-  observer.observe(stage);
-  const resize = new ResizeObserver(() => {
-    const bounds = stage.getBoundingClientRect();
-    if (Math.abs(bounds.width - measuredWidth) > 0.5 || Math.abs(bounds.height - measuredHeight) > 0.5) scheduleRebuild();
+    const controls = root.querySelector<HTMLElement>("[data-controls-container]");
+    if (controls) controls.hidden = !pane;
+    const scheduleRebuild = () => safely(() => { cancelAnimationFrame(resizeFrame); resizeFrame = requestAnimationFrame(rebuild); });
+    animationPreference = new MutationObserver(scheduleRebuild);
+    animationPreference.observe(document.documentElement, { attributes: true, attributeFilter: ["data-animation"] });
+    reduced.addEventListener("change", scheduleRebuild, { signal: abort.signal });
+    document.addEventListener("visibilitychange", () => safely(() => document.hidden ? pause() : resume()), { signal: abort.signal });
+    window.addEventListener("pagehide", () => safely(pause), { signal: abort.signal });
+    window.addEventListener("pageshow", () => safely(resume), { signal: abort.signal });
+    observer = new IntersectionObserver(([entry]) => safely(() => { visible = entry.isIntersecting; if (visible) resume(); else pause(); }), { rootMargin: "0px 0px -20% 0px" });
+    observer.observe(stage);
+    resize = new ResizeObserver(() => safely(() => {
+      const bounds = stage.getBoundingClientRect();
+      if (Math.abs(bounds.width - measuredWidth) > 0.5 || Math.abs(bounds.height - measuredHeight) > 0.5) scheduleRebuild();
+    }));
+    rebuild();
+    if (!disposed) resize.observe(stage);
   });
-  rebuild();
-  resize.observe(stage);
-  return () => {
-    disposed = true; pause(); cancelAnimationFrame(resizeFrame); abort.abort(); observer.disconnect(); resize.disconnect(); animationPreference.disconnect(); pane?.dispose();
-    if (engine) { Composite.clear(engine.world, false); Engine.clear(engine); }
-    skin.replaceChildren();
-    root.dataset.active = "false";
-    for (const card of cards) card.removeAttribute("style");
-  };
+  return dispose;
 }

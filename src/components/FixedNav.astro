@@ -10,40 +10,65 @@ const { items } = Astro.props;
 
 <nav id="fixed-nav" aria-label="表示設定とページ内ナビゲーション" class="fixed-nav font-sans font-normal">
   <ul class="fixed-nav__items">
-    <li class="fixed-nav__item">
-      <button type="button" class="fixed-nav__trigger" aria-expanded="false" aria-controls="animation-options">
-        Animation:<span data-animation-label>Off</span>
-      </button>
-      <ul id="animation-options" class="fixed-nav__panel" hidden>
-        <li><button type="button" data-animation="off" aria-pressed="true">Off</button></li>
-        <li><button type="button" data-animation="on" aria-pressed="false">On</button></li>
-      </ul>
+    <li>
+      <details class="fixed-nav__item" data-preference-item hidden>
+        <summary class="fixed-nav__trigger">
+          Animation:<span data-animation-label>Off</span>
+        </summary>
+        <ul id="animation-options" class="fixed-nav__panel">
+          <li><button type="button" data-animation="off" aria-pressed="true" disabled>Off</button></li>
+          <li><button type="button" data-animation="on" aria-pressed="false" disabled>On</button></li>
+        </ul>
+      </details>
     </li>
-    <li class="fixed-nav__item">
-      <button type="button" class="fixed-nav__trigger" aria-expanded="false" aria-controls="theme-options">
-        Theme:<span data-theme-label>Light</span>
-      </button>
-      <ul id="theme-options" class="fixed-nav__panel" hidden>
-        <li><button type="button" data-theme="light" aria-pressed="true">Light</button></li>
-        <li><button type="button" data-theme="dark" aria-pressed="false">Dark</button></li>
-      </ul>
+    <li>
+      <details class="fixed-nav__item" data-preference-item hidden>
+        <summary class="fixed-nav__trigger">
+          Theme:<span data-theme-label>Light</span>
+        </summary>
+        <ul id="theme-options" class="fixed-nav__panel">
+          <li><button type="button" data-theme="light" aria-pressed="true" disabled>Light</button></li>
+          <li><button type="button" data-theme="dark" aria-pressed="false" disabled>Dark</button></li>
+        </ul>
+      </details>
     </li>
-    <li class="fixed-nav__item">
-      <button type="button" class="fixed-nav__trigger" aria-expanded="false" aria-controls="contents-options">
-        Contents
-      </button>
-      <ul id="contents-options" class="fixed-nav__panel" hidden>
-        {items.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
-      </ul>
+    <li>
+      <details class="fixed-nav__item" data-contents-item open>
+        <summary class="fixed-nav__trigger">
+          Contents
+        </summary>
+        <ul id="contents-options" class="fixed-nav__panel">
+          {items.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </details>
     </li>
   </ul>
 </nav>
 
 <script>
-  import "../scripts/fixed-nav";
+  import { initFixedNav } from "../scripts/fixed-nav";
+  initFixedNav();
 </script>
 
 <style>
+  .fixed-nav [hidden] { display: none; }
+
+  .fixed-nav:not([data-enhanced]) {
+    position: static;
+    margin-bottom: 2rem;
+  }
+
+  .fixed-nav:not([data-enhanced]) .fixed-nav__items { display: block; }
+
+  .fixed-nav:not([data-enhanced]) .fixed-nav__panel {
+    position: static;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    max-height: none;
+    background: transparent;
+  }
+
   .fixed-nav {
     position: fixed;
     z-index: 50;
@@ -86,7 +111,20 @@ const { items } = Astro.props;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.3em;
     cursor: pointer;
+    padding-inline: 0.2em;
+    list-style: none;
   }
+
+  .fixed-nav__trigger::-webkit-details-marker { display: none; }
+
+  .fixed-nav__trigger:is(:focus-visible, :hover) {
+    outline: var(--focus-ring-width) solid var(--focus-ring-outer);
+    outline-offset: var(--focus-ring-offset);
+    background: var(--focus-ring-inner);
+    box-shadow: 0 0 0 var(--focus-ring-inner-width) var(--focus-ring-inner);
+  }
+
+  :global(html:not(.dark)) .fixed-nav__trigger:is(:focus-visible, :hover) { color: var(--focus-ring-text); }
 
   .fixed-nav__panel {
     position: absolute;

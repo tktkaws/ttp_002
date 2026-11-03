@@ -4,7 +4,8 @@ import test from "node:test";
 import vm from "node:vm";
 import { defaultPreferences } from "../src/config/preferences.ts";
 import { getPreferences, initPreferenceSync, preferencesChangeEvent, readStoredPreferences, setAnimation, setTheme } from "../src/scripts/preferences.ts";
-import { createDOM, ElementStub, eventWith, installDOM } from "./helpers/dom.mjs";
+import { createDOM, eventWith, installDOM } from "./helpers/dom.mjs";
+import { createNav } from "./helpers/nav.mjs";
 
 const html = readFileSync(new URL("../dist/index.html", import.meta.url), "utf8");
 const bootstrap = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)]
@@ -125,28 +126,9 @@ test("保存しない更新は、既存の保存値を書き換えない", (t) =
 
 test("設定ボタン・復元・別タブ変更でラベルと選択状態も同期する", async (t) => {
   const dom = installDOM(t);
-  Object.assign(dom.root, { scrollHeight: 2000 });
-  Object.assign(dom.window, { innerHeight: 800, scrollY: 0 });
-  const themeLabel = new ElementStub(), animationLabel = new ElementStub();
-  const option = (key, value) => {
-    const button = new ElementStub();
-    button.dataset[key] = value;
-    button.closest = () => button;
-    return button;
-  };
-  const themes = [option("theme", "light"), option("theme", "dark")];
-  const animations = [option("animation", "off"), option("animation", "on")];
-  const panels = Array.from({ length: 3 }, () => new ElementStub());
-  const items = panels.map((panel) => {
-    const item = new ElementStub(), trigger = new ElementStub();
-    item.querySelector = (selector) => selector.endsWith("trigger") ? trigger : panel;
-    return item;
-  });
-  const nav = new ElementStub();
-  nav.querySelector = (selector) => selector.includes("theme") ? themeLabel : animationLabel;
-  nav.querySelectorAll = (selector) => selector === ".fixed-nav__item" ? items : selector.includes("theme") ? themes : animations;
-  dom.document.querySelector = (selector) => selector === "#fixed-nav" ? nav : dom.meta;
-  await import("../src/scripts/fixed-nav.ts");
+  const { nav, panels, themes, animations, themeLabel, animationLabel } = createNav(dom);
+  const { initFixedNav } = await import("../src/scripts/fixed-nav.ts");
+  const cleanupNav = initFixedNav(nav);
   assert.equal(themeLabel.textContent, "Light");
   panels[1].dispatchEvent(eventWith("click", { target: themes[1], button: 0 }));
   assert.equal(themeLabel.textContent, "Dark");
@@ -163,4 +145,5 @@ test("設定ボタン・復元・別タブ変更でラベルと選択状態も�
   assert.equal(themeLabel.textContent, "Light");
   assert.equal(themes[0].getAttribute("aria-pressed"), "true");
   dispose();
+  cleanupNav();
 });

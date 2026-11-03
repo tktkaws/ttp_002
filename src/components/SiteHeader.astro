@@ -28,19 +28,4 @@ import { identity } from "../data/portfolio";
     opacity: 1;
   }
 
-  :global(html.js[data-animation="on"]) .logo-random-reveal:not(.logo-random-reveal--visible) [data-logo-char] {
-    opacity: 0;
-  }
-
-  :global(html[data-animation="on"]) [data-logo-char] {
-    transition: opacity 324ms ease-out;
-    transition-delay: var(--logo-char-delay, 0ms);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-logo-char] {
-      opacity: 1;
-      transition: none;
-    }
-  }
 </style>

@@ -31,7 +31,6 @@ import { defaultPreferences, preferenceKeys } from "../config/preferences";
     if (storedTheme === "light" || storedTheme === "dark") theme = storedTheme;
     if (storedAnimation === "off" || storedAnimation === "on") animation = storedAnimation;
     const root = document.documentElement;
-    root.classList.add("js");
     root.classList.toggle("dark", theme === "dark");
     root.dataset.theme = theme;
     root.dataset.animation = animation;

@@ -61,7 +61,7 @@ const wideCardHeight = 20 * objectHeightScale;
 	data-distance={dropDistance} data-interval={dropInterval} data-max-columns={maxColumns}
 	data-settings-key={settingsKey}
 >
-	<div class="controls" data-controls-container hidden={!showControls}></div>
+	<div class="controls" data-controls-container hidden></div>
 	<div class="stage" data-stage hidden={items.length === 0}>
 		<ul class="grid" role="list" aria-label={label}>
 			{items.map((item) => (
@@ -220,16 +220,16 @@ const wideCardHeight = 20 * objectHeightScale;
 		}
 	}
 	@media (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * 100% * var(--mobile-card-half-height) / 35); }
+		falling-text-cards[data-active="true"] .grid { padding-top: calc(var(--drop-distance) * 100% * var(--mobile-card-half-height) / 35); }
 	}
 	@media (min-width: 640px) and (max-width: 1535.98px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - var(--column-gap)) / 2 * var(--wide-card-half-height) / 43); }
+		falling-text-cards[data-active="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - var(--column-gap)) / 2 * var(--wide-card-half-height) / 43); }
 	}
 	@media (min-width: 1536px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-animate="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - var(--three-column-gaps)) / 3 * var(--wide-card-half-height) / 43); }
+		falling-text-cards[data-active="true"] .grid { padding-top: calc(var(--drop-distance) * (100% - var(--three-column-gaps)) / 3 * var(--wide-card-half-height) / 43); }
 	}
 	@media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
-		falling-text-cards[data-animate="true"][data-max-columns="2"] .grid {
+		falling-text-cards[data-active="true"][data-max-columns="2"] .grid {
 			padding-top: calc(var(--drop-distance) * (100% - var(--column-gap)) / 2 * var(--wide-card-half-height) / 43);
 		}
 	}

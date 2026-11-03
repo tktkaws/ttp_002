@@ -1,6 +1,12 @@
 export class ElementStub extends EventTarget {
+  isConnected = true;
   attributes = new Map();
   dataset = {};
+  style = {
+    setProperty(name, value) { this[name] = value; },
+    getPropertyValue(name) { return this[name] ?? this[name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] ?? ""; },
+    removeProperty(name) { delete this[name]; delete this[name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())]; },
+  };
   classes = new Set();
   classList = {
     add: (name) => this.classes.add(name),
@@ -12,7 +18,14 @@ export class ElementStub extends EventTarget {
   hasAttribute(name) { return this.attributes.has(name); }
   getAttribute(name) { return this.attributes.get(name) ?? null; }
   setAttribute(name, value) { this.attributes.set(name, String(value)); }
-  removeAttribute(name) { this.attributes.delete(name); }
+  removeAttribute(name) {
+    this.attributes.delete(name);
+    if (name === "style") for (const key of Object.keys(this.style)) if (typeof this.style[key] !== "function") delete this.style[key];
+  }
+  querySelector() { return null; }
+  querySelectorAll() { return []; }
+  replaceChildren(...children) { this.children = children; }
+  contains(node) { return node === this || Boolean(node?.parentElement && this.contains(node.parentElement)); }
   closest() { return this.parentElement?.closest() ?? null; }
   focus(options) { this.focusOptions = options; this.focusCount = (this.focusCount ?? 0) + 1; }
 }
@@ -51,7 +64,7 @@ export function createDOM({ saved = {}, deniedKeys = [], href = "http://localhos
   return { document, window: new EventTarget(), root, meta, targets, storage, values, writes, location: new URL(href) };
 }
 
-export function installDOM(t, options) {
+export function installDOM(t, options, extraGlobals = {}) {
   const dom = createDOM(options);
   const globals = {
     document: dom.document,
@@ -61,6 +74,8 @@ export function installDOM(t, options) {
     Element: ElementStub,
     HTMLElement: ElementStub,
     HTMLAnchorElement: AnchorStub,
+    Node: ElementStub,
+    ...extraGlobals,
   };
   const descriptors = Object.fromEntries(Object.keys(globals).map((key) => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
   for (const [key, value] of Object.entries(globals)) Object.defineProperty(globalThis, key, { configurable: true, value });
