@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import FixedNav from "../components/FixedNav.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import PageSection from "../components/PageSection.astro";
@@ -18,8 +17,7 @@ import { projectPresentation } from "../config/presentation";
 ---
 
 <BaseLayout title={identity.title} description={identity.description}>
-  <FixedNav items={navItems} />
-  <SiteHeader />
+  <SiteHeader items={navItems} />
   <main>
     <PageSection {...sections.about}>
       <div class="text-body font-sans font-light">

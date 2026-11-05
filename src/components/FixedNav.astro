@@ -18,13 +18,11 @@ const { items } = Astro.props;
     class="fixed-nav__menu-button"
     data-menu-button
     popovertarget="fixed-nav-popover"
-    aria-expanded="false"
     aria-controls="fixed-nav-popover"
-    hidden
   >
     メニュー
   </button>
-  <div id="fixed-nav-popover" class="fixed-nav__popover">
+  <div id="fixed-nav-popover" class="fixed-nav__popover" popover="auto">
     <ul class="fixed-nav__items">
       <li>
         <div
@@ -141,22 +139,8 @@ const { items } = Astro.props;
     display: none;
   }
 
-  .fixed-nav:not([data-enhanced]) {
-    position: static;
-    margin-bottom: 2rem;
-  }
-
   .fixed-nav:not([data-enhanced]) .fixed-nav__items {
     display: block;
-  }
-
-  .fixed-nav:not([data-enhanced]) .fixed-nav__panel {
-    position: static;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    max-height: none;
-    background: transparent;
   }
 
   .fixed-nav {
@@ -170,7 +154,7 @@ const { items } = Astro.props;
   }
 
   .fixed-nav__menu-button,
-  .fixed-nav[data-enhanced] .fixed-nav__popover {
+  .fixed-nav__popover {
     border: 1px solid #000;
     box-shadow: 0 2px 6px rgb(0 0 0 / 12%);
     background: var(--color-white);
@@ -184,7 +168,7 @@ const { items } = Astro.props;
     cursor: pointer;
   }
 
-  .fixed-nav[data-enhanced] .fixed-nav__popover {
+  .fixed-nav__popover {
     position: fixed;
     inset: auto;
     top: calc(var(--header-offset) + 3.5rem);
@@ -216,7 +200,7 @@ const { items } = Astro.props;
   }
 
   :global(html.dark) .fixed-nav__menu-button,
-  :global(html.dark) .fixed-nav[data-enhanced] .fixed-nav__popover {
+  :global(html.dark) .fixed-nav__popover {
     background: var(--color-gray-900);
     color: var(--color-gray-100);
     border-color: var(--color-gray-100);

@@ -26,6 +26,8 @@ export function createNav(dom) {
   const nav = new ElementStub();
   const menuButton = new ElementStub();
   const popover = new ElementStub();
+  menuButton.hidden = false;
+  popover.setAttribute("popover", "auto");
   popover.matches = () => false;
   nav.querySelector = (selector) =>
     selector === "[data-menu-button]"
@@ -43,6 +45,8 @@ export function createNav(dom) {
     selector === "#fixed-nav" ? nav : dom.meta;
   return {
     nav,
+    menuButton,
+    popover,
     items,
     panels,
     themes,

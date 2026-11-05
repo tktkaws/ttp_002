@@ -21,7 +21,7 @@ const css = readdirSync(cssDirectory)
   .map((name) => readFileSync(new URL(name, cssDirectory), "utf8"))
   .join("\n");
 
-test("JSなしの生成HTMLに全本文と成果物リンク、通常の目次がある", () => {
+test("JSなしの生成HTMLに全本文と成果物リンク、ネイティブ目次がある", () => {
   const contents = html.match(
     /<div\b[^>]*data-contents-item[^>]*>([\s\S]*?)<\/div>/,
   );
@@ -59,6 +59,9 @@ test("headの設定復元だけ成功しても見出しを隠すCSSがない", (
 function assertNavFallback(fixture) {
   assert.equal(fixture.nav.dataset.enhanced, undefined);
   assert.equal(fixture.nav.classList.contains("fixed-nav--hidden"), false);
+  assert.equal(fixture.menuButton.hidden, false);
+  assert.equal(fixture.menuButton.hasAttribute("aria-expanded"), false);
+  assert.equal(fixture.popover.getAttribute("popover"), "auto");
   assert.equal(fixture.items[2].hidden, false);
   assert.ok(fixture.items.slice(0, 2).every((item) => item.hidden));
   assert.ok(
@@ -68,7 +71,7 @@ function assertNavFallback(fixture) {
   );
 }
 
-test("目次の初期化に必要な要素が不足しても通常のリンク一覧を残す", (t) => {
+test("目次の初期化に必要な要素が不足してもネイティブ目次を残す", (t) => {
   const dom = installDOM(t),
     nav = createNav(dom);
   nav.items[0].querySelector = () => null;

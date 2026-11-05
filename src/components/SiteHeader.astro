@@ -1,23 +1,34 @@
 ---
 import { identity } from "../data/portfolio";
+import FixedNav from "./FixedNav.astro";
+import type { NavItem } from "../types/portfolio";
+
+interface Props {
+  items: NavItem[];
+}
+
+const { items } = Astro.props;
 ---
 
-<h1
-  class="logo-random-reveal text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
-  data-logo-random-reveal
-  aria-label={identity.logoLabel}
->
-  <span aria-hidden="true">
-    {identity.logoLines.map((line, index) => (
-      <Fragment>
-        {Array.from(line).map((character) => (
-          <span data-logo-char>{character}</span>
-        ))}
-        {index < identity.logoLines.length - 1 && <br />}
-      </Fragment>
-    ))}
-  </span>
-</h1>
+<header>
+  <FixedNav items={items} />
+  <h1
+    class="logo-random-reveal text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
+    data-logo-random-reveal
+    aria-label={identity.logoLabel}
+  >
+    <span aria-hidden="true">
+      {identity.logoLines.map((line, index) => (
+        <Fragment>
+          {Array.from(line).map((character) => (
+            <span data-logo-char>{character}</span>
+          ))}
+          {index < identity.logoLines.length - 1 && <br />}
+        </Fragment>
+      ))}
+    </span>
+  </h1>
+</header>
 
 <script>
   import { initLogoReveal } from "../scripts/logo-reveal";

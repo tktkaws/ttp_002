@@ -24,9 +24,12 @@ export function initFixedNav(
     abort?.abort();
     if (popover) {
       if (popover.matches(":popover-open")) popover.hidePopover();
-      popover.removeAttribute("popover");
     }
-    if (menuButton) menuButton.hidden = true;
+    if (menuButton) {
+      menuButton.textContent = "メニュー";
+      // Let the native popover invoker expose its expanded state.
+      menuButton.removeAttribute("aria-expanded");
+    }
     delete nav.dataset.enhanced;
     nav.classList.remove("fixed-nav--hidden");
     for (const item of items) {
@@ -111,6 +114,7 @@ export function initFixedNav(
       menuButton.setAttribute("aria-expanded", String(open));
     };
     listen(popover, "toggle", syncMenu);
+    syncMenu();
     listen(nav, "keydown", (event) => {
       if (
         (event as KeyboardEvent).key === "Escape" &&
@@ -148,9 +152,6 @@ export function initFixedNav(
         syncMenu();
       }
     });
-    popover.setAttribute("popover", "auto");
-    menuButton.hidden = false;
-
     // Publish the enhanced state only after all handlers and labels are ready.
     for (const button of buttons) button.disabled = false;
     for (const item of items) item.hidden = false;
