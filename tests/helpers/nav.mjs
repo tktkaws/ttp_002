@@ -3,8 +3,6 @@ import { ElementStub } from "./dom.mjs";
 export function createNav(dom) {
   Object.assign(dom.root, { scrollHeight: 2000 });
   Object.assign(dom.window, { innerHeight: 800, scrollY: 0 });
-  const themeLabel = new ElementStub(),
-    animationLabel = new ElementStub();
   const option = (key, value) => {
     const button = new ElementStub();
     button.dataset[key] = value;
@@ -15,7 +13,6 @@ export function createNav(dom) {
   const themes = [option("theme", "light"), option("theme", "dark")];
   const animations = [option("animation", "off"), option("animation", "on")];
   const panels = Array.from({ length: 3 }, () => new ElementStub());
-  const triggers = panels.map(() => new ElementStub());
   const items = panels.map((panel, index) => {
     const item = new ElementStub();
     item.setAttribute(
@@ -23,18 +20,23 @@ export function createNav(dom) {
       "",
     );
     item.hidden = index !== 2;
-    item.open = index === 2;
-    item.querySelector = (selector) =>
-      selector.endsWith("trigger") ? triggers[index] : panel;
+    item.querySelector = () => panel;
     return item;
   });
   const nav = new ElementStub();
+  const menuButton = new ElementStub();
+  const popover = new ElementStub();
+  popover.matches = () => false;
   nav.querySelector = (selector) =>
-    selector.includes("theme") ? themeLabel : animationLabel;
+    selector === "[data-menu-button]"
+      ? menuButton
+      : selector === "#fixed-nav-popover"
+        ? popover
+        : null;
   nav.querySelectorAll = (selector) =>
     selector === ".fixed-nav__item"
       ? items
-      : selector === "button"
+      : selector === "[data-preference-item] button"
         ? [...themes, ...animations]
         : [];
   dom.document.querySelector = (selector) =>
@@ -43,9 +45,6 @@ export function createNav(dom) {
     nav,
     items,
     panels,
-    triggers,
-    themeLabel,
-    animationLabel,
     themes,
     animations,
   };

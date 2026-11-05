@@ -21,13 +21,12 @@ const css = readdirSync(cssDirectory)
   .map((name) => readFileSync(new URL(name, cssDirectory), "utf8"))
   .join("\n");
 
-test("JSなしの生成HTMLに全本文と成果物リンク、開いたネイティブ目次がある", () => {
+test("JSなしの生成HTMLに全本文と成果物リンク、通常の目次がある", () => {
   const contents = html.match(
-    /<details\b[^>]*data-contents-item[^>]*>([\s\S]*?)<\/details>/,
+    /<div\b[^>]*data-contents-item[^>]*>([\s\S]*?)<\/div>/,
   );
   assert.ok(contents);
-  assert.match(contents[0].split(">")[0], /\bopen\b/);
-  assert.match(contents[1], /<summary\b/);
+  assert.match(contents[1], /コンテンツ/);
   assert.equal([...contents[1].matchAll(/href="#section0[1-4]"/g)].length, 4);
   assert.equal([...html.matchAll(/<article\b/g)].length, 6);
   for (const match of html.matchAll(
@@ -38,9 +37,7 @@ test("JSなしの生成HTMLに全本文と成果物リンク、開いたネイ�
   assert.match(html, /はじめまして。タカハシタカユキと申します。/);
   assert.match(html, /href="https:\/\/front-dispatch-2026.vercel.app\/"/);
   const settings = [
-    ...html.matchAll(
-      /<details\b[^>]*data-preference-item[^>]*>([\s\S]*?)<\/details>/g,
-    ),
+    ...html.matchAll(/<div\b[^>]*data-preference-item[^>]*>([\s\S]*?)<\/div>/g),
   ];
   assert.equal(settings.length, 2);
   for (const setting of settings) {
@@ -63,7 +60,6 @@ function assertNavFallback(fixture) {
   assert.equal(fixture.nav.dataset.enhanced, undefined);
   assert.equal(fixture.nav.classList.contains("fixed-nav--hidden"), false);
   assert.equal(fixture.items[2].hidden, false);
-  assert.equal(fixture.items[2].open, true);
   assert.ok(fixture.items.slice(0, 2).every((item) => item.hidden));
   assert.ok(
     [...fixture.themes, ...fixture.animations].every(
@@ -83,7 +79,7 @@ test("目次の初期化に必要な要素が不足しても通常のリンク�
 test("イベント登録が途中で失敗したら登録を解除してネイティブ目次へ戻る", (t) => {
   const dom = installDOM(t),
     nav = createNav(dom);
-  nav.items[1].addEventListener = () => {
+  nav.panels[1].addEventListener = () => {
     throw new Error("listener failed");
   };
   initFixedNav(nav.nav);
@@ -103,8 +99,8 @@ test("初期化成功時だけ設定を有効化し、実行中の例外でも�
     [...nav.themes, ...nav.animations].every((button) => !button.disabled),
   );
   nav.nav.classList.add("fixed-nav--hidden");
-  nav.triggers[1].focus = () => {
-    throw new Error("focus failed");
+  nav.themes[1].closest = () => {
+    throw new Error("selection failed");
   };
   nav.panels[1].dispatchEvent(
     eventWith("click", { target: nav.themes[1], button: 0 }),
