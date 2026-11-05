@@ -314,10 +314,28 @@ function assertStaticCards(dom) {
 
 test("物理演算モジュールの読み込み失敗は静的表示に戻る", async (t) => {
   const dom = cardsDOM(t);
+  dom.root.dataset.state = "pending";
   enhanceTextCards(dom.root, async () => {
     throw new Error("chunk failed");
   });
   await new Promise(setImmediate);
+  assertStaticCards(dom);
+});
+
+test("物理演算の読み込み中は初期表示の非表示状態を維持する", async (t) => {
+  const dom = cardsDOM(t);
+  dom.root.dataset.state = "pending";
+  let resolve;
+  const loading = new Promise((done) => (resolve = done));
+  const dispose = enhanceTextCards(dom.root, () => loading);
+  assert.equal(dom.root.dataset.state, "loading");
+  await new Promise(setImmediate);
+  assert.equal(dom.root.dataset.state, "loading");
+  resolve({ mountTextCards });
+  await new Promise(setImmediate);
+  assert.equal(dom.root.dataset.state, "waiting");
+  assert.equal(dom.card.style.opacity, "0");
+  dispose();
   assertStaticCards(dom);
 });
 
@@ -364,7 +382,7 @@ test("Observer登録の途中で失敗してもリソースを解除し静的表
 test("フレーム処理が失敗したら非表示・変形を解除し、演算を停止する", (t) => {
   const dom = cardsDOM(t);
   const dispose = mountTextCards(dom.root);
-  assert.equal(dom.card.style.getPropertyValue("opacity"), "");
+  assert.equal(dom.card.style.getPropertyValue("opacity"), "0");
   dom.observers[1].callback([{ isIntersecting: true }]);
   dom.runFrame(1);
   assert.equal(dom.card.style.getPropertyValue("opacity"), "0");

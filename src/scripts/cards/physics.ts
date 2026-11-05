@@ -437,6 +437,10 @@ export function mountTextCards(root: HTMLElement) {
     engine.velocityIterations = 8;
     skin.setAttribute("viewBox", `0 0 ${bounds.width} ${bounds.height}`);
     items = cards.map((card, index) => makeItem(card, index, bounds));
+    // Hide every card before the observer starts the staggered drops.
+    // Cards awaiting their turn must not flash at their resting positions.
+    for (const card of cards) card.style.opacity = "0";
+    root.dataset.state = "waiting";
     elapsed = 0;
     accumulator = 0;
     settled = false;

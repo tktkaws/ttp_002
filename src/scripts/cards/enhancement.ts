@@ -9,7 +9,8 @@ export function enhanceTextCards(
 ) {
   let disposed = false;
   let cleanup: (() => void) | undefined;
-  restoreTextCards(root);
+  if (root.dataset.state === "pending") root.dataset.state = "loading";
+  else restoreTextCards(root);
   void Promise.resolve()
     .then(load)
     .then(({ mountTextCards }) => {
