@@ -13,78 +13,122 @@ const { items } = Astro.props;
   aria-label="表示設定とページ内ナビゲーション"
   class="fixed-nav font-sans font-normal"
 >
-  <ul class="fixed-nav__items">
-    <li>
-      <details class="fixed-nav__item" data-preference-item hidden>
-        <summary class="fixed-nav__trigger">
-          Animation:<span data-animation-label>Off</span>
-        </summary>
-        <ul id="animation-options" class="fixed-nav__panel">
-          <li>
-            <button
-              type="button"
-              data-animation="off"
-              aria-pressed="true"
-              disabled
-            >
-              Off
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              data-animation="on"
-              aria-pressed="false"
-              disabled
-            >
-              On
-            </button>
-          </li>
-        </ul>
-      </details>
-    </li>
-    <li>
-      <details class="fixed-nav__item" data-preference-item hidden>
-        <summary class="fixed-nav__trigger">
-          Theme:<span data-theme-label>Light</span>
-        </summary>
-        <ul id="theme-options" class="fixed-nav__panel">
-          <li>
-            <button
-              type="button"
-              data-theme="light"
-              aria-pressed="true"
-              disabled
-            >
-              Light
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              data-theme="dark"
-              aria-pressed="false"
-              disabled
-            >
-              Dark
-            </button>
-          </li>
-        </ul>
-      </details>
-    </li>
-    <li>
-      <details class="fixed-nav__item" data-contents-item open>
-        <summary class="fixed-nav__trigger">Contents</summary>
-        <ul id="contents-options" class="fixed-nav__panel">
-          {items.map((item) => (
+  <button
+    type="button"
+    class="fixed-nav__menu-button"
+    data-menu-button
+    popovertarget="fixed-nav-popover"
+    aria-expanded="false"
+    aria-controls="fixed-nav-popover"
+    hidden
+  >
+    メニュー
+  </button>
+  <div id="fixed-nav-popover" class="fixed-nav__popover">
+    <ul class="fixed-nav__items">
+      <li>
+        <div
+          class="fixed-nav__item"
+          role="group"
+          aria-labelledby="animation-title"
+          data-preference-item
+          hidden
+        >
+          <p id="animation-title" class="fixed-nav__title">
+            アニメーション
+          </p>
+          <ul id="animation-options" class="fixed-nav__panel">
             <li>
-              <a href={item.href}>{item.label}</a>
+              <button
+                type="button"
+                data-animation="on"
+                aria-pressed="false"
+                disabled
+              >
+                オン
+                <span class="fixed-nav__selection" aria-hidden="true">
+                  ●
+                </span>
+              </button>
             </li>
-          ))}
-        </ul>
-      </details>
-    </li>
-  </ul>
+            <li>
+              <button
+                type="button"
+                data-animation="off"
+                aria-pressed="true"
+                disabled
+              >
+                オフ
+                <span class="fixed-nav__selection" aria-hidden="true">
+                  ●
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div
+          class="fixed-nav__item"
+          role="group"
+          aria-labelledby="theme-title"
+          data-preference-item
+          hidden
+        >
+          <p id="theme-title" class="fixed-nav__title">
+            テーマ
+          </p>
+          <ul id="theme-options" class="fixed-nav__panel">
+            <li>
+              <button
+                type="button"
+                data-theme="light"
+                aria-pressed="true"
+                disabled
+              >
+                ライト
+                <span class="fixed-nav__selection" aria-hidden="true">
+                  ●
+                </span>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                data-theme="dark"
+                aria-pressed="false"
+                disabled
+              >
+                ダーク
+                <span class="fixed-nav__selection" aria-hidden="true">
+                  ●
+                </span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div
+          class="fixed-nav__item"
+          role="group"
+          aria-labelledby="contents-title"
+          data-contents-item
+        >
+          <p id="contents-title" class="fixed-nav__title">
+            コンテンツ
+          </p>
+          <ul id="contents-options" class="fixed-nav__panel">
+            {items.map((item) => (
+              <li>
+                <a href={item.href}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
 </nav>
 
 <script>
@@ -123,72 +167,104 @@ const { items } = Astro.props;
     max-width: calc(100% - 2 * var(--body-padding));
     font-size: clamp(1rem, 1.25vw, 1.25rem);
     line-height: 1.5;
-    opacity: 1;
-    transition: opacity 200ms ease-out;
   }
 
-  .fixed-nav--hidden {
-    opacity: 0;
-    pointer-events: none;
+  .fixed-nav__menu-button,
+  .fixed-nav[data-enhanced] .fixed-nav__popover {
+    border: 1px solid #000;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 12%);
+    background: var(--color-white);
+    color: inherit;
   }
 
-  .fixed-nav:focus-within {
-    opacity: 1;
-    pointer-events: auto;
+  .fixed-nav__menu-button {
+    min-height: 44px;
+    min-width: 6.5em;
+    padding: 0.4em 1em;
+    cursor: pointer;
+  }
+
+  .fixed-nav[data-enhanced] .fixed-nav__popover {
+    position: fixed;
+    inset: auto;
+    top: calc(var(--header-offset) + 3.5rem);
+    right: var(--body-padding);
+    margin: 0;
+    padding: 2rem;
+    width: max-content;
+    max-width: calc(100vw - 2 * var(--body-padding));
+    max-height: calc(100dvh - var(--header-offset) - 4.5rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .fixed-nav__popover:popover-open {
+      animation: menu-fade-in 180ms ease-out;
+    }
+  }
+
+  @keyframes menu-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  :global(html.dark) .fixed-nav__menu-button,
+  :global(html.dark) .fixed-nav[data-enhanced] .fixed-nav__popover {
+    background: var(--color-gray-900);
+    color: var(--color-gray-100);
+    border-color: var(--color-gray-100);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 40%);
+  }
+
+  .fixed-nav .fixed-nav__menu-button:is(:focus-visible, :hover) {
+    background-color: var(--focus-ring-inner);
   }
 
   .fixed-nav__items {
-    display: flex;
-    align-items: flex-start;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: clamp(0.5rem, 2vw, 2rem);
+  }
+
+  .fixed-nav__items > li {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .fixed-nav__item {
     position: relative;
-    text-align: right;
+    text-align: left;
   }
 
-  .fixed-nav__trigger {
-    display: inline-flex;
+  .fixed-nav__title {
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
     align-items: center;
     min-height: 44px;
-    white-space: nowrap;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.3em;
-    cursor: pointer;
-    padding-inline: 0.2em;
-    list-style: none;
-  }
-
-  .fixed-nav__trigger::-webkit-details-marker {
-    display: none;
-  }
-
-  .fixed-nav__trigger:is(:focus-visible, :hover) {
-    outline: var(--focus-ring-width) solid var(--focus-ring-outer);
-    outline-offset: var(--focus-ring-offset);
-    background: var(--focus-ring-inner);
-    box-shadow: 0 0 0 var(--focus-ring-inner-width) var(--focus-ring-inner);
-  }
-
-  :global(html:not(.dark)) .fixed-nav__trigger:is(:focus-visible, :hover) {
-    color: var(--focus-ring-text);
+    overflow-wrap: anywhere;
+    padding-inline: 0.5rem;
+    font-weight: 700;
+    border-bottom: 1px solid currentColor;
   }
 
   .fixed-nav__panel {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: max-content;
-    min-width: 100%;
+    position: static;
+    width: 100%;
+    min-width: 0;
     max-width: calc(100vw - 2 * var(--body-padding));
-    max-height: max(6rem, calc(100dvh - var(--header-offset) - 10rem));
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    margin-top: 0.5rem;
+    max-height: none;
+    margin-top: 0;
     padding: 0.5rem;
-    border: 1px solid currentColor;
+    border: 0;
     background: var(--color-white);
   }
 
@@ -198,59 +274,62 @@ const { items } = Astro.props;
 
   .fixed-nav__panel li {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     min-height: 44px;
+    text-align: left;
   }
 
   .fixed-nav__panel :is(button, a) {
     display: inline;
+    padding-inline: 0;
     width: fit-content;
     max-width: 100%;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
     cursor: pointer;
   }
 
-  .fixed-nav__panel button[aria-pressed="true"] {
-    font-weight: 700;
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.3em;
+  .fixed-nav__panel button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
   }
 
-  @media (max-width: 768px) {
+  .fixed-nav__selection {
+    flex-shrink: 0;
+    visibility: hidden;
+    font-size: 0.65em;
+  }
+
+  .fixed-nav__panel button[aria-pressed="true"] .fixed-nav__selection {
+    visibility: visible;
+  }
+
+  @media (width >= 600px) {
+    .fixed-nav__item {
+      min-width: 8.75rem;
+    }
+  }
+
+  @media (width < 600px) {
     .fixed-nav__items {
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .fixed-nav__panel {
-      position: static;
-      margin-block: 0.25rem 0.5rem;
-      margin-left: auto;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .fixed-nav {
-      transition: none;
-    }
-  }
-
-  /* Keep every option reachable when zoom leaves little screen space. */
-  @media (max-width: 639px), (max-height: 480px) {
-    .fixed-nav {
-      position: static;
-      max-width: 100%;
-      margin-bottom: 2rem;
-      opacity: 1;
-      pointer-events: auto;
+    .fixed-nav__items > li:nth-child(1) {
+      grid-column: 1;
+      grid-row: 1;
     }
 
-    .fixed-nav__panel {
-      position: static;
-      max-height: none;
+    .fixed-nav__items > li:nth-child(2) {
+      grid-column: 1;
+      grid-row: 2;
+    }
+
+    .fixed-nav__items > li:nth-child(3) {
+      grid-column: 2;
+      grid-row: 1 / span 2;
     }
   }
 </style>

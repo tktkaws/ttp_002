@@ -24,12 +24,13 @@ async function expectPreferences(page, theme, animation) {
     "data-enhanced",
     "true",
   );
-  await expect(page.locator("[data-theme-label]")).toHaveText(
-    theme === "dark" ? "Dark" : "Light",
+  await expect(page.locator(`button[data-theme="${theme}"]`)).toHaveAttribute(
+    "aria-pressed",
+    "true",
   );
-  await expect(page.locator("[data-animation-label]")).toHaveText(
-    animation === "on" ? "On" : "Off",
-  );
+  await expect(
+    page.locator(`button[data-animation="${animation}"]`),
+  ).toHaveAttribute("aria-pressed", "true");
   expect(
     await page
       .locator("html")
@@ -42,11 +43,20 @@ async function expectPreferences(page, theme, animation) {
   ).toBe(theme);
 }
 
+async function openMenu(page) {
+  const button = page.locator("[data-menu-button]");
+  if ((await button.getAttribute("aria-expanded")) === "false") {
+    await button.focus();
+    await button.press("Enter");
+  }
+}
+
 async function choose(page, kind, label) {
-  const summary = page.locator("#fixed-nav summary").filter({ hasText: kind });
-  await summary.focus();
-  await summary.press("Enter");
-  await page.getByRole("button", { name: label, exact: true }).click();
+  await openMenu(page);
+  await page
+    .getByRole("group", { name: kind, exact: true })
+    .getByRole("button", { name: label, exact: true })
+    .click();
 }
 
 async function expectAnchor(page, id) {
@@ -67,11 +77,7 @@ async function expectAnchor(page, id) {
 }
 
 async function contentsLink(page, id) {
-  const summary = page
-    .locator("#fixed-nav summary")
-    .filter({ hasText: "Contents" });
-  await summary.focus();
-  await summary.press("Enter");
+  await openMenu(page);
   await page.locator(`#contents-options a[href="#${id}"]`).click();
 }
 
@@ -169,8 +175,8 @@ test("UIで変更したテーマと動きの設定を再読み込みで復元す
 }) => {
   await page.goto("/");
   await expectPreferences(page, "light", "off");
-  await choose(page, "Theme:", "Dark");
-  await choose(page, "Animation:", "On");
+  await choose(page, "テーマ", "ダーク");
+  await choose(page, "アニメーション", "オン");
   await expectPreferences(page, "dark", "on");
   expect(
     await page.evaluate(() => ({
@@ -180,8 +186,8 @@ test("UIで変更したテーマと動きの設定を再読み込みで復元す
   ).toEqual({ theme: "dark", animation: "on" });
   await page.reload();
   await expectPreferences(page, "dark", "on");
-  await choose(page, "Theme:", "Light");
-  await choose(page, "Animation:", "Off");
+  await choose(page, "テーマ", "ライト");
+  await choose(page, "アニメーション", "オフ");
   await page.reload();
   await expectPreferences(page, "light", "off");
 });
@@ -205,8 +211,8 @@ test("ストレージを利用できなくても設定操作と本文を使え�
   });
   await page.goto("/");
   await expectPreferences(page, "light", "off");
-  await choose(page, "Theme:", "Dark");
-  await choose(page, "Animation:", "On");
+  await choose(page, "テーマ", "ダーク");
+  await choose(page, "アニメーション", "オン");
   await expectPreferences(page, "dark", "on");
   await expect(page.locator("main")).toBeVisible();
   await page.reload();
@@ -217,8 +223,8 @@ test("別タブの設定変更と削除を表示へ反映する", async ({ page,
   await page.goto("/");
   const other = await context.newPage();
   await other.goto("/");
-  await choose(page, "Theme:", "Dark");
-  await choose(page, "Animation:", "On");
+  await choose(page, "テーマ", "ダーク");
+  await choose(page, "アニメーション", "オン");
   await expectPreferences(other, "dark", "on");
   await page.evaluate(() => localStorage.clear());
   await expectPreferences(other, "light", "off");

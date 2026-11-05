@@ -182,15 +182,12 @@ test("保存しない更新は、既存の保存値を書き換えない", (t) =
   assert.deepEqual(dom.writes, []);
 });
 
-test("設定ボタン・復元・別タブ変更でラベルと選択状態も同期する", async (t) => {
+test("設定ボタン・復元・別タブ変更で選択状態も同期する", async (t) => {
   const dom = installDOM(t);
-  const { nav, panels, themes, animations, themeLabel, animationLabel } =
-    createNav(dom);
+  const { nav, panels, themes, animations } = createNav(dom);
   const { initFixedNav } = await import("../src/scripts/fixed-nav.ts");
   const cleanupNav = initFixedNav(nav);
-  assert.equal(themeLabel.textContent, "Light");
   panels[1].dispatchEvent(eventWith("click", { target: themes[1], button: 0 }));
-  assert.equal(themeLabel.textContent, "Dark");
   assert.equal(themes[1].getAttribute("aria-pressed"), "true");
   assert.equal(themes[0].getAttribute("aria-pressed"), "false");
   assert.equal(dom.values.get("theme"), "dark");
@@ -199,11 +196,9 @@ test("設定ボタン・復元・別タブ変更でラベルと選択状態も�
   dom.window.dispatchEvent(
     eventWith("storage", { key: "animation", storageArea: dom.storage }),
   );
-  assert.equal(animationLabel.textContent, "On");
   assert.equal(animations[1].getAttribute("aria-pressed"), "true");
   dom.values.delete("theme");
   dom.window.dispatchEvent(new Event("pageshow"));
-  assert.equal(themeLabel.textContent, "Light");
   assert.equal(themes[0].getAttribute("aria-pressed"), "true");
   dispose();
   cleanupNav();

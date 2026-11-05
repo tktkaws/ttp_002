@@ -15,6 +15,8 @@ async function ready(page) {
     "data-enhanced",
     "true",
   );
+  await page.locator("[data-menu-button]").focus();
+  await page.keyboard.press("Enter");
 }
 
 async function visibleFocus(_page, element) {
@@ -47,59 +49,31 @@ for (const theme of ["light", "dark"]) {
       theme,
     );
     await ready(page);
-    const animation = page
-      .locator("[data-preference-item]")
-      .nth(0)
-      .locator("summary");
-    const appearance = page
-      .locator("[data-preference-item]")
-      .nth(1)
-      .locator("summary");
-    const contents = page.locator("[data-contents-item] summary");
+    const option = (name) => page.getByRole("button", { name, exact: true });
     await page.keyboard.press("Tab");
-    await visibleFocus(page, animation);
-    await page.keyboard.press("Enter");
-    await page.keyboard.press("Tab");
-    await visibleFocus(
-      page,
-      page.getByRole("button", { name: "Off", exact: true }),
-    );
-    await page.keyboard.press("Tab");
-    await visibleFocus(
-      page,
-      page.getByRole("button", { name: "On", exact: true }),
-    );
+    await visibleFocus(page, option("オン"));
     await page.keyboard.press("Space");
     await expect(page.locator("html")).toHaveAttribute("data-animation", "on");
-    await visibleFocus(page, animation);
+    await visibleFocus(page, option("オン"));
     await page.keyboard.press("Tab");
-    await visibleFocus(page, appearance);
-    await page.keyboard.press("Space");
+    await visibleFocus(page, option("オフ"));
     await page.keyboard.press("Tab");
-    await visibleFocus(
-      page,
-      page.getByRole("button", { name: "Light", exact: true }),
-    );
+    await visibleFocus(page, option("ライト"));
     await page.keyboard.press("Tab");
-    await visibleFocus(
-      page,
-      page.getByRole("button", { name: "Dark", exact: true }),
-    );
+    await visibleFocus(page, option("ダーク"));
     await page.keyboard.press("Enter");
-    await visibleFocus(page, appearance);
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await visibleFocus(page, option("ダーク"));
     await page.keyboard.press("Shift+Tab");
-    await visibleFocus(page, animation);
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
-    await visibleFocus(page, contents);
-    await page.keyboard.press("Enter");
+    await visibleFocus(page, option("ライト"));
     await page.keyboard.press("Escape");
-    await visibleFocus(page, contents);
-    await expect(page.locator("[data-contents-item]")).not.toHaveAttribute(
-      "open",
-    );
+    await visibleFocus(page, page.locator("[data-menu-button]"));
+    await expect(page.locator("#fixed-nav-popover")).not.toBeVisible();
     await page.keyboard.press("Enter");
+    for (const name of ["オン", "オフ", "ライト", "ダーク"]) {
+      await page.keyboard.press("Tab");
+      await visibleFocus(page, option(name));
+    }
     await page.keyboard.press("Tab");
     await visibleFocus(
       page,
@@ -139,7 +113,7 @@ test("キーボード: 固定ナビのフォーカスをスクロールで隠さ
   await ready(page);
   await page.keyboard.press("Tab");
   await page.keyboard.press("PageDown");
-  await visibleFocus(page, page.locator("#fixed-nav summary").first());
+  await visibleFocus(page, page.locator("#animation-options button").first());
 });
 
 test("支援技術向け情報: 見出し・ランドマーク・一覧・名称・状態", async ({
@@ -183,52 +157,19 @@ test("支援技術向け情報: 見出し・ランドマーク・一覧・名称
     expect(index).toBeGreaterThan(previous);
     previous = index;
   }
-  const contents = page.locator("[data-contents-item] summary");
-  // Playwright's ARIA snapshot omits Chrome's native DisclosureTriangle role.
-  // Read the browser accessibility tree directly for summary names and states.
-  const session = await page.context().newCDPSession(page);
-  const disclosure = async (name) => {
-    const { nodes } = await session.send("Accessibility.getFullAXTree");
-    const node = nodes.find(
-      (node) =>
-        !node.ignored &&
-        node.role?.value === "DisclosureTriangle" &&
-        node.name?.value === name,
-    );
-    expect(node).toBeDefined();
-    return Object.fromEntries(
-      node.properties.map(({ name, value }) => [name, value.value]),
-    );
-  };
-  expect(await disclosure("Contents")).toMatchObject({
-    expanded: false,
-    focusable: true,
-  });
-  await contents.focus();
-  await contents.press("Enter");
-  expect(await disclosure("Contents")).toMatchObject({ expanded: true });
-  await page.keyboard.press("Escape");
-  expect(await disclosure("Contents")).toMatchObject({ expanded: false });
-  const appearance = page
-    .locator("[data-preference-item] summary")
-    .filter({ hasText: "Theme:" });
-  await appearance.focus();
-  await appearance.press("Enter");
+  for (const name of ["アニメーション", "テーマ", "コンテンツ"]) {
+    await expect(page.getByRole("group", { name, exact: true })).toBeVisible();
+  }
   await expect(
-    page.getByRole("button", { name: "Light", exact: true }),
-  ).toMatchAriaSnapshot('- button "Light" [pressed]');
-  await page.getByRole("button", { name: "Dark", exact: true }).click();
-  expect(await disclosure("Theme: Dark")).toMatchObject({ expanded: false });
-  const { nodes } = await session.send("Accessibility.getFullAXTree");
-  await testInfo.attach("native-disclosures", {
-    body: JSON.stringify(
-      nodes.filter((node) => node.role?.value === "DisclosureTriangle"),
-      null,
-      2,
-    ),
-    contentType: "application/json",
-  });
-  await session.detach();
+    page.locator("#fixed-nav details, #fixed-nav summary"),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "ライト", exact: true }),
+  ).toMatchAriaSnapshot('- button "ライト" [pressed]');
+  await page.getByRole("button", { name: "ダーク", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "ダーク", exact: true }),
+  ).toMatchAriaSnapshot('- button "ダーク" [pressed]');
   await testInfo.attach("accessibility-tree", {
     body: snapshot,
     contentType: "text/plain",
@@ -242,7 +183,9 @@ test("支援技術向け情報: 見出し・ランドマーク・一覧・名称
 async function checkLayout(page, testInfo, description) {
   const metrics = await page.evaluate(() => {
     const elements = [
-      ...document.querySelectorAll("h1, h2, h3, main p, a, summary, button"),
+      ...document.querySelectorAll(
+        "h1, h2, h3, main p, .fixed-nav__title, a, button",
+      ),
     ];
     const outside = [];
     for (const element of elements) {
@@ -284,10 +227,6 @@ for (const theme of ["light", "dark"]) {
       );
       await ready(page);
       await checkLayout(page, testInfo, "layout");
-      const contents = page.locator("[data-contents-item] summary");
-      await contents.focus();
-      await contents.press("Enter");
-      await checkLayout(page, testInfo, "expanded-layout");
       await testInfo.attach("layout-image", {
         body: await page.screenshot(),
         contentType: "image/png",
@@ -317,16 +256,7 @@ for (const theme of ["light", "dark"]) {
         .evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
       expect(after / before).toBeCloseTo(2, 1);
       await checkLayout(page, testInfo, "text-200-percent");
-      for (const summary of await page.locator("#fixed-nav summary").all()) {
-        await summary.focus();
-        await summary.press("Enter");
-        await checkLayout(
-          page,
-          testInfo,
-          `text-200-percent-${await summary.textContent()}`,
-        );
-        await page.keyboard.press("Escape");
-      }
+
       await testInfo.attach("enlarged-text", {
         body: await page.screenshot(),
         contentType: "image/png",
@@ -343,10 +273,7 @@ for (const theme of ["light", "dark"]) {
     );
     await ready(page);
     await checkLayout(page, testInfo, "reflow-400-percent-equivalent");
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Enter");
+    for (let index = 0; index < 4; index++) await page.keyboard.press("Tab");
     for (const id of ["section01", "section02", "section03", "section04"]) {
       await page.keyboard.press("Tab");
       await visibleFocus(
@@ -359,13 +286,14 @@ for (const theme of ["light", "dark"]) {
       contentType: "image/png",
     });
     await page.keyboard.press("Escape");
-    await page.locator("[data-contents-item] summary").click();
+    await page.locator("[data-menu-button]").click();
     const before = await page.evaluate(() => scrollY);
+    await page.mouse.move(5, 200);
     await page.mouse.wheel(0, 80);
     await expect
       .poll(() => page.evaluate(() => scrollY))
       .toBeGreaterThan(before);
-    await expect(page.locator("[data-contents-item]")).toHaveAttribute("open");
+    await expect(page.locator("#fixed-nav-popover")).toBeVisible();
   });
   test(`文字間隔の上書き: 320px (${theme})`, async ({ page }, testInfo) => {
     await page.setViewportSize({ width: 320, height: 900 });
@@ -379,16 +307,6 @@ for (const theme of ["light", "dark"]) {
         "* { line-height: 1.5 !important; letter-spacing: .12em !important; word-spacing: .16em !important; } p { margin-bottom: 2em !important; }",
     });
     await checkLayout(page, testInfo, "text-spacing");
-    for (const summary of await page.locator("#fixed-nav summary").all()) {
-      await summary.focus();
-      await summary.press("Enter");
-      await checkLayout(
-        page,
-        testInfo,
-        `text-spacing-${await summary.textContent()}`,
-      );
-      await page.keyboard.press("Escape");
-    }
   });
 }
 
@@ -405,7 +323,7 @@ async function monitorMotion(page) {
 
 for (const animation of ["off", "on"]) {
   for (const reducedMotion of ["reduce", "no-preference"]) {
-    test(`モーション: Animation ${animation}・OS ${reducedMotion}`, async ({
+    test(`モーション: アニメーション ${animation}・OS ${reducedMotion}`, async ({
       page,
     }, testInfo) => {
       await page.emulateMedia({ reducedMotion });
@@ -486,12 +404,7 @@ test("モーション: 落下中にOffを選ぶと変形と非表示を解除す
     "data-state",
     "falling",
   );
-  const summary = page
-    .locator("[data-preference-item] summary")
-    .filter({ hasText: "Animation:" });
-  await summary.focus();
-  await summary.press("Enter");
-  await page.getByRole("button", { name: "Off", exact: true }).click();
+  await page.getByRole("button", { name: "オフ", exact: true }).click();
   await expect(page.locator("falling-text-cards")).toHaveAttribute(
     "data-active",
     "false",
