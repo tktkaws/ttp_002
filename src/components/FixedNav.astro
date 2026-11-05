@@ -215,7 +215,7 @@ const { items } = Astro.props;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: start;
-    gap: clamp(0.5rem, 2vw, 2rem);
+    gap: clamp(0.75rem, 3vw, 3rem);
   }
 
   .fixed-nav__items > li {
@@ -236,7 +236,7 @@ const { items } = Astro.props;
     min-height: 44px;
     overflow-wrap: anywhere;
     padding-inline: 0.5rem;
-    font-weight: 700;
+    font-weight: 500;
     border-bottom: 1px solid currentColor;
   }
 
@@ -297,8 +297,13 @@ const { items } = Astro.props;
   }
 
   @media (width < 600px) {
+    .fixed-nav__popover {
+      padding: 1rem;
+    }
+
     .fixed-nav__items {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(1.5rem, 6vw, 6rem);
     }
 
     .fixed-nav__items > li:nth-child(1) {
