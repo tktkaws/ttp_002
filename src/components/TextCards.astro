@@ -343,7 +343,7 @@ const wideCardHeight = 20 * objectHeightScale;
   falling-text-cards[data-max-columns="2"] .grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  @media (min-width: 640px) {
+  @media (min-width: 80rem) {
     falling-text-cards[data-max-columns="2"] .grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -383,6 +383,15 @@ const wideCardHeight = 20 * objectHeightScale;
     }
   }
   @media (min-width: 640px) and (prefers-reduced-motion: no-preference) {
+    :global(html[data-animation="on"])
+      falling-text-cards[data-animate="true"][data-max-columns="2"]
+      .grid {
+      padding-top: calc(
+        var(--drop-distance) * 100% * var(--wide-card-half-height) / 43
+      );
+    }
+  }
+  @media (min-width: 80rem) and (prefers-reduced-motion: no-preference) {
     :global(html[data-animation="on"])
       falling-text-cards[data-animate="true"][data-max-columns="2"]
       .grid {

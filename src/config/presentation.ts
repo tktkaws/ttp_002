@@ -5,4 +5,5 @@ export const projectPresentation = {
   columnGap: 56,
   detailsTextScale: 0.8,
   showDetailsLabel: true,
+  maxColumns: 2 as const,
 };

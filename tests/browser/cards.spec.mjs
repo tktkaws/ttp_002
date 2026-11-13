@@ -25,7 +25,7 @@ async function layout(page) {
   });
 }
 
-for (const width of [320, 768, 1280, 1536]) {
+for (const width of [320, 768, 1279, 1280, 1536]) {
   test(`落下前のカードを隠し、読み込みと落下でレイアウトを動かさない: ${width}px`, async ({
     page,
   }, testInfo) => {
@@ -47,6 +47,30 @@ for (const width of [320, 768, 1280, 1536]) {
       }
       const before = await layout(page);
       expect(parseFloat(before.padding)).toBeGreaterThan(0);
+      const columns = await page.evaluate(() =>
+        [
+          "#section02 ul[role='list']",
+          "#section03 ul[role='list']",
+          "falling-text-cards .grid",
+        ].map(
+          (selector) =>
+            getComputedStyle(
+              document.querySelector(selector),
+            ).gridTemplateColumns.split(" ").length,
+        ),
+      );
+      expect(columns[2]).toBe(columns[0]);
+      expect(columns[2]).toBe(columns[1]);
+      expect(columns[2]).toBeLessThanOrEqual(2);
+      const reservedSpace = await root.evaluate(
+        (element) =>
+          (element.querySelector("[data-card]").getBoundingClientRect().height *
+            Number(element.dataset.distance)) /
+          2,
+      );
+      expect(Math.abs(parseFloat(before.padding) - reservedSpace)).toBeLessThan(
+        0.1,
+      );
       // Sample actual rendered frames, including the first frame of the drop.
       await page.evaluate(() => {
         window.__cardFrames = [];
