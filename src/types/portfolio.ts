@@ -25,4 +25,6 @@ export interface TextCardItem extends DescriptionItem {
   image?: string;
   imageLayout?: "inset" | "full";
   href?: string;
+  /** Optional link to a detailed explanation, shown below the description. */
+  detailsHref?: string;
 }

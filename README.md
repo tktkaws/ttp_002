@@ -36,6 +36,8 @@ AstroとTailwind CSSで構築したポートフォリオです。本文は静的
 
 単純な配置にはTailwindのutilityを使い、コンポーネント固有のスタイルは各 `.astro` のscopedな `<style>` に置きます。共通の基準や操作時の表示は `src/styles/` が担当します。コンポーネントを分割するときは、scoped CSSが子コンポーネント内部に自動で届かない点を確認してください。
 
+成果物の説明文の下にある「詳しい説明を見る」のリンク先は、`src/data/portfolio.ts` の各成果物の `detailsHref` で指定します。一部の成果物には仮URLの `https://example.com/` を設定しています。`detailsHref` を省略するか空文字にすると、その成果物の詳細リンクは表示しません。
+
 `index.astro` はデータ・表示設定・コンポーネントを組み立てます。各コンポーネントの `<script>` は対応するTypeScriptモジュールを読み込む入口です。`PageSection` を複数使っても、Astroが処理するscriptは1回だけ実行され、ページ内の対象見出しをまとめて初期化します。
 
 `PreferenceInit.astro` はhead内で、外部CSSより先に実行する同期インラインscriptと、読み込み中の背景・color-scheme用CSSを持ちます。既定値と保存キーは `config/preferences.ts` から渡します。操作後の文書状態・保存・別タブのstorageイベント・pageshow時の復元は `scripts/preferences.ts`、変更通知を受けたラベルと選択状態の更新は `scripts/fixed-nav.ts` が担当します。

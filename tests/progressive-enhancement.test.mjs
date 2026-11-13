@@ -36,8 +36,9 @@ test("JSなしの生成HTMLに全本文と成果物リンク、ネイティブ�
     assert.doesNotMatch(match[1], /\b(?:hidden|inert|aria-hidden="true")\b/);
   }
   assert.match(html, /はじめまして。タカハシタカユキと申します。/);
-  for (const { href } of outputs) {
+  for (const { href, detailsHref } of outputs) {
     assert.ok(html.includes(`href="${href}"`));
+    if (detailsHref) assert.ok(html.includes(`href="${detailsHref}"`));
   }
   const settings = [
     ...html.matchAll(/<div\b[^>]*data-preference-item[^>]*>([\s\S]*?)<\/div>/g),

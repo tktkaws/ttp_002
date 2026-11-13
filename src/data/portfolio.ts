@@ -95,12 +95,14 @@ export const outputs = [
       "microCMS、Astroを使用しブログを作成しました。Swupによる擬似的な非同期遷移も実装しました。",
     image: "/front-dispatch-2026.vercel.app_.png",
     href: "https://thinking-in-the-grey.pages.dev/",
+    detailsHref: "https://thinking-in-the-grey.pages.dev/blog/ekgrhcgdn/",
   },
   {
     label: "会議室予約システム",
     description: "Next.jsとSupabaseを使用して会議室予約アプリを作成しました。",
     image: "/reservation-01.vercel.app_.png",
     href: "https://reservation-01.vercel.app/",
+    detailsHref: "https://example.com/",
   },
   {
     label: "SCROLL WARS",
@@ -110,6 +112,7 @@ export const outputs = [
       "https://raw.githubusercontent.com/tktkaws/scroll_wars/main/public/screenshot.png",
     imageLayout: "inset",
     href: "https://scroll-wars.vercel.app/",
+    detailsHref: "https://example.com/",
   },
   {
     label: "Spotify UI",
@@ -117,17 +120,20 @@ export const outputs = [
       "Spotifyで印象的な、カバー画像が縮小して背景色が浮き上がってくるUIを再現してみました。",
     image: "/spotify_ui.png",
     href: "https://spotify-ui-six.vercel.app/",
+    detailsHref: "https://example.com/",
   },
   {
     label: "p5.js Learning",
     description: "P5.jsを学習するサイトを作成しました。",
     image: "/p5-learning.png",
     href: "https://p5-learning-tau.vercel.app/",
+    detailsHref: "https://example.com/",
   },
   {
     label: "Scroll Image Distortion",
     description: "スクロールに応じて画像が歪むUIを作成しました。",
     image: "/Scroll_Image_Distortion.png",
     href: "https://scroll-image-distortion.vercel.app/",
+    detailsHref: "https://example.com/",
   },
 ] satisfies TextCardItem[];
