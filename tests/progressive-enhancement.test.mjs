@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import Matter from "matter-js";
+import { outputs } from "../src/data/portfolio.ts";
 import { initFixedNav } from "../src/scripts/fixed-nav.ts";
 import { initHeadingReveal } from "../src/scripts/heading-reveal.ts";
 import { initLogoReveal } from "../src/scripts/logo-reveal.ts";
@@ -35,7 +36,9 @@ test("JSなしの生成HTMLに全本文と成果物リンク、ネイティブ�
     assert.doesNotMatch(match[1], /\b(?:hidden|inert|aria-hidden="true")\b/);
   }
   assert.match(html, /はじめまして。タカハシタカユキと申します。/);
-  assert.match(html, /href="https:\/\/front-dispatch-2026.vercel.app\/"/);
+  for (const { href } of outputs) {
+    assert.ok(html.includes(`href="${href}"`));
+  }
   const settings = [
     ...html.matchAll(/<div\b[^>]*data-preference-item[^>]*>([\s\S]*?)<\/div>/g),
   ];
