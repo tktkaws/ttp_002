@@ -22,3 +22,36 @@
   transform: translateX(-0.15em);
   line-height: 1.3;
 }
+
+[data-logo-random-reveal],
+[data-heading-reveal] {
+  --reveal-ink: var(--color-gray-900);
+}
+
+html.dark [data-logo-random-reveal],
+html.dark [data-heading-reveal] {
+  --reveal-ink: var(--color-gray-100);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-animation="on"] [data-heading-reveal],
+  html[data-animation="on"] [data-logo-char] {
+    color: var(--color-gray-300);
+  }
+
+  html[data-animation="on"] [data-heading-reveal]::after,
+  html[data-animation="on"] [data-logo-char]::after {
+    content: attr(data-reveal-text);
+    position: absolute;
+    inset: 0;
+    color: var(--reveal-ink);
+    pointer-events: none;
+  }
+
+  html[data-animation="on"] [data-heading-reveal]:not([data-revealed])::after,
+  html[data-animation="on"]
+    [data-logo-random-reveal]:not([data-revealed])
+    [data-logo-char]::after {
+    clip-path: inset(0 100% 0 0);
+  }
+}

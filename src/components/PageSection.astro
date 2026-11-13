@@ -20,6 +20,8 @@ const headingId = `${id}-heading`;
       id={headingId}
       class="heading-reveal text-display section-inset-x mt-[4rem]"
       data-heading-reveal
+      data-reveal-text={title}
+      aria-label={title}
     >
       {title}
     </h2>
@@ -36,6 +38,7 @@ const headingId = `${id}-heading`;
 
 <style>
   .heading-reveal {
+    position: relative;
     width: fit-content;
   }
 </style>

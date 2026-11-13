@@ -21,7 +21,9 @@ const { items } = Astro.props;
       {identity.logoLines.map((line, index) => (
         <Fragment>
           {Array.from(line).map((character) => (
-            <span data-logo-char>{character}</span>
+            <span data-logo-char data-reveal-text={character}>
+              {character}
+            </span>
           ))}
           {index < identity.logoLines.length - 1 && <br />}
         </Fragment>
@@ -37,6 +39,7 @@ const { items } = Astro.props;
 
 <style>
   [data-logo-char] {
+    position: relative;
     display: inline-block;
     opacity: 1;
   }

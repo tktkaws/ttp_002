@@ -5,7 +5,7 @@ export function initHeadingReveal() {
     track(
       heading.animate(
         [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0 0 0)" }],
-        { duration: 250, easing: "ease-out" },
+        { duration: 250, easing: "ease-out", pseudoElement: "::after" },
       ),
     );
   });

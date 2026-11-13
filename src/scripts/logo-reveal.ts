@@ -19,6 +19,7 @@ export function initLogoReveal() {
           delay: index * 48.6,
           easing: "ease-out",
           fill: "backwards",
+          pseudoElement: "::after",
         }),
       );
     });

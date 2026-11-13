@@ -2,7 +2,7 @@ import { preferencesChangeEvent } from "./preferences.ts";
 
 type TrackAnimation = (animation: Animation) => void;
 
-// Content stays visible until a finite Web Animation actually starts.
+// Animate the ink layer while the gray text underneath stays visible.
 export function initReveal(
   selector: string,
   animate: (element: HTMLElement, track: TrackAnimation) => void,
@@ -19,6 +19,7 @@ export function initReveal(
     observer = undefined;
     for (const animation of animations) animation.cancel();
     animations.clear();
+    for (const element of elements) element.dataset.revealed = "true";
   };
   const track: TrackAnimation = (animation) => {
     animations.add(animation);
@@ -34,6 +35,9 @@ export function initReveal(
     enabled = next;
     stop();
     if (!enabled) return;
+    for (const element of elements) {
+      if (!revealed.has(element)) delete element.dataset.revealed;
+    }
     try {
       observer = new IntersectionObserver((entries) => {
         try {
@@ -43,6 +47,7 @@ export function initReveal(
             observer?.unobserve(element);
             if (revealed.has(element)) continue;
             revealed.add(element);
+            element.dataset.revealed = "true";
             animate(element, track);
           }
         } catch {
@@ -70,8 +75,10 @@ export function initReveal(
     if (
       !elements.length ||
       elements.some((element) => typeof element.animate !== "function")
-    )
+    ) {
+      stop();
       return dispose;
+    }
     reduced = matchMedia("(prefers-reduced-motion: reduce)");
     document.addEventListener(preferencesChangeEvent, setup);
     reduced.addEventListener("change", setup);

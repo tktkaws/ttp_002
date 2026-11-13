@@ -53,10 +53,19 @@ test("JSなしの生成HTMLに全本文と成果物リンク、ネイティブ�
 
 test("headの設定復元だけ成功しても見出しを隠すCSSがない", () => {
   assert.doesNotMatch(css, /html\.js/);
-  assert.doesNotMatch(
-    css,
-    /(?:heading-reveal|logo-random-reveal)[^{}]*\{[^{}]*(?:opacity:0|clip-path:inset\(0 100%)/,
-  );
+  for (const [, selector, declarations] of css.matchAll(
+    /([^{}]+)\{([^{}]*)\}/g,
+  )) {
+    if (
+      /(?:heading-reveal|logo-random-reveal)/.test(selector) &&
+      !/::?after/.test(selector)
+    ) {
+      assert.doesNotMatch(
+        declarations,
+        /(?:opacity:0|clip-path:inset\(0 100%)/,
+      );
+    }
+  }
   assert.doesNotMatch(html, /data-active="true"/);
 });
 
@@ -179,6 +188,7 @@ test("演出用APIがない環境では見出しを変更しない", (t) => {
   const dispose = initHeadingReveal();
   assert.equal(dom.observer(), undefined);
   assert.equal(dom.heading.style.getPropertyValue("opacity"), "");
+  assert.equal(dom.heading.dataset.revealed, "true");
   dispose();
 });
 
@@ -189,6 +199,7 @@ test("Observerの初期化が失敗しても見出しを隠さない", (t) => {
   assert.equal(dom.observer().disconnected, true);
   assert.equal(dom.animations.length, 0);
   assert.equal(dom.heading.style.getPropertyValue("clip-path"), "");
+  assert.equal(dom.heading.dataset.revealed, "true");
   dispose();
 });
 
@@ -199,6 +210,8 @@ test("見出しの演出は有限時間で、Offへの切替時はキャンセ�
   dom.observer().callback([{ target: dom.heading, isIntersecting: true }]);
   assert.equal(dom.animations[0].options.duration, 250);
   assert.equal(dom.animations[0].options.fill, undefined);
+  assert.equal(dom.animations[0].options.pseudoElement, "::after");
+  assert.equal(dom.heading.dataset.revealed, "true");
   dom.root.dataset.animation = "off";
   dom.document.dispatchEvent(new Event(preferencesChangeEvent));
   assert.equal(dom.animations[0].cancelled, true);
@@ -219,6 +232,8 @@ test("ロゴの演出が途中で失敗しても開始済みのアニメーシ�
   dom.observer().callback([{ target: dom.logo, isIntersecting: true }]);
   assert.equal(dom.animations.length, 1);
   assert.equal(dom.animations[0].cancelled, true);
+  assert.equal(dom.animations[0].options.pseudoElement, "::after");
+  assert.equal(dom.logo.dataset.revealed, "true");
   dispose();
 });
 
