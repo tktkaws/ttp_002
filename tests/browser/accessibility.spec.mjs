@@ -146,7 +146,10 @@ test("支援技術向け情報: 見出し・ランドマーク・一覧・名称
     page.getByRole("list", { name: "成果物一覧" }).getByRole("listitem"),
   ).toHaveCount(6);
   await expect(
-    page.getByRole("link", { name: "GitHub", exact: true }),
+    page.getByRole("link", {
+      name: "タカハシタカユキのgithub（別ウィンドウで開きます）",
+      exact: true,
+    }),
   ).toHaveCount(1);
   const snapshot = await page.locator("body").ariaSnapshot();
   expect(snapshot).not.toContain("[01]");
