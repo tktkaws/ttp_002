@@ -7,6 +7,10 @@ a {
   padding-inline: 0.2em;
 }
 
+section[id]:focus {
+  outline: none;
+}
+
 /* デジタル庁スタイルのダブルリング（ライト: 黄×黒 / ダーク: 白リングのみ）— outline を主役にする */
 :is(a, button):is(:focus-visible, :hover) {
   background-color: var(--focus-ring-inner);
