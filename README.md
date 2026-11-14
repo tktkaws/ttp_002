@@ -4,35 +4,36 @@ AstroとTailwind CSSで構築したポートフォリオです。本文は静的
 
 ## 変更する内容とファイル
 
-| 変更したい内容                                                            | 主な変更箇所                                                         |
-| ------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| タイトル・description、ロゴの文字、自己紹介、技術、強み、成果物、リンク先 | `src/data/portfolio.ts`                                              |
-| コンテンツデータの型                                                      | `src/types/portfolio.ts`                                             |
-| ページ全体のセクション構成・並び・一覧のHTML                              | `src/pages/index.astro`                                              |
-| html・head・body、外部フォント、ページ全体の余白                          | `src/layouts/BaseLayout.astro`                                       |
-| セクションの枠・番号・h2と本文の配置                                      | `src/components/PageSection.astro`                                   |
-| ロゴのHTMLと見た目                                                        | `src/components/SiteHeader.astro`                                    |
-| フッターのHTMLと見た目                                                    | `src/components/SiteFooter.astro`                                    |
-| ナビゲーション・設定ボタンのHTMLと見た目                                  | `src/components/FixedNav.astro`                                      |
-| 成果物一覧・カードのHTMLと見た目                                          | `src/components/TextCards.astro`                                     |
-| フォント・余白・文字サイズの基準値・フォーカスの色                        | `src/styles/tokens.css`                                              |
-| 基礎スタイル・ページ内移動・アニメーション停止のCSS                       | `src/styles/base.css`                                                |
-| 共通の文字サイズ・ロゴの組版                                              | `src/styles/typography.css`                                          |
-| 共通フォーカス・リンクやボタンの操作時の表示                              | `src/styles/accessibility.css`                                       |
-| CSSの読み込み順・Tailwindの導入とdark variant                             | `src/styles/global.css`                                              |
-| テーマ・アニメーションの既定値と保存キー                                  | `src/config/preferences.ts`                                          |
-| 成果物カードの色・高さ・間隔・文字倍率                                    | `src/config/presentation.ts`                                         |
-| カードの物理演算の既定値                                                  | `src/config/card-physics.ts`                                         |
-| 初回描画前の設定復元                                                      | `src/components/PreferenceInit.astro`                                |
-| 設定の取得・DOMへの反映・保存                                             | `src/scripts/preferences.ts`                                         |
-| ナビの開閉・フォーカス・スクロール時の表示                                | `src/scripts/fixed-nav.ts`                                           |
-| ページ内リンク・直接アクセス・hashchange時のフォーカス                    | `src/scripts/page-anchors.ts`                                        |
-| ロゴ／セクション見出しの表示演出                                          | `src/scripts/logo-reveal.ts` / `src/scripts/heading-reveal.ts`       |
-| 表示演出の開始条件・有限アニメーションの管理                              | `src/scripts/reveal.ts`                                              |
-| カード用カスタム要素の登録・接続と切断                                    | `src/scripts/cards/text-cards.ts`                                    |
-| カードの演出モジュール読み込み・失敗時の静的表示                          | `src/scripts/cards/enhancement.ts` / `src/scripts/cards/fallback.ts` |
-| カードの物理演算・描画・Observerとフレームの停止／再開／破棄              | `src/scripts/cards/physics.ts`                                       |
-| カードの調整用Tweakpane UI                                                | `src/scripts/cards/controls.ts`                                      |
+| 変更したい内容                                                            | 主な変更箇所                                                                    |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| タイトル・description、ロゴの文字、自己紹介、技術、強み、成果物、リンク先 | `src/data/portfolio.ts`                                                         |
+| コンテンツデータの型                                                      | `src/types/portfolio.ts`                                                        |
+| ページ全体のセクション構成・並び・一覧のHTML                              | `src/pages/index.astro`                                                         |
+| html・head・body、外部フォント、ページ全体の余白                          | `src/layouts/BaseLayout.astro`                                                  |
+| セクションの枠・番号・h2と本文の配置                                      | `src/components/PageSection.astro`                                              |
+| ロゴのHTMLと見た目                                                        | `src/components/SiteHeader.astro`                                               |
+| フッターのHTMLと見た目                                                    | `src/components/SiteFooter.astro`                                               |
+| コンテンツ目次のHTMLと見た目                                              | `src/components/FixedNav.astro`                                                 |
+| 右上のアニメーション・テーマトグル                                        | `src/components/PreferenceToggles.astro` / `src/scripts/preference-controls.ts` |
+| 成果物一覧・カードのHTMLと見た目                                          | `src/components/TextCards.astro`                                                |
+| フォント・余白・文字サイズの基準値・フォーカスの色                        | `src/styles/tokens.css`                                                         |
+| 基礎スタイル・ページ内移動・アニメーション停止のCSS                       | `src/styles/base.css`                                                           |
+| 共通の文字サイズ・ロゴの組版                                              | `src/styles/typography.css`                                                     |
+| 共通フォーカス・リンクやボタンの操作時の表示                              | `src/styles/accessibility.css`                                                  |
+| CSSの読み込み順・Tailwindの導入とdark variant                             | `src/styles/global.css`                                                         |
+| テーマ・アニメーションの既定値と保存キー                                  | `src/config/preferences.ts`                                                     |
+| 成果物カードの色・高さ・間隔・文字倍率                                    | `src/config/presentation.ts`                                                    |
+| カードの物理演算の既定値                                                  | `src/config/card-physics.ts`                                                    |
+| 初回描画前の設定復元                                                      | `src/components/PreferenceInit.astro`                                           |
+| 設定の取得・DOMへの反映・保存                                             | `src/scripts/preferences.ts`                                                    |
+| ナビの開閉・フォーカス・スクロール時の表示                                | `src/scripts/fixed-nav.ts`                                                      |
+| ページ内リンク・直接アクセス・hashchange時のフォーカス                    | `src/scripts/page-anchors.ts`                                                   |
+| ロゴ／セクション見出しの表示演出                                          | `src/scripts/logo-reveal.ts` / `src/scripts/heading-reveal.ts`                  |
+| 表示演出の開始条件・有限アニメーションの管理                              | `src/scripts/reveal.ts`                                                         |
+| カード用カスタム要素の登録・接続と切断                                    | `src/scripts/cards/text-cards.ts`                                               |
+| カードの演出モジュール読み込み・失敗時の静的表示                          | `src/scripts/cards/enhancement.ts` / `src/scripts/cards/fallback.ts`            |
+| カードの物理演算・描画・Observerとフレームの停止／再開／破棄              | `src/scripts/cards/physics.ts`                                                  |
+| カードの調整用Tweakpane UI                                                | `src/scripts/cards/controls.ts`                                                 |
 
 単純な配置にはTailwindのutilityを使い、コンポーネント固有のスタイルは各 `.astro` のscopedな `<style>` に置きます。共通の基準や操作時の表示は `src/styles/` が担当します。コンポーネントを分割するときは、scoped CSSが子コンポーネント内部に自動で届かない点を確認してください。
 
@@ -40,11 +41,15 @@ AstroとTailwind CSSで構築したポートフォリオです。本文は静的
 
 `index.astro` はデータ・表示設定・コンポーネントを組み立てます。各コンポーネントの `<script>` は対応するTypeScriptモジュールを読み込む入口です。`PageSection` を複数使っても、Astroが処理するscriptは1回だけ実行され、ページ内の対象見出しをまとめて初期化します。
 
-`PreferenceInit.astro` はhead内で、外部CSSより先に実行する同期インラインscriptと、読み込み中の背景・color-scheme用CSSを持ちます。既定値と保存キーは `config/preferences.ts` から渡します。操作後の文書状態・保存・別タブのstorageイベント・pageshow時の復元は `scripts/preferences.ts`、変更通知を受けたラベルと選択状態の更新は `scripts/fixed-nav.ts` が担当します。
+`PreferenceInit.astro` はhead内で、外部CSSより先に実行する同期インラインscriptと、読み込み中の背景・color-scheme用CSSを持ちます。既定値と保存キーは `config/preferences.ts` から渡します。操作後の文書状態・保存・別タブのstorageイベント・pageshow時の復元は `scripts/preferences.ts`、変更通知を受けたトグルの状態と表示テキストの更新は `scripts/preference-controls.ts` が担当します。
 
 既存の `#section01`〜`#section04` は維持します。`scripts/page-anchors.ts` は移動先へのフォーカスを補い、URL・スクロール・戻る／進むの履歴更新は通常のリンクとブラウザーが担当します。初回ロードではfragmentの移動を待ってフォーカスし、Ctrl／Command等を伴うリンク操作には介入しません。
 
 本文・見出し・成果物リンクは静的HTMLで利用できます。目次にはHTMLの `popover` / `popovertarget` を使い、JavaScriptが無効でも開閉できます。設定操作は初期化完了後に表示・有効化し、途中の失敗時もネイティブの目次を維持します。
+
+アニメーションとテーマの設定はヘッダー右上の下線付きテキストのトグルです。「モーション：オン／オフ」「テーマ：ライト／ダーク」で現在の設定を示します。600px未満ではロゴの下に縦並び・左揃えで配置します。画面幅にかかわらずヘッダーと一緒にスクロールし、表示テキストと `aria-pressed` で名称と状態を伝えます。コンテンツ目次は右端中央に固定し、セクション数に対応した横線と `aria-current="location"` で現在位置を示します。現在位置の線はライトで黒、ダークで白の太線です。640px未満では非カレントの横線を本文の右端に揃え、カレントの横線も同じ分だけ短くします。ホバー・クリック・タッチ・Enter／Spaceで開き、Escape・外側の操作・リンク選択で閉じます。ホバーだけで開いた場合は、ポインターが離れると閉じます。ヘッダー末尾に置き、Tab順はアニメーション→テーマ→目次です。`tests/browser/menu.spec.mjs` で配置・操作・スクロール追従を確認します。
+
+ページ内リンクで移動したセクションへのフォーカスは維持し、セクション全体を囲む枠は表示しません。リンクやボタンには共通のフォーカス表示を適用します。
 
 `SiteHeader.astro` の `header` にナビとh1をまとめています。ナビは生成HTMLから固定配置とし、JavaScript初期化時の通常フローからの離脱によるレイアウトシフトを防ぎます。`tests/browser/header.spec.mjs` では320／1280pxで初期化前後・メニュー開閉時の位置と寸法、およびJavaScript無効・取得失敗時の目次操作を検証します。
 
