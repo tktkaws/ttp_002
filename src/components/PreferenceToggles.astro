@@ -1,0 +1,64 @@
+<div
+  class="header-preferences"
+  role="group"
+  aria-label="表示設定"
+  data-preference-controls
+>
+  <button
+    type="button"
+    data-animation-toggle
+    aria-pressed="false"
+    title="アニメーションを動かす"
+    disabled
+  >
+    モーション：オフ
+  </button>
+  <button
+    type="button"
+    data-theme-toggle
+    aria-pressed="false"
+    title="ダークテーマに切り替える"
+    disabled
+  >
+    テーマ：ライト
+  </button>
+</div>
+
+<script>
+  import { initPreferenceControls } from "../scripts/preference-controls";
+  initPreferenceControls();
+</script>
+
+<style>
+  .header-preferences {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.5rem 1rem;
+    max-width: 100%;
+    visibility: hidden;
+    font-size: 0.875rem;
+  }
+  .header-preferences[data-enhanced] {
+    visibility: visible;
+  }
+  button {
+    min-height: 44px;
+    padding: 0.5rem 0.2em;
+    white-space: nowrap;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  @media (width < 600px) {
+    .header-preferences {
+      position: static;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

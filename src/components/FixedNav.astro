@@ -10,7 +10,7 @@ const { items } = Astro.props;
 
 <nav
   id="fixed-nav"
-  aria-label="表示設定とページ内ナビゲーション"
+  aria-label="ページ内ナビゲーション"
   class="fixed-nav font-sans font-normal"
 >
   <button
@@ -19,112 +19,26 @@ const { items } = Astro.props;
     data-menu-button
     popovertarget="fixed-nav-popover"
     aria-controls="fixed-nav-popover"
+    aria-label="コンテンツメニュー"
   >
-    メニュー
+    <span class="fixed-nav__lines" aria-hidden="true">
+      {items.map((item) => (
+        <span class="fixed-nav__line" data-section-line={item.href} />
+      ))}
+    </span>
   </button>
-  <div id="fixed-nav-popover" class="fixed-nav__popover" popover="auto">
-    <ul class="fixed-nav__items">
-      <li>
-        <div
-          class="fixed-nav__item"
-          role="group"
-          aria-labelledby="animation-title"
-          data-preference-item
-          hidden
-        >
-          <p id="animation-title" class="fixed-nav__title">
-            アニメーション
-          </p>
-          <ul id="animation-options" class="fixed-nav__panel">
-            <li>
-              <button
-                type="button"
-                data-animation="on"
-                aria-pressed="false"
-                disabled
-              >
-                オン
-                <span class="fixed-nav__selection" aria-hidden="true">
-                  ●
-                </span>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                data-animation="off"
-                aria-pressed="true"
-                disabled
-              >
-                オフ
-                <span class="fixed-nav__selection" aria-hidden="true">
-                  ●
-                </span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div
-          class="fixed-nav__item"
-          role="group"
-          aria-labelledby="theme-title"
-          data-preference-item
-          hidden
-        >
-          <p id="theme-title" class="fixed-nav__title">
-            テーマ
-          </p>
-          <ul id="theme-options" class="fixed-nav__panel">
-            <li>
-              <button
-                type="button"
-                data-theme="light"
-                aria-pressed="true"
-                disabled
-              >
-                ライト
-                <span class="fixed-nav__selection" aria-hidden="true">
-                  ●
-                </span>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                data-theme="dark"
-                aria-pressed="false"
-                disabled
-              >
-                ダーク
-                <span class="fixed-nav__selection" aria-hidden="true">
-                  ●
-                </span>
-              </button>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div
-          class="fixed-nav__item"
-          role="group"
-          aria-labelledby="contents-title"
-          data-contents-item
-        >
-          <p id="contents-title" class="fixed-nav__title">
-            コンテンツ
-          </p>
-          <ul id="contents-options" class="fixed-nav__panel">
-            {items.map((item) => (
-              <li>
-                <a href={item.href}>{item.label}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </li>
+  <div
+    id="fixed-nav-popover"
+    class="fixed-nav__popover"
+    popover="auto"
+    data-contents-item
+  >
+    <ul id="contents-options">
+      {items.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+        </li>
+      ))}
     </ul>
   </div>
 </nav>
@@ -135,190 +49,137 @@ const { items } = Astro.props;
 </script>
 
 <style>
-  .fixed-nav [hidden] {
-    display: none;
-  }
-
-  .fixed-nav:not([data-enhanced]) .fixed-nav__items {
-    display: block;
-  }
-
   .fixed-nav {
     position: fixed;
     z-index: 50;
-    top: var(--header-offset);
-    right: var(--body-padding);
-    max-width: calc(100% - 2 * var(--body-padding));
-    font-size: clamp(1rem, 1.25vw, 1.25rem);
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
     line-height: 1.5;
   }
 
-  .fixed-nav__menu-button,
-  .fixed-nav__popover {
-    border: 1px solid #000;
-    box-shadow: 0 2px 6px rgb(0 0 0 / 12%);
-    background: var(--color-white);
-    color: inherit;
+  .fixed-nav__menu-button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    min-height: 44px;
+    padding: 12px 8px;
+    cursor: pointer;
   }
 
-  .fixed-nav__menu-button {
-    min-height: 44px;
-    min-width: 6.5em;
-    padding: 0.4em 1em;
-    cursor: pointer;
+  .fixed-nav__lines {
+    display: grid;
+    justify-items: end;
+    align-items: center;
+    grid-auto-rows: 18px;
+  }
+
+  .fixed-nav__line {
+    width: 20px;
+    height: 2px;
+    border-radius: 0;
+    background: #b4b4b4;
+  }
+
+  .fixed-nav__line[data-current] {
+    width: 28px;
+    height: 4px;
+    background: #000;
+  }
+
+  @media (width < 640px) {
+    .fixed-nav__lines {
+      width: 100%;
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .fixed-nav__line {
+      width: calc(var(--body-padding) - 8px);
+    }
+
+    .fixed-nav__line[data-current] {
+      width: var(--body-padding);
+    }
   }
 
   .fixed-nav__popover {
     position: fixed;
-    inset: auto;
-    top: calc(var(--header-offset) + 3.5rem);
-    right: var(--body-padding);
+    inset: 50% 44px auto auto;
+    translate: 0 -50%;
     margin: 0;
-    padding: 2rem;
-    width: max-content;
-    max-width: calc(100vw - 2 * var(--body-padding));
-    max-height: calc(100dvh - var(--header-offset) - 4.5rem);
+    width: 14.4rem;
+    max-width: calc((100vw - 60px) * 0.8);
+    max-height: calc(100dvh - 32px);
     overflow-y: auto;
     overscroll-behavior: contain;
+    padding: 1.25rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 0;
+    background: #fff;
+    color: #525252;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 8%);
+  }
+
+  #contents-options {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  #contents-options a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem;
+    overflow-wrap: anywhere;
+  }
+
+  #contents-options a[aria-current="location"] {
+    color: #000;
+    font-weight: 700;
+  }
+
+  :global(html.dark) .fixed-nav__line {
+    background: #6b7280;
+  }
+
+  :global(html.dark) .fixed-nav__line[data-current] {
+    background: #fff;
+  }
+
+  :global(html.dark) .fixed-nav__popover {
+    background: var(--color-gray-900);
+    color: var(--color-gray-300);
+    border-color: var(--color-gray-700);
+  }
+
+  :global(html.dark) #contents-options a[aria-current="location"] {
+    color: #fff;
   }
 
   @media (prefers-reduced-motion: no-preference) {
     .fixed-nav__popover:popover-open {
-      animation: menu-fade-in 180ms ease-out;
+      animation: menu-slide-in 180ms ease-out;
     }
   }
 
-  @keyframes menu-fade-in {
+  @keyframes menu-slide-in {
     from {
       opacity: 0;
-      transform: translateY(-8px);
+      transform: translateX(24px);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateX(0);
     }
   }
 
-  :global(html.dark) .fixed-nav__menu-button,
-  :global(html.dark) .fixed-nav__popover {
-    background: var(--color-gray-900);
-    color: var(--color-gray-100);
-    border-color: var(--color-gray-100);
-    box-shadow: 0 2px 6px rgb(0 0 0 / 40%);
-  }
-
-  .fixed-nav .fixed-nav__menu-button:is(:focus-visible, :hover) {
-    background-color: var(--focus-ring-inner);
-  }
-
-  .fixed-nav__items {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: start;
-    gap: clamp(0.75rem, 3vw, 3rem);
-  }
-
-  .fixed-nav__items > li {
-    min-width: 0;
-    max-width: 100%;
-  }
-
-  .fixed-nav__item {
-    position: relative;
-    text-align: left;
-  }
-
-  .fixed-nav__title {
-    display: flex;
-    width: 100%;
-    justify-content: flex-start;
-    align-items: center;
-    min-height: 44px;
-    overflow-wrap: anywhere;
-    padding-inline: 0.5rem;
-    font-weight: 500;
-    border-bottom: 1px solid currentColor;
-  }
-
-  .fixed-nav__panel {
-    position: static;
-    width: 100%;
-    min-width: 0;
-    max-width: calc(100vw - 2 * var(--body-padding));
-    max-height: none;
-    margin-top: 0;
-    padding: 0.5rem;
-    border: 0;
-    background: var(--color-white);
-  }
-
-  :global(html.dark) .fixed-nav__panel {
-    background: var(--color-gray-900);
-  }
-
-  .fixed-nav__panel li {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    min-height: 44px;
-    text-align: left;
-  }
-
-  .fixed-nav__panel :is(button, a) {
-    display: inline;
-    padding-inline: 0;
-    width: fit-content;
-    max-width: 100%;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    cursor: pointer;
-  }
-
-  .fixed-nav__panel button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-  }
-
-  .fixed-nav__selection {
-    flex-shrink: 0;
-    visibility: hidden;
-    font-size: 0.65em;
-  }
-
-  .fixed-nav__panel button[aria-pressed="true"] .fixed-nav__selection {
-    visibility: visible;
-  }
-
-  @media (width >= 600px) {
-    .fixed-nav__item {
-      min-width: 8.75rem;
+  @media (forced-colors: active) {
+    .fixed-nav__line {
+      background: GrayText;
     }
-  }
-
-  @media (width < 600px) {
-    .fixed-nav__popover {
-      padding: 1rem;
-    }
-
-    .fixed-nav__items {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: clamp(1.5rem, 6vw, 6rem);
-    }
-
-    .fixed-nav__items > li:nth-child(1) {
-      grid-column: 1;
-      grid-row: 1;
-    }
-
-    .fixed-nav__items > li:nth-child(2) {
-      grid-column: 1;
-      grid-row: 2;
-    }
-
-    .fixed-nav__items > li:nth-child(3) {
-      grid-column: 2;
-      grid-row: 1 / span 2;
+    .fixed-nav__line[data-current] {
+      background: CanvasText;
     }
   }
 </style>

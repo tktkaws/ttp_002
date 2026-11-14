@@ -24,13 +24,14 @@ async function expectPreferences(page, theme, animation) {
     "data-enhanced",
     "true",
   );
-  await expect(page.locator(`button[data-theme="${theme}"]`)).toHaveAttribute(
+  await expect(page.locator("[data-theme-toggle]")).toHaveAttribute(
     "aria-pressed",
-    "true",
+    String(theme === "dark"),
   );
-  await expect(
-    page.locator(`button[data-animation="${animation}"]`),
-  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("[data-animation-toggle]")).toHaveAttribute(
+    "aria-pressed",
+    String(animation === "on"),
+  );
   expect(
     await page
       .locator("html")
@@ -52,11 +53,12 @@ async function openMenu(page) {
 }
 
 async function choose(page, kind, label) {
-  await openMenu(page);
-  await page
-    .getByRole("group", { name: kind, exact: true })
-    .getByRole("button", { name: label, exact: true })
-    .click();
+  const button = page.locator(
+    kind === "テーマ" ? "[data-theme-toggle]" : "[data-animation-toggle]",
+  );
+  const pressed = label === "ダーク" || label === "オン";
+  if ((await button.getAttribute("aria-pressed")) !== String(pressed))
+    await button.click();
 }
 
 async function expectAnchor(page, id) {

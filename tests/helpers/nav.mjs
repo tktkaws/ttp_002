@@ -3,32 +3,18 @@ import { ElementStub } from "./dom.mjs";
 export function createNav(dom) {
   Object.assign(dom.root, { scrollHeight: 2000 });
   Object.assign(dom.window, { innerHeight: 800, scrollY: 0 });
-  const option = (key, value) => {
-    const button = new ElementStub();
-    button.dataset[key] = value;
-    button.disabled = true;
-    button.closest = () => button;
-    return button;
-  };
-  const themes = [option("theme", "light"), option("theme", "dark")];
-  const animations = [option("animation", "off"), option("animation", "on")];
-  const panels = Array.from({ length: 3 }, () => new ElementStub());
-  const items = panels.map((panel, index) => {
-    const item = new ElementStub();
-    item.setAttribute(
-      index === 2 ? "data-contents-item" : "data-preference-item",
-      "",
-    );
-    item.hidden = index !== 2;
-    item.querySelector = () => panel;
-    return item;
-  });
   const nav = new ElementStub();
   const menuButton = new ElementStub();
   const popover = new ElementStub();
   menuButton.hidden = false;
   popover.setAttribute("popover", "auto");
   popover.matches = () => false;
+  const links = Array.from({ length: 4 }, (_, index) => {
+    const link = new ElementStub();
+    link.hash = `#section0${index + 1}`;
+    return link;
+  });
+  const lines = links.map(() => new ElementStub());
   nav.querySelector = (selector) =>
     selector === "[data-menu-button]"
       ? menuButton
@@ -36,20 +22,26 @@ export function createNav(dom) {
         ? popover
         : null;
   nav.querySelectorAll = (selector) =>
-    selector === ".fixed-nav__item"
-      ? items
-      : selector === "[data-preference-item] button"
-        ? [...themes, ...animations]
+    selector === "#contents-options a"
+      ? links
+      : selector === "[data-section-line]"
+        ? lines
         : [];
   dom.document.querySelector = (selector) =>
     selector === "#fixed-nav" ? nav : dom.meta;
-  return {
-    nav,
-    menuButton,
-    popover,
-    items,
-    panels,
-    themes,
-    animations,
-  };
+  return { nav, menuButton, popover, links, lines };
+}
+
+export function createPreferenceControls() {
+  const controls = new ElementStub();
+  const animation = new ElementStub();
+  const theme = new ElementStub();
+  animation.disabled = theme.disabled = true;
+  controls.querySelector = (selector) =>
+    selector === "[data-animation-toggle]"
+      ? animation
+      : selector === "[data-theme-toggle]"
+        ? theme
+        : null;
+  return { controls, animation, theme };
 }

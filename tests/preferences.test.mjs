@@ -12,7 +12,7 @@ import {
   setTheme,
 } from "../src/scripts/preferences.ts";
 import { createDOM, eventWith, installDOM } from "./helpers/dom.mjs";
-import { createNav } from "./helpers/nav.mjs";
+import { createPreferenceControls } from "./helpers/nav.mjs";
 
 const html = readFileSync(
   new URL("../dist/index.html", import.meta.url),
@@ -184,22 +184,22 @@ test("保存しない更新は、既存の保存値を書き換えない", (t) =
 
 test("設定ボタン・復元・別タブ変更で選択状態も同期する", async (t) => {
   const dom = installDOM(t);
-  const { nav, panels, themes, animations } = createNav(dom);
-  const { initFixedNav } = await import("../src/scripts/fixed-nav.ts");
-  const cleanupNav = initFixedNav(nav);
-  panels[1].dispatchEvent(eventWith("click", { target: themes[1], button: 0 }));
-  assert.equal(themes[1].getAttribute("aria-pressed"), "true");
-  assert.equal(themes[0].getAttribute("aria-pressed"), "false");
+  const { controls, theme, animation } = createPreferenceControls();
+  const { initPreferenceControls } =
+    await import("../src/scripts/preference-controls.ts");
+  const cleanupNav = initPreferenceControls(controls);
+  theme.dispatchEvent(new Event("click"));
+  assert.equal(theme.getAttribute("aria-pressed"), "true");
   assert.equal(dom.values.get("theme"), "dark");
   const dispose = initPreferenceSync();
   dom.values.set("animation", "on");
   dom.window.dispatchEvent(
     eventWith("storage", { key: "animation", storageArea: dom.storage }),
   );
-  assert.equal(animations[1].getAttribute("aria-pressed"), "true");
+  assert.equal(animation.getAttribute("aria-pressed"), "true");
   dom.values.delete("theme");
   dom.window.dispatchEvent(new Event("pageshow"));
-  assert.equal(themes[0].getAttribute("aria-pressed"), "true");
+  assert.equal(theme.getAttribute("aria-pressed"), "false");
   dispose();
   cleanupNav();
 });

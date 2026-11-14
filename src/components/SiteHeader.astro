@@ -1,6 +1,7 @@
 ---
 import { identity } from "../data/portfolio";
 import FixedNav from "./FixedNav.astro";
+import PreferenceToggles from "./PreferenceToggles.astro";
 import type { NavItem } from "../types/portfolio";
 
 interface Props {
@@ -11,9 +12,8 @@ const { items } = Astro.props;
 ---
 
 <header>
-  <FixedNav items={items} />
   <h1
-    class="logo-random-reveal text-logo font-zen header_logo w-fit pb-6 sm:pb-12 md:pb-16 2xl:pb-32"
+    class="logo-random-reveal text-logo font-zen header_logo w-fit pb-16 2xl:pb-32"
     data-logo-random-reveal
     aria-label={identity.logoLabel}
   >
@@ -30,6 +30,8 @@ const { items } = Astro.props;
       ))}
     </span>
   </h1>
+  <PreferenceToggles />
+  <FixedNav items={items} />
 </header>
 
 <script>
@@ -38,6 +40,10 @@ const { items } = Astro.props;
 </script>
 
 <style>
+  header {
+    position: relative;
+  }
+
   [data-logo-char] {
     position: relative;
     display: inline-block;

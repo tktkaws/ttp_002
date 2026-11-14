@@ -27,7 +27,6 @@ test("JSなしの生成HTMLに全本文と成果物リンク、ネイティブ�
     /<div\b[^>]*data-contents-item[^>]*>([\s\S]*?)<\/div>/,
   );
   assert.ok(contents);
-  assert.match(contents[1], /コンテンツ/);
   assert.equal([...contents[1].matchAll(/href="#section0[1-4]"/g)].length, 4);
   assert.equal([...html.matchAll(/<article\b/g)].length, 6);
   for (const match of html.matchAll(
@@ -41,14 +40,10 @@ test("JSなしの生成HTMLに全本文と成果物リンク、ネイティブ�
     if (detailsHref) assert.ok(html.includes(`href="${detailsHref}"`));
   }
   const settings = [
-    ...html.matchAll(/<div\b[^>]*data-preference-item[^>]*>([\s\S]*?)<\/div>/g),
+    ...html.matchAll(/<button\b[^>]*data-(?:animation|theme)-toggle[^>]*>/g),
   ];
   assert.equal(settings.length, 2);
-  for (const setting of settings) {
-    assert.match(setting[0].split(">")[0], /\bhidden\b/);
-    for (const button of setting[1].matchAll(/<button\b([^>]*)>/g))
-      assert.match(button[1], /\bdisabled\b/);
-  }
+  for (const [button] of settings) assert.match(button, /\bdisabled\b/);
 });
 
 test("headの設定復元だけ成功しても見出しを隠すCSSがない", () => {
@@ -71,23 +66,15 @@ test("headの設定復元だけ成功しても見出しを隠すCSSがない", (
 
 function assertNavFallback(fixture) {
   assert.equal(fixture.nav.dataset.enhanced, undefined);
-  assert.equal(fixture.nav.classList.contains("fixed-nav--hidden"), false);
   assert.equal(fixture.menuButton.hidden, false);
   assert.equal(fixture.menuButton.hasAttribute("aria-expanded"), false);
   assert.equal(fixture.popover.getAttribute("popover"), "auto");
-  assert.equal(fixture.items[2].hidden, false);
-  assert.ok(fixture.items.slice(0, 2).every((item) => item.hidden));
-  assert.ok(
-    [...fixture.themes, ...fixture.animations].every(
-      (button) => button.disabled,
-    ),
-  );
 }
 
 test("目次の初期化に必要な要素が不足してもネイティブ目次を残す", (t) => {
   const dom = installDOM(t),
     nav = createNav(dom);
-  nav.items[0].querySelector = () => null;
+  nav.lines.pop();
   initFixedNav(nav.nav);
   assertNavFallback(nav);
 });
@@ -95,32 +82,21 @@ test("目次の初期化に必要な要素が不足してもネイティブ目�
 test("イベント登録が途中で失敗したら登録を解除してネイティブ目次へ戻る", (t) => {
   const dom = installDOM(t),
     nav = createNav(dom);
-  nav.panels[1].addEventListener = () => {
+  nav.menuButton.addEventListener = () => {
     throw new Error("listener failed");
   };
   initFixedNav(nav.nav);
   assertNavFallback(nav);
-  nav.panels[0].dispatchEvent(
-    eventWith("click", { target: nav.animations[1], button: 0 }),
-  );
-  assert.equal(dom.root.dataset.animation, "off");
 });
 
-test("初期化成功時だけ設定を有効化し、実行中の例外でも目次を復元する", (t) => {
+test("初期化成功時だけ拡張し、実行中の例外でもネイティブ目次を復元する", (t) => {
   const dom = installDOM(t),
     nav = createNav(dom);
   const dispose = initFixedNav(nav.nav);
   assert.equal(nav.nav.dataset.enhanced, "true");
-  assert.ok(
-    [...nav.themes, ...nav.animations].every((button) => !button.disabled),
-  );
-  nav.nav.classList.add("fixed-nav--hidden");
-  nav.themes[1].closest = () => {
-    throw new Error("selection failed");
-  };
-  nav.panels[1].dispatchEvent(
-    eventWith("click", { target: nav.themes[1], button: 0 }),
-  );
+  assert.equal(nav.links[0].getAttribute("aria-current"), "location");
+  // Simulate a missing popover API during an interaction.
+  nav.menuButton.dispatchEvent(eventWith("click", { detail: 0 }));
   assertNavFallback(nav);
   dispose();
 });

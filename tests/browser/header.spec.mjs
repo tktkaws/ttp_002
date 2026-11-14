@@ -84,16 +84,12 @@ for (const width of [320, 1280]) {
         const page = await context.newPage();
         await page.goto("/");
         await page
-          .getByRole("button", { name: "メニュー", exact: true })
+          .getByRole("button", { name: "コンテンツメニュー", exact: true })
           .click();
         const panel = page.locator("#fixed-nav-popover");
         await expect(panel).toBeVisible();
         await expect(panel.getByRole("link")).toHaveCount(4);
-        for (const item of await panel
-          .locator("[data-preference-item]")
-          .all()) {
-          await expect(item).toBeHidden();
-        }
+        await expect(page.locator("[data-preference-controls]")).toBeHidden();
         await panel.locator('a[href="#section02"]').click();
         await expect(page).toHaveURL(/#section02$/);
         await page.keyboard.press("Escape");

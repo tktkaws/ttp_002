@@ -49,31 +49,26 @@ for (const theme of ["light", "dark"]) {
       theme,
     );
     await ready(page);
-    const option = (name) => page.getByRole("button", { name, exact: true });
-    await page.keyboard.press("Tab");
-    await visibleFocus(page, option("オン"));
+    await page.keyboard.press("Escape");
+    const animation = page.locator("[data-animation-toggle]");
+    const themeToggle = page.locator("[data-theme-toggle]");
+    await animation.focus();
+    await visibleFocus(page, animation);
     await page.keyboard.press("Space");
     await expect(page.locator("html")).toHaveAttribute("data-animation", "on");
-    await visibleFocus(page, option("オン"));
     await page.keyboard.press("Tab");
-    await visibleFocus(page, option("オフ"));
-    await page.keyboard.press("Tab");
-    await visibleFocus(page, option("ライト"));
-    await page.keyboard.press("Tab");
-    await visibleFocus(page, option("ダーク"));
+    await visibleFocus(page, themeToggle);
     await page.keyboard.press("Enter");
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await visibleFocus(page, option("ダーク"));
-    await page.keyboard.press("Shift+Tab");
-    await visibleFocus(page, option("ライト"));
-    await page.keyboard.press("Escape");
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-theme",
+      theme === "dark" ? "light" : "dark",
+    );
+    await page.keyboard.press("Tab");
     await visibleFocus(page, page.locator("[data-menu-button]"));
-    await expect(page.locator("#fixed-nav-popover")).not.toBeVisible();
+    await page.keyboard.press("Shift+Tab");
+    await visibleFocus(page, themeToggle);
+    await page.keyboard.press("Tab");
     await page.keyboard.press("Enter");
-    for (const name of ["オン", "オフ", "ライト", "ダーク"]) {
-      await page.keyboard.press("Tab");
-      await visibleFocus(page, option(name));
-    }
     await page.keyboard.press("Tab");
     await visibleFocus(
       page,
@@ -113,7 +108,7 @@ test("キーボード: 固定ナビのフォーカスをスクロールで隠さ
   await ready(page);
   await page.keyboard.press("Tab");
   await page.keyboard.press("PageDown");
-  await visibleFocus(page, page.locator("#animation-options button").first());
+  await visibleFocus(page, page.locator("#contents-options a").first());
 });
 
 test("支援技術向け情報: 見出し・ランドマーク・一覧・名称・状態", async ({
@@ -125,7 +120,7 @@ test("支援技術向け情報: 見出し・ランドマーク・一覧・名称
   await expect(page.getByRole("navigation")).toHaveCount(2);
   await expect(
     page.getByRole("navigation", {
-      name: "表示設定とページ内ナビゲーション",
+      name: "ページ内ナビゲーション",
       exact: true,
     }),
   ).toHaveCount(1);
@@ -160,19 +155,18 @@ test("支援技術向け情報: 見出し・ランドマーク・一覧・名称
     expect(index).toBeGreaterThan(previous);
     previous = index;
   }
-  for (const name of ["アニメーション", "テーマ", "コンテンツ"]) {
-    await expect(page.getByRole("group", { name, exact: true })).toBeVisible();
-  }
   await expect(
-    page.locator("#fixed-nav details, #fixed-nav summary"),
-  ).toHaveCount(0);
-  await expect(
-    page.getByRole("button", { name: "ライト", exact: true }),
-  ).toMatchAriaSnapshot('- button "ライト" [pressed]');
-  await page.getByRole("button", { name: "ダーク", exact: true }).click();
-  await expect(
-    page.getByRole("button", { name: "ダーク", exact: true }),
-  ).toMatchAriaSnapshot('- button "ダーク" [pressed]');
+    page.getByRole("group", { name: "表示設定", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator("[data-animation-toggle]")).toMatchAriaSnapshot(
+    '- button "モーション：オフ"',
+  );
+  const themeToggle = page.locator("[data-theme-toggle]");
+  await expect(themeToggle).toMatchAriaSnapshot('- button "テーマ：ライト"');
+  await themeToggle.click();
+  await expect(themeToggle).toMatchAriaSnapshot(
+    '- button "テーマ：ダーク" [pressed]',
+  );
   await testInfo.attach("accessibility-tree", {
     body: snapshot,
     contentType: "text/plain",
@@ -276,7 +270,6 @@ for (const theme of ["light", "dark"]) {
     );
     await ready(page);
     await checkLayout(page, testInfo, "reflow-400-percent-equivalent");
-    for (let index = 0; index < 4; index++) await page.keyboard.press("Tab");
     for (const id of ["section01", "section02", "section03", "section04"]) {
       await page.keyboard.press("Tab");
       await visibleFocus(
@@ -407,7 +400,7 @@ test("モーション: 落下中にOffを選ぶと変形と非表示を解除す
     "data-state",
     "falling",
   );
-  await page.getByRole("button", { name: "オフ", exact: true }).click();
+  await page.locator("[data-animation-toggle]").click();
   await expect(page.locator("falling-text-cards")).toHaveAttribute(
     "data-active",
     "false",
